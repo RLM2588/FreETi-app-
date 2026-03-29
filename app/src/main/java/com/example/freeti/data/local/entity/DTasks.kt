@@ -13,12 +13,13 @@ data class DTasks (
     val user_id: Int,
     val start: Long?, //timestamp
     val end : Long?, //timestamp
-    // TODO сделать enum надо + остальные поля, остановился тут, узнать как сделать конвертер и тп
+    val status: EStatus,// TODO сделать enum надо + остальные поля, остановился тут, узнать как сделать конвертер и тп
+    val private: EPrivacy,
     val importance: Int,
-    val push_tenplate_id: Int?,
+    val push_template_id: Int?,
     @ColumnInfo(defaultValue = "FFFFFF")
     val colour: String,
-    val created_at: Long //timestamp !!! надо ли возможность null?
+    val created_at: Long //timestamp !!! надо ли возможность null? нужно ли вообще это поле локально?
     )
 
 /*
