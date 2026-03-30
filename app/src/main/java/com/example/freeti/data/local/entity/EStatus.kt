@@ -1,6 +1,7 @@
 package com.example.freeti.data.local.entity
 
 enum class EStatus {
-    NEWS, //TODO пока заглушка, все заменить
-    BLOG
+    NOT_STARTED,
+    IN_PROGRESS,
+    FINISHED
 }

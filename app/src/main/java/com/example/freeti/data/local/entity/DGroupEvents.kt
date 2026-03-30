@@ -11,7 +11,7 @@ data class DGroupEvents (
     val body: String?,
     val group_id: String,
     val start: Long,
-    val status: EStatus, // TODO status enum
+    val status: EStatus, // TODO status enum, хз, то ли
     val end: Long,
     val vote_id: String,
     val created_at: String,

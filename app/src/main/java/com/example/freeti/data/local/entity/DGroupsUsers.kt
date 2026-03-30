@@ -5,5 +5,5 @@ import androidx.room.Entity
 data class DGroupsUsers (
     val group: String,
     val user1: Int,
-    // TODO enum role
+    val role: ERole
 )
