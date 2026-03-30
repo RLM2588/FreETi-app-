@@ -14,5 +14,5 @@ data class DVoting (
     val var4: String?,
     val var5: String?,
     val group_id: String,
-    //TODO status???
+    val status: EStatus // точно ли такой?
 )

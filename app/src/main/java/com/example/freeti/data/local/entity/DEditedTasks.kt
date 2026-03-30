@@ -1,8 +1,8 @@
 package com.example.freeti.data.local.entity
 import androidx.room.Entity
 
-@Entity(primaryKeys = ["task1", "repeattask"], tableName = "edited_tasks")
+@Entity(primaryKeys = ["task", "repeat_task"], tableName = "edited_tasks")
 data class DEditedTasks (
-    val task1: String,
-    val repeattask: String
-)
+    val task: String,
+    val repeat_task: String
+) // договориться об именах полей
