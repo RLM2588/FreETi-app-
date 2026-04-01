@@ -1,4 +1,4 @@
-package com.example.freeti.data.local.entity
+package com.example.freeti.enum
 
 enum class EPrivacy {
     PUBLIC,

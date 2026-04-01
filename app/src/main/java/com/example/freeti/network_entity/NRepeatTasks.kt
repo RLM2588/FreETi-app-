@@ -1,12 +1,6 @@
-package com.example.freeti.data.local.entity
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import com.example.freeti.enum.EPrivacy
+package com.example.freeti.network_entity
 
-
-@Entity(tableName = "repeat_tasks")
-data class DRepeatTasks (
-    @PrimaryKey
+data class NRepeatTasks (
     val id: String,
     val title: String?,
     val body: String?,
@@ -15,7 +9,7 @@ data class DRepeatTasks (
     val end : Long?, //timestamp
     val global_end : Long?, //timestamp
     val repeat: Int,
-    val private: EPrivacy,
+    val private: String,
     val push_template_id: Int?,
     val created_at: Long //timestamp !!! надо ли возможность null? нужно ли вообще это поле локально?
 )
