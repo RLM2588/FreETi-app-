@@ -19,7 +19,7 @@ class MainScreen : AppCompatActivity() {
     lateinit var new_task: Button
     lateinit var privacy_button: Button
     val privacy_text: List<String> = listOf("Публичное", "Для друзей", "Приватное")
-    val privacy_color: List<Int> = listOf(0xAA5555, 0x5555AA, 0x55AA55)
+    val privacy_color: List<Long> = listOf(0xFFAA5555, 0xFF5555AA, 0xFF55AA55)
     var iterator_privacy = 2
 
 
@@ -70,7 +70,7 @@ class MainScreen : AppCompatActivity() {
             iterator_privacy = (iterator_privacy + 1) % 3
             Toast.makeText(this, privacy_text[iterator_privacy], Toast.LENGTH_SHORT).show()
         }
-        privacy_button.setBackgroundColor(privacy_color[iterator_privacy])
+        privacy_button.setBackgroundColor(privacy_color[iterator_privacy].toInt())
         //privacy_button.setText(privacy_text[iterator_privacy])
         // TODO по менять сами задачи на нужные из бд
     }
