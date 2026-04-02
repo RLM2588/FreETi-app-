@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
+import java.util.Calendar
 
 class MainScreen : AppCompatActivity() {
     lateinit var settings_button: TextView // потом возможно button
@@ -18,9 +19,19 @@ class MainScreen : AppCompatActivity() {
     lateinit var tasks_view: RecyclerView
     lateinit var new_task: Button
     lateinit var privacy_button: Button
+    lateinit var month_and_year: TextView
+    lateinit var calendar: Calendar
+
+    // константы
     val privacy_text: List<String> = listOf("Публичное", "Для друзей", "Приватное")
+    val week_text: List<String> = listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс")
+    val monthes_text: List<String> = listOf("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль",
+        "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь")
     val privacy_color: List<Long> = listOf(0xFFAA5555, 0xFF5555AA, 0xFF55AA55)
+
+    // итераторы
     var iterator_privacy = 2
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,17 +52,27 @@ class MainScreen : AppCompatActivity() {
         tasks_view = findViewById(R.id.main_tasks)
         new_task = findViewById(R.id.main_new_task)
         privacy_button = findViewById(R.id.main_privacy)
+        month_and_year = findViewById(R.id.main_month)
+
+        calendar = Calendar.getInstance()
+
+        setDate()
 
         // Настройки / кнопка перехода в профиль
         settings_button.setOnClickListener {
             Toast.makeText(this, "Тут будет профиль", Toast.LENGTH_SHORT).show() //Удалить
-            // TODO жду старницы профиль: startActivity(Intent(this, Profile::class.java))
+            // TODO жду старницы профиль: startActivity(Intent(this, ProfileActivity::class.java))
         }
 
         // Переход в календарь
         date_number.setOnClickListener {
             Toast.makeText(this, "Тут будет календарь", Toast.LENGTH_SHORT).show() //Удалить
-            // TODO Ожидает страницы календарь: startActivity(Intent(this, Profile::class.java))
+            // TODO Ожидает страницы календарь: startActivity(Intent(this, CalendarActivity::class.java))
+        }
+
+        month_and_year.setOnClickListener {
+            Toast.makeText(this, "Тут будет календарь", Toast.LENGTH_SHORT).show() //Удалить
+            // TODO Ожидает страницы календарь: startActivity(Intent(this, CalendarActivity::class.java))
         }
 
         // Кнопка приватности
@@ -60,8 +81,32 @@ class MainScreen : AppCompatActivity() {
             setPrivacy()
         }
 
-        // TODO на новую задачу открываем окно для создания
-        // TODO для дня недели переход по неделе?
+        // на новую задачу открываем окно для создания
+        new_task.setOnClickListener {
+            Toast.makeText(this, "Тут будет cтраница новой задачи", Toast.LENGTH_SHORT).show() //Удалить
+            // TODO Ожидает страницы новая задача: startActivity(Intent(this, NewTaskActivity::class.java))
+        }
+
+        // Кнопка дня недели
+        day_week.setOnClickListener {
+            if (calendar.get(Calendar.DAY_OF_WEEK) == 1) {
+                addDays(-6)
+            }
+            else {
+                addDays(1)
+            }
+        }
+
+        day_week.setOnLongClickListener {
+            if (calendar.get(Calendar.DAY_OF_WEEK) == 2) {
+                addDays(6)
+            }
+            else {
+                addDays(-1)
+            }
+            true
+        }
+
         // TODO хз еще где, но смена приватности
     }
 
@@ -73,5 +118,21 @@ class MainScreen : AppCompatActivity() {
         privacy_button.setBackgroundColor(privacy_color[iterator_privacy].toInt())
         //privacy_button.setText(privacy_text[iterator_privacy])
         // TODO по менять сами задачи на нужные из бд
+    }
+
+    fun setDate() {
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        val month = calendar.get(Calendar.MONTH)
+        val year = calendar.get(Calendar.YEAR)
+        val weekday = calendar.get(Calendar.DAY_OF_WEEK)
+
+        date_number.text = day.toString()
+        month_and_year.text = "${monthes_text[month]} $year"
+        day_week.text = week_text[(weekday + 5) % 7]
+    }
+
+    fun addDays(delta: Int) {
+        calendar.add(Calendar.DAY_OF_MONTH, delta)
+        setDate()
     }
 }

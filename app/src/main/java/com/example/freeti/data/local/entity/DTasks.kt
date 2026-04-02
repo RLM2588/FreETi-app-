@@ -14,7 +14,7 @@ data class DTasks (
     val body: String?,
     val user_id: Int,
     val start: Long?, //timestamp
-    val end : Long?, //timestamp
+    val time_end : Long?, //timestamp
     val status: EStatus,// TODO сделать enum надо + остальные поля, остановился тут, узнать как сделать конвертер и тп
     val private: EPrivacy,
     val importance: Int,

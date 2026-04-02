@@ -8,19 +8,33 @@
     tools:context=".MainScreen">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="28dp"
         android:layout_height="wrap_content"
         android:text="..."
         android:textSize="25sp"
-        android:id="@id/main_settings"
+        android:id="@+id/main_settings"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="5dp"
+        android:layout_marginTop="17dp"
         android:background="#ABABAB"/>
 
     <TextView
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="март 2007"
+        android:textSize="20sp"
+        android:id="@+id/main_month"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@id/main_settings"
+        app:layout_constraintBottom_toTopOf="@+id/main_tasks_without_time"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="5dp"
+        android:background="#ABABAB"/>
+
+    <TextView
+        android:layout_width="28dp"
         android:layout_height="wrap_content"
         android:text="17"
         android:textSize="20sp"
@@ -32,9 +46,9 @@
         android:background="#ABABAB"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="28dp"
         android:layout_height="wrap_content"
-        android:text="Вт"
+        android:text="Пн"
         android:textSize="20sp"
         android:id="@+id/main_day_week"
         app:layout_constraintStart_toStartOf="parent"
