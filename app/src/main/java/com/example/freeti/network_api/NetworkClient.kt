@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 
 object NetworkClient {
     // Базовый URL сервера
-    private const val BASE_URL = "https://сервер.ru/api/"
+    private const val BASE_URL = "https://сервер.ru/api/" // TODO вставить в будщем свой сервер
 
     // Настройка OkHttpClient
     private fun provideOkHttpClient(): OkHttpClient {

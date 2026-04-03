@@ -29,7 +29,7 @@ import com.example.freeti.data.local.entity.DVoting
 
 @TypeConverters(Converters::class)
 abstract class AppDataBase : RoomDatabase(){
-    abstract fun dataBaseDao(): DataBaseDao
+    abstract fun tasksDao(): TasksDao
 
     companion object {
         @Volatile
