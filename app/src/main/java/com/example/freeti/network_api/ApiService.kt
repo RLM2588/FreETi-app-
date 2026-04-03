@@ -1,8 +1,11 @@
 package com.example.freeti.network_api
 
 import com.example.freeti.data.local.entity.DTasks
+import com.example.freeti.network_entity.AuthResponse
+import com.example.freeti.network_entity.LoginRequest
 import com.example.freeti.network_entity.NRepeatTasks
 import com.example.freeti.network_entity.NTasks
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -20,4 +23,8 @@ interface ApiService {
 
     @POST("tasks")
     suspend fun postTask(@Body tasks: DTasks) // TODO : DTasks??
+
+
+    @POST("auth/login")
+    suspend fun login(@Body request: LoginRequest): Response<AuthResponse>
 }
