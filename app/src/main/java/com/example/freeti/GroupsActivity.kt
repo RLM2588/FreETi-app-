@@ -27,7 +27,7 @@ class GroupsActivity : AppCompatActivity() {
         setupRecyclerView()
         setupSearch()
         setupFab()
-        loadSampleGroups()
+
     }
 
     private fun initViews() {
@@ -99,4 +99,5 @@ class GroupsActivity : AppCompatActivity() {
         filterGroups(searchEditText.text.toString())
         Toast.makeText(this, "Группа \"$name\" добавлена", Toast.LENGTH_SHORT).show()
     }
+}
 
