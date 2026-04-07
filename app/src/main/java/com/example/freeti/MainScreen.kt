@@ -12,22 +12,22 @@ import androidx.recyclerview.widget.RecyclerView
 import java.util.Calendar
 
 class MainScreen : AppCompatActivity() {
-    lateinit var settings_button: TextView // потом возможно button
-    lateinit var date_number: TextView
-    lateinit var day_week: TextView
-    lateinit var tasks_without_time: RecyclerView
-    lateinit var tasks_view: RecyclerView
-    lateinit var new_task: Button
-    lateinit var privacy_button: Button
-    lateinit var month_and_year: TextView
-    lateinit var calendar: Calendar
+    private lateinit var settings_button: TextView // потом возможно button
+    private lateinit var date_number: TextView
+    private lateinit var day_week: TextView
+    private lateinit var tasks_without_time: RecyclerView
+    private lateinit var tasks_view: RecyclerView
+    private lateinit var new_task: Button
+    private lateinit var privacy_button: Button
+    private lateinit var month_and_year: TextView
+    private lateinit var calendar: Calendar
 
-    // константы
-    val privacy_text: List<String> = listOf("Публичное", "Для друзей", "Приватное")
-    val week_text: List<String> = listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс")
-    val monthes_text: List<String> = listOf("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль",
+     // константы
+    private val privacy_text: List<String> = listOf("Публичное", "Для друзей", "Приватное")
+    private val week_text: List<String> = listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс")
+    private val monthes_text: List<String> = listOf("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль",
         "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь")
-    val privacy_color: List<Long> = listOf(0xFFAA5555, 0xFF5555AA, 0xFF55AA55)
+    private val privacy_color: List<Long> = listOf(0xFFAA5555, 0xFF5555AA, 0xFF55AA55)
 
     // итераторы
     var iterator_privacy = 2
