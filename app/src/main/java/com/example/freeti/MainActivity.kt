@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         main_screen = findViewById(R.id.main_screen_text_button)
         main_screen.setOnClickListener {
-            startActivity(Intent(this, MainScreen::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
         }
     }
 }

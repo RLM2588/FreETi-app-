@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">FreETi</string>
+    <string name="greetings_1">Добро пожаловать</string>
+    <string name="log_in_user_name">Имя пользователя</string>
+    <string name="log_in_password">Пароль</string>
+    <string name="log_in_button_1">Войти</string>
+    <string name="log_in_button_2">Зарегистрироваться</string>
+    <string name="no_acc">Нет аккаунта?</string>
+
 </resources>
