@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="👥 Группы"
+        android:textSize="24sp"
+        android:layout_marginBottom="32dp" />
+
+    <!-- По поводу групп, я хз. Я сделал что чисто к Егору переходит. Я так и не понял, что нужно сделать-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Страница, которую сделает Егор Ж"
+        android:textSize="18sp"
+        android:gravity="center" />
+
+    <Button
+        android:id="@+id/btnBackFromGroups"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="⬅ Назад" />
+
+</LinearLayout>

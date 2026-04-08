@@ -52,6 +52,11 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, "Вход выполнен успешно!", Toast.LENGTH_SHORT).show()
                 // Скрываем клавиатуру после входа
                 imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+
+                // 👇 ВОТ ЭТО ДОБАВЛЕНО - переход в профиль
+                val intent = Intent(this, ProfileActivity::class.java)
+                startActivity(intent)
+                finish() // Закрываем LoginActivity, чтобы нельзя было вернуться назад кнопкой "Назад"
             } else {
                 Toast.makeText(this, "Неверное имя пользователя или пароль", Toast.LENGTH_SHORT).show()
             }
