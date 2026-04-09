@@ -48,10 +48,13 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (username == "admin" && password == "123456") {
+            if (is_login_succes()) {
                 Toast.makeText(this, "Вход выполнен успешно!", Toast.LENGTH_SHORT).show()
                 // Скрываем клавиатуру после входа
                 imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+                //startActivity(Intent(this, MainScreen::class.java))
+
+                finish()
             } else {
                 Toast.makeText(this, "Неверное имя пользователя или пароль", Toast.LENGTH_SHORT).show()
             }
@@ -61,5 +64,10 @@ class LoginActivity : AppCompatActivity() {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    fun is_login_succes(): Boolean {
+        //TODO добавить проверку с сервера
+        return true
     }
 }

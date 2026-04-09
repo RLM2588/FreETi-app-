@@ -14,9 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="100dp"
-        android:fontFamily="@font/kanit_black"
         android:text="Создайте аккаунт"
-        android:textColor="@color/black"
         android:textSize="25sp" />
 
     <EditText
@@ -25,10 +23,8 @@
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:ems="10"
         android:hint="Введите логин"
-        android:inputType="text"
-        android:textColor="@color/black" />
+        android:inputType="text"/>
 
     <EditText
         android:id="@+id/user_email"
@@ -36,10 +32,8 @@
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:ems="10"
         android:hint="Введите почту"
-        android:inputType="textEmailAddress"
-        android:textColor="@color/black" />
+        android:inputType="textEmailAddress"/>
 
     <EditText
         android:id="@+id/user_code"
@@ -47,7 +41,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:ems="10"
         android:inputType="text"
         android:hint="Ввести код" />
 
@@ -65,10 +58,8 @@
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:ems="10"
         android:inputType="textPassword"
-        android:hint="Введите пароль"
-        android:textColor="@color/black" />
+        android:hint="Введите пароль"/>
 
     <EditText
         android:id="@+id/user_pass2"
@@ -76,10 +67,8 @@
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
-        android:ems="10"
         android:hint="Введите пароль еще раз"
-        android:inputType="textPassword"
-        android:textColor="@color/black" />
+        android:inputType="textPassword"/>
 
     <Button
         android:id="@+id/button_reg"
@@ -96,9 +85,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="40dp"
-        android:fontFamily="@font/kanit_extrabold"
         android:text="Авторизоваться"
-        android:textColor="@color/black"
         android:textSize="17sp" />
 
 </LinearLayout>
