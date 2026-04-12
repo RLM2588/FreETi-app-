@@ -54,6 +54,7 @@ class GroupsActivity : AppCompatActivity() {
         })
     }
 
+
     private fun filterGroups(query: String) {
         val filtered = if (query.isEmpty()) {
             allGroups
@@ -89,6 +90,7 @@ class GroupsActivity : AppCompatActivity() {
             .setNegativeButton("Отмена", null)
             .show()
     }
+
 
     private fun addGroup(name: String) {
         val newGroup = Group(
