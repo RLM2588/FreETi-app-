@@ -3,6 +3,8 @@
     <style name="Base.Theme.FreETi" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/light</item> <!--цвет кнопок-->
+        <item name="android:windowBackground">@color/dark</item>  <!-- Цвет фона -->
     </style>
 
     <style name="Theme.FreETi" parent="Base.Theme.FreETi" />

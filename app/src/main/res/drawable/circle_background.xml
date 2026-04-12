@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <!-- Заливка цветом -->
+    <solid android:color="@color/light" />
+
+    <!-- Обводка (рамка) -->
+    <stroke
+        android:width="2dp"
+        android:color="@color/light" />
+
+    <!-- Размер (адаптируется под контейнер) -->
+    <size
+        android:width="150dp"
+        android:height="150dp" />
+
+</shape>
