@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg">
@@ -17,8 +18,10 @@
         <ImageView
             android:id="@+id/imageViewTop"
             android:layout_width="match_parent"
-            android:layout_height="280dp"
-            android:scaleType="centerCrop"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:maxHeight="1000dp"
+            android:scaleType="fitCenter"
             app:srcCompat="@drawable/up_2_log" />
 
         <TextView
@@ -80,7 +83,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/log_in_user_name"
-                        android:textColor="#FF909faf"  android:textColorHint="#90909faf"
+                        android:textColor="@color/for_text"  android:textColorHint="@color/for_hint"
                         android:textSize="18sp"
                         android:inputType="text"
                         android:maxLines="1"
@@ -169,6 +172,7 @@
         android:layout_height="200dp"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:srcCompat="@drawable/up_img_1dowm" />
+        android:elevation="-10dp"
+        app:srcCompat="@drawable/down_img_1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

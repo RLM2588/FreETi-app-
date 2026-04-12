@@ -4,8 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var userLogin: EditText
@@ -19,7 +23,13 @@ class RegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContentView(R.layout.activity_register)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.register)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         userLogin = findViewById(R.id.user_login)
         userEmail = findViewById(R.id.user_email)
@@ -28,7 +38,7 @@ class RegisterActivity : AppCompatActivity() {
         userCode = findViewById(R.id.user_code)
         userPass = findViewById(R.id.user_pass)
         userPass2 = findViewById(R.id.user_pass2)
-        tolog = findViewById(R.id.tvToLogin)
+        tolog = findViewById(R.id.btnToLogin)
 
         tolog.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))

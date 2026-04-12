@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,86 +7,280 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white"
+    android:background="@color/bg"
     tools:context=".RegisterActivity">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="100dp"
-        android:text="Создайте аккаунт"
-        android:textSize="25sp" />
+            <ImageView
+                android:id="@+id/imageViewTop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:maxHeight="1000dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/up_2_log" />
 
-    <EditText
-        android:id="@+id/user_login"
-        android:layout_width="220dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:hint="Введите логин"
-        android:inputType="text"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-20dp"
+                android:fontFamily="@font/montserrat_extrabold"
+                android:letterSpacing="0.03"
+                android:text="@string/app_name"
+                android:textColor="@color/for_text"
+                android:textSize="68sp"
+                android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/user_email"
-        android:layout_width="220dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:hint="Введите почту"
-        android:inputType="textEmailAddress"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:text="@string/register_title"
+                android:textColor="@color/for_text"
+                android:textSize="18sp" />
 
-    <EditText
-        android:id="@+id/user_code"
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:inputType="text"
-        android:hint="Ввести код" />
 
-    <Button
-        android:id="@+id/send_code"
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:text="Отправить код" />
 
-    <EditText
-        android:id="@+id/user_pass"
-        android:layout_width="220dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:inputType="textPassword"
-        android:hint="Введите пароль"/>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/user_login_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="10dp"
+                app:hintEnabled="false"
+                app:boxStrokeWidth="1dp"
+                app:boxStrokeColor="@color/for_text"
+                app:boxStrokeWidthFocused="2dp"
+                app:boxBackgroundColor="@android:color/transparent"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
 
-    <EditText
-        android:id="@+id/user_pass2"
-        android:layout_width="220dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:hint="Введите пароль еще раз"
-        android:inputType="textPassword"/>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/user_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:paddingTop="22dp"
+                    android:paddingBottom="4dp"
+                    android:textSize="18sp"
+                    android:hint="@string/register_log_in"
+                    android:textColor="@color/for_text"
+                    android:textColorHint="@color/for_hint"
+                    android:inputType="text" />
 
-    <Button
-        android:id="@+id/button_reg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="20dp"
-        android:text="Регистрация"
-        android:textSize="20sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/user_email_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="10dp"
+                app:hintEnabled="false"
+                app:boxStrokeWidth="1dp"
+                app:boxStrokeColor="@color/for_text"
+                app:boxStrokeWidthFocused="2dp"
+                app:boxBackgroundColor="@android:color/transparent"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
 
-    <TextView
-        android:id="@+id/tvToLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="40dp"
-        android:text="Авторизоваться"
-        android:textSize="17sp" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/user_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:paddingTop="22dp"
+                    android:paddingBottom="4dp"
+                    android:textSize="18sp"
+                    android:hint="@string/register_mail"
+                    android:textColor="@color/for_text"
+                    android:textColorHint="@color/for_hint"
+                    android:inputType="textEmailAddress"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/user_code_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="10dp"
+                app:hintEnabled="false"
+                app:boxStrokeWidth="1dp"
+                app:boxStrokeColor="@color/for_text"
+                app:boxStrokeWidthFocused="2dp"
+                app:boxBackgroundColor="@android:color/transparent"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/user_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:paddingTop="22dp"
+                    android:paddingBottom="4dp"
+                    android:textSize="18sp"
+                    android:hint="@string/register_verify_code"
+                    android:textColor="@color/for_text"
+                    android:textColorHint="@color/for_hint"
+                    android:inputType="text"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/send_code"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="2dp"
+                android:text="@string/register_verify_code_send"
+                android:textColor="@color/for_text"
+                android:textSize="16sp"
+                android:letterSpacing="0.05"
+                android:textAllCaps="false" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/user_pass_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="0dp"
+                app:hintEnabled="false"
+                app:boxStrokeWidth="1dp"
+                app:boxStrokeColor="@color/for_text"
+                app:boxStrokeWidthFocused="2dp"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/for_text"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/user_pass"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:paddingTop="22dp"
+                    android:paddingBottom="4dp"
+                    android:textSize="18sp"
+                    android:hint="@string/register_password"
+                    android:textColor="@color/for_text"
+                    android:textColorHint="@color/for_hint"
+                    android:inputType="textPassword"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/user_pass2_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="10dp"
+                app:hintEnabled="false"
+                app:boxStrokeWidth="1dp"
+                app:boxStrokeColor="@color/for_text"
+                app:boxStrokeWidthFocused="2dp"
+                app:boxBackgroundColor="@android:color/transparent"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/for_text"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/user_pass2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:paddingTop="22dp"
+                    android:paddingBottom="4dp"
+                    android:textSize="18sp"
+                    android:hint="@string/register_password_repeat"
+                    android:textColor="@color/for_text"
+                    android:textColorHint="@color/for_hint"
+                    android:inputType="textPassword"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_reg"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/register_registrations"
+                android:textColor="@color/bg"
+                android:textSize="18sp"
+                android:textAllCaps="false"
+                app:cornerRadius="8dp"
+                android:backgroundTint="@color/for_text" />
+
+
+
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/register_sign_in_question"
+                    android:textColor="@color/for_hint"
+                    android:letterSpacing="0.03"
+                    android:textSize="18sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnToLogin"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="12dp"
+                    android:minHeight="22dp"
+                    android:padding="6dp"
+                    android:text="@string/register_sign_in"
+                    android:textColor="@color/for_text"
+                    android:textSize="18sp"
+                    android:letterSpacing="0.05"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+            <ImageView
+                android:id="@+id/imageViewBottom"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:srcCompat="@drawable/down_img_1" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
 
 </LinearLayout>
+
+

@@ -11,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
     private lateinit var main_screen : TextView
+    private lateinit var reg_butt : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,9 +23,12 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        Toast.makeText(this, "Сева нигга ", Toast.LENGTH_LONG).show()
-
         main_screen = findViewById(R.id.main_screen_text_button)
+        reg_butt = findViewById(R.id.register_text_button)
+        reg_butt.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
+
         main_screen.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
         }
