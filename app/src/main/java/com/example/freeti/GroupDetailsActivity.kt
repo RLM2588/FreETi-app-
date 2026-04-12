@@ -53,7 +53,8 @@ class GroupDetailsActivity : AppCompatActivity() {
 
     private fun setupListeners() {
         buttonCreateEvent.setOnClickListener {
-            Toast.makeText(this, "Создание события", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, CreateEventActivity::class.java)
+            startActivity(intent)
         }
     }
 }
