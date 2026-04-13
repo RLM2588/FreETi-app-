@@ -13,3 +13,4 @@
 .externalNativeBuild
 .cxx
 local.properties
+server_certificate.crt
