@@ -142,24 +142,36 @@
                 android:textAllCaps="false"
                 app:cornerRadius="8dp"
                 android:backgroundTint="@color/for_text" />
-            <TextView
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/no_acc"
-                android:textColor="@color/for_text"
-                android:textSize="14sp" />
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/tvRegister"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:text="@string/log_in_button_2"
-                android:textColor="@color/bg"
-                android:textSize="18sp"
-                android:textAllCaps="false"
-                app:cornerRadius="8dp"
-                android:backgroundTint="@color/for_text" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_acc"
+                    android:textColor="@color/for_hint"
+                    android:letterSpacing="0.03"
+                    android:textSize="18sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/tvRegister"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="12dp"
+                    android:minHeight="22dp"
+                    android:padding="6dp"
+                    android:text="@string/log_in_button_2"
+                    android:textColor="@color/for_text"
+                    android:textSize="18sp"
+                    android:letterSpacing="0.05"
+                    android:textAllCaps="false" />
+            </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
