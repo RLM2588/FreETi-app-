@@ -5,6 +5,8 @@ import com.example.freeti.network_entity.AuthResponse
 import com.example.freeti.network_entity.LoginRequest
 import com.example.freeti.network_entity.NRepeatTasks
 import com.example.freeti.network_entity.NTasks
+import com.example.freeti.network_entity.TestRequest
+import com.example.freeti.network_entity.TestResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -27,4 +29,7 @@ interface ApiService {
 
     @POST("auth/login")
     suspend fun login(@Body request: LoginRequest): Response<AuthResponse>
+
+    @POST("test/out_inp")
+    suspend fun test(@Body request: TestRequest): Response<TestResponse>
 }

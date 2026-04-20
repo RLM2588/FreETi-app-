@@ -17,4 +17,46 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="60dp"/>
+
+    <EditText
+        android:id="@+id/test_text_to_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:hint="text to send"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_screen_text_button"
+        android:layout_marginTop="60dp"/>
+
+    <Button
+        android:id="@+id/test_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="test send"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/test_text_to_send"
+        android:layout_marginTop="60dp"/>
+
+    <TextView
+        android:id="@+id/test_input_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Тут что-то будет"
+        app:layout_constraintTop_toBottomOf="@+id/test_send"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="60dp"/>
+
+    <Button
+        android:id="@+id/test_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="test input"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/test_input_text"
+        android:layout_marginTop="60dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
