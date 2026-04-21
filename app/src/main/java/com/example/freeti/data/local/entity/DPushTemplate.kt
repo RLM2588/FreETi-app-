@@ -6,6 +6,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "push_template")
 data class DPushTemplate (
     @PrimaryKey
-    val id: Int,
-    val before_how: Long
+    var id: Int,
+    var before_how: Long
 )

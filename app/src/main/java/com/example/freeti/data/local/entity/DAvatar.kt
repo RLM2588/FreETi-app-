@@ -6,6 +6,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "avatar")
 data class DAvatar (
     @PrimaryKey
-    val id: Int,
-    val webadress: String
+    var id: Int,
+    var webadress: String
 )
