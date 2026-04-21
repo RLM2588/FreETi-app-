@@ -12,6 +12,8 @@ class AppContainer(private val context: Context) {
     private val database = AppDataBase.getInstance(context)
 
     private val tasksDao = database.tasksDao()
+    private val myTasksDao = database.tasksDao()
+    private val syncMetaDao = database.syncMetadataDao()
 
     private val tokenManager = TokenManager(context)
 

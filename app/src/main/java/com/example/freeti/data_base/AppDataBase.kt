@@ -4,32 +4,32 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import com.example.freeti.data.local.entity.ConvertersEnum
 import com.example.freeti.data.local.entity.DAvatar
 import com.example.freeti.data.local.entity.DContacts
-import com.example.freeti.data.local.entity.DEditedTasks
 import com.example.freeti.data.local.entity.DGroupEvents
 import com.example.freeti.data.local.entity.DGroups
 import com.example.freeti.data.local.entity.DGroupsUsers
+import com.example.freeti.data.local.entity.DOtherTasks
 import com.example.freeti.data.local.entity.DPushTemplate
-import com.example.freeti.data.local.entity.DRepeatTasks
 import com.example.freeti.data.local.entity.DTasks
 import com.example.freeti.data.local.entity.DUsers
 import com.example.freeti.data.local.entity.DVote
 import com.example.freeti.data.local.entity.DVoting
+import com.example.freeti.sync.SyncMetadata
 
 @Database(
-    entities = [DAvatar::class, DContacts::class, DEditedTasks::class, DGroupEvents::class,
-        DGroups::class, DGroupsUsers::class, DPushTemplate::class, DRepeatTasks::class,
-        DTasks::class, DUsers::class, DVote::class, DVoting::class],
+    entities = [DAvatar::class, DContacts::class, DOtherTasks::class, DGroupEvents::class,
+        DGroups::class, DGroupsUsers::class, DPushTemplate::class,
+        DTasks::class, DUsers::class, DVote::class, DVoting::class, SyncMetadata::class],
     version = 1,
     exportSchema = true // уточнить что это, но знаю что это что-то для миграции
 )
 
-//@TypeConverters(ConvertersEnum::class)
+//@TypeConverters(ConvertersEnum::class) - отказ от конвертеров, не работают на Kotlin
 abstract class AppDataBase : RoomDatabase(){
     abstract fun tasksDao(): TasksDao
+    abstract fun myTasksDao(): MyTasksDao
+    abstract fun syncMetadataDao(): SyncMetadataDao
 
     companion object {
         @Volatile

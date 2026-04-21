@@ -9,7 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.datepicker.MaterialDatePicker
 import java.util.Calendar
+import java.util.TimeZone
 
 class MainScreen : AppCompatActivity() {
     private lateinit var settings_button: TextView // потом возможно button
@@ -71,7 +73,8 @@ class MainScreen : AppCompatActivity() {
         }
 
         month_and_year.setOnClickListener {
-            Toast.makeText(this, "Тут будет календарь", Toast.LENGTH_SHORT).show() //Удалить
+            showMaterialDatePicker()
+            //Toast.makeText(this, "Тут будет календарь", Toast.LENGTH_SHORT).show() //Удалить
             // TODO Ожидает страницы календарь: startActivity(Intent(this, CalendarActivity::class.java))
         }
 
@@ -110,7 +113,7 @@ class MainScreen : AppCompatActivity() {
         // TODO хз еще где, но смена приватности
     }
 
-    fun setPrivacy(k: Boolean = true) {
+    private fun setPrivacy(k: Boolean = true) {
         if (k) {
             iterator_privacy = (iterator_privacy + 1) % 3
             Toast.makeText(this, privacy_text[iterator_privacy], Toast.LENGTH_SHORT).show()
@@ -120,7 +123,7 @@ class MainScreen : AppCompatActivity() {
         // TODO по менять сами задачи на нужные из бд
     }
 
-    fun setDate() {
+    private fun setDate() {
         val day = calendar.get(Calendar.DAY_OF_MONTH)
         val month = calendar.get(Calendar.MONTH)
         val year = calendar.get(Calendar.YEAR)
@@ -131,8 +134,33 @@ class MainScreen : AppCompatActivity() {
         day_week.text = week_text[(weekday + 5) % 7]
     }
 
-    fun addDays(delta: Int) {
+    private fun addDays(delta: Int) {
         calendar.add(Calendar.DAY_OF_MONTH, delta)
         setDate()
+    }
+
+    private fun showMaterialDatePicker() {
+        // Создаем "строитель" диалога выбора даты
+        val datePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Выберите дату")               // Заголовок
+            .setSelection(MaterialDatePicker.todayInUtcMilliseconds()) // Текущая дата по умолчанию
+            .build()
+
+        // Устанавливаем слушатель нажатия кнопки "ОК"
+        datePicker.addOnPositiveButtonClickListener { selection ->
+            // selection — это выбранная дата в миллисекундах от начала эпохи (UTC)
+            val calendar1 = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+            calendar1.timeInMillis = selection
+
+            // Обновляем ваш календарь (переменную calendar)
+            this.calendar.timeInMillis = selection
+            // Обновляем текст на экране
+            setDate()
+            // Опционально: показываем Toast с выбранной датой
+            Toast.makeText(this, "Выбрано: ${date_number.text}.${month_and_year.text}", Toast.LENGTH_SHORT).show()
+        }
+
+        // Показываем диалог
+        datePicker.show(supportFragmentManager, "MATERIAL_DATE_PICKER_TAG")
     }
 }

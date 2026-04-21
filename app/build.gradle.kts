@@ -16,6 +16,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        //noinspection WrongGradleMethod
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
     }
 
     buildTypes {
@@ -41,6 +47,7 @@ android {
 }
 
 dependencies {
+    implementation("com.google.android.material:material:1.12.0") // для календаря
     // --- Retrofit ---
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     // Конвертер JSON (Gson) - чтобы Retrofit сам превращал JSON в объекты
