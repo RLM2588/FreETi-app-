@@ -3,6 +3,6 @@ import androidx.room.Entity
 
 @Entity(primaryKeys = ["task", "repeat_task"], tableName = "edited_tasks")
 data class DEditedTasks (
-    val task: String,
-    val repeat_task: String
+    var task: String,
+    var repeat_task: String
 ) // договориться об именах полей

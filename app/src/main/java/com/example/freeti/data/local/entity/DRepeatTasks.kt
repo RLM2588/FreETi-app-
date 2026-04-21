@@ -1,21 +1,21 @@
 package com.example.freeti.data.local.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.freeti.enum.EPrivacy
+import com.example.freeti.enum_classes.EPrivacy
 
 
 @Entity(tableName = "repeat_tasks")
 data class DRepeatTasks (
     @PrimaryKey
-    val id: String,
-    val title: String?,
-    val body: String?,
-    val user_id: Int,
-    val start: Long?, //timestamp
-    val end : Long?, //timestamp
-    val global_end : Long?, //timestamp
-    val repeat: Int,
-    val private: EPrivacy,
-    val push_template_id: Int?,
-    val created_at: Long //timestamp !!! надо ли возможность null? нужно ли вообще это поле локально?
+    var id: String,
+    var title: String,
+    var body: String,
+    var user_id: Int,
+    var start: Long, //timestamp
+    var end : Long, //timestamp
+    var global_end : Long, //timestamp
+    var repeat_time: Int,
+    var privacy: String,
+    var push_template_id: Int,
+    var created_at: Long //timestamp !!! надо ли возможность null? нужно ли вообще это поле локально?
 )
