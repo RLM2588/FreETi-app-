@@ -19,33 +19,33 @@ import com.example.freeti.data.local.entity.DUsers
 import com.example.freeti.data.local.entity.DVote
 import com.example.freeti.data.local.entity.DVoting
 
-//@Database(
-//    entities = [DAvatar::class, DContacts::class, DEditedTasks::class, DGroupEvents::class,
-//        DGroups::class, DGroupsUsers::class, DPushTemplate::class, DRepeatTasks::class,
-//        DTasks::class, DUsers::class, DVote::class, DVoting::class],
-//    version = 1,
-//    exportSchema = true // уточнить что это, но знаю что это что-то для миграции
-//)
+@Database(
+    entities = [DAvatar::class, DContacts::class, DEditedTasks::class, DGroupEvents::class,
+        DGroups::class, DGroupsUsers::class, DPushTemplate::class, DRepeatTasks::class,
+        DTasks::class, DUsers::class, DVote::class, DVoting::class],
+    version = 1,
+    exportSchema = true // уточнить что это, но знаю что это что-то для миграции
+)
 
 //@TypeConverters(ConvertersEnum::class)
-abstract class AppDataBase {//: RoomDatabase(){
-    //abstract fun tasksDao(): TasksDao
-//
-    //companion object {
-    //    @Volatile
-    //    private var INSTANCE: AppDataBase? = null
-//
-    //    fun getInstance(context: Context): AppDataBase {
-    //        return INSTANCE ?: synchronized(this) {
-    //            val instance = Room.databaseBuilder(
-    //                context.applicationContext,
-    //                AppDataBase::class.java,
-    //                "freeti_database"
-    //            )
-    //                .build()
-    //            INSTANCE = instance
-    //            instance
-    //        }
-    //    }
-    //}
+abstract class AppDataBase : RoomDatabase(){
+    abstract fun tasksDao(): TasksDao
+
+    companion object {
+        @Volatile
+        private var INSTANCE: AppDataBase? = null
+
+        fun getInstance(context: Context): AppDataBase {
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    AppDataBase::class.java,
+                    "freeti_database"
+                )
+                    .build()
+                INSTANCE = instance
+                instance
+            }
+        }
+    }
 }
