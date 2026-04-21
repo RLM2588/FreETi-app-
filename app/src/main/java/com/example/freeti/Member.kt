@@ -3,5 +3,5 @@ package com.example.freeti
 data class Member(
     val id: String = "",
     val name: String = "",
-    val role: String = "member"
+    var role: String = "member"
 )

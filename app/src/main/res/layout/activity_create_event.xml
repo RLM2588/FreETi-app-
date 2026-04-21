@@ -16,6 +16,14 @@
         android:gravity="center"
         android:layout_marginBottom="24dp" />
 
+
+    <Spinner
+        android:id="@+id/spinnerMode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp" />
+
+
     <EditText
         android:id="@+id/editTextEventName"
         android:layout_width="match_parent"
@@ -25,44 +33,101 @@
         android:background="@android:drawable/editbox_background"
         android:layout_marginBottom="12dp" />
 
-    <EditText
-        android:id="@+id/editTextDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Дата (ДД/ММ/ГГГГ)"
-        android:padding="12dp"
-        android:background="@android:drawable/editbox_background"
-        android:layout_marginBottom="12dp"
-        android:inputType="date" />
 
-    <EditText
-        android:id="@+id/editTextTime"
+    <LinearLayout
+        android:id="@+id/layoutCreateMode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Время (ЧЧ:ММ)"
-        android:padding="12dp"
-        android:background="@android:drawable/editbox_background"
-        android:layout_marginBottom="12dp"
-        android:inputType="time" />
+        android:orientation="vertical"
+        android:visibility="gone">
 
-    <EditText
-        android:id="@+id/editTextDuration"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Длительность (минуты)"
-        android:padding="12dp"
-        android:background="@android:drawable/editbox_background"
-        android:layout_marginBottom="12dp"
-        android:inputType="number" />
+        <EditText
+            android:id="@+id/editTextDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Дата (ДД/ММ/ГГГГ)"
+            android:padding="12dp"
+            android:background="@android:drawable/editbox_background"
+            android:layout_marginBottom="12dp"
+            android:inputType="date" />
 
-    <Spinner
-        android:id="@+id/spinnerPriority"
+        <EditText
+            android:id="@+id/editTextTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Время (ЧЧ:ММ)"
+            android:padding="12dp"
+            android:background="@android:drawable/editbox_background"
+            android:layout_marginBottom="12dp"
+            android:inputType="time" />
+
+        <EditText
+            android:id="@+id/editTextDuration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Длительность (минуты)"
+            android:padding="12dp"
+            android:background="@android:drawable/editbox_background"
+            android:layout_marginBottom="12dp"
+            android:inputType="number" />
+
+        <Spinner
+            android:id="@+id/spinnerPriority"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/layoutSearchMode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp" />
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <EditText
+            android:id="@+id/editTextDateStart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Дата начала (ДД/ММ/ГГГГ)"
+            android:padding="12dp"
+            android:background="@android:drawable/editbox_background"
+            android:layout_marginBottom="12dp"
+            android:inputType="date" />
+
+        <EditText
+            android:id="@+id/editTextDateEnd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Дата конца (ДД/ММ/ГГГГ)"
+            android:padding="12dp"
+            android:background="@android:drawable/editbox_background"
+            android:layout_marginBottom="12dp"
+            android:inputType="date" />
+
+        <EditText
+            android:id="@+id/editTextTimeStart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Время начала (ЧЧ:ММ)"
+            android:padding="12dp"
+            android:background="@android:drawable/editbox_background"
+            android:layout_marginBottom="12dp"
+            android:inputType="time" />
+
+        <EditText
+            android:id="@+id/editTextTimeEnd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Время конца (ЧЧ:ММ)"
+            android:padding="12dp"
+            android:background="@android:drawable/editbox_background"
+            android:layout_marginBottom="12dp"
+            android:inputType="time" />
+    </LinearLayout>
 
     <Button
-        android:id="@+id/buttonCreateEvent"
+        android:id="@+id/buttonSubmit"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:text="Создать событие"

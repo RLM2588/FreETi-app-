@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         main_screen = findViewById(R.id.registr_text)
         main_screen.setOnClickListener {
-            startActivity(Intent(this, RegistrActivity::class.java))
+            startActivity(Intent(this, GroupsActivity::class.java))
         }
     }
 }

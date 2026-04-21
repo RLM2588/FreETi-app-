@@ -34,5 +34,24 @@
             android:textColor="#666666" />
 
     </LinearLayout>
+    <Button
+        android:id="@+id/buttonPromote"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:text="повысить в рейтинге"
+        android:textSize="14sp"
+        android:backgroundTint="#4CAF50"
+        android:textColor="@android:color/white"
+        android:layout_marginEnd="8dp" />
+
+
+    <Button
+        android:id="@+id/buttonKick"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:text="выгнать"
+        android:textSize="14sp"
+        android:backgroundTint="#F44336"
+        android:textColor="@android:color/white" />
 
 </LinearLayout>

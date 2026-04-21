@@ -12,7 +12,7 @@ class RegistrActivity : AppCompatActivity() {
     lateinit var userEmail: EditText
     lateinit var userPass: EditText
     lateinit var button: Button
-    lateinit var buttonsendcode : Button
+    lateinit var buttonsendcode: Button
     lateinit var userCode: EditText
     lateinit var userPass2: EditText
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,45 +47,48 @@ class RegistrActivity : AppCompatActivity() {
                 Toast.makeText(this, "Неверный код подтверждения", Toast.LENGTH_LONG).show()
 
 
-            if(login == "" || email == "" || pass == "")
+                if (login == "" || email == "" || pass == "")
+                    Toast.makeText(this, "Не все поля заполнены", Toast.LENGTH_LONG).show()
+                else {
+                    //val user = User(login, email, pass)
+
+                    //val db = DbHelper(this, null)
+                    //db.addUser(user)
+                    Toast.makeText(this, "Пользователь $login добавлен", Toast.LENGTH_LONG).show()
+
+                    if (pass.length < 8) {
+                        userPass.error = "Пароль должен быть не менее 8 символов"
+                        Toast.makeText(
+                            this,
+                            "Пароль должен быть не менее 8 символов",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+
+                    userLogin.text.clear()
+                    userEmail.text.clear()
+                    userPass.text.clear()
+                }
+            }
+        }
+        fun sendCode() {
+            buttonsendcode.setOnClickListener {
+                sendCode()
+            }
+            val login = userLogin.text.toString().trim()
+            val email = userEmail.text.toString().trim()
+            val code = buttonsendcode.text.toString().trim()
+
+            if (login == "" || email == "") {//Отправка логина и почты и получение ответа от сервера
                 Toast.makeText(this, "Не все поля заполнены", Toast.LENGTH_LONG).show()
-            else {
-                //val user = User(login, email, pass)
+            } else {
 
-                //val db = DbHelper(this, null)
-                //db.addUser(user)
-                Toast.makeText(this, "Пользователь $login добавлен", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Код отправлен на $email", Toast.LENGTH_LONG).show()
+                buttonsendcode.isEnabled = true
+                buttonsendcode.requestFocus()
 
-            if(pass.length < 8) {
-                userPass.error = "Пароль должен быть не менее 8 символов"
-                Toast.makeText(this, "Пароль должен быть не менее 8 символов", Toast.LENGTH_LONG).show()
-            }
-
-                userLogin.text.clear()
-                userEmail.text.clear()
-                userPass.text.clear()
             }
         }
+
     }
-    fun sendCode() {
-        buttonsendcode.setOnClickListener {
-            sendCode()
-        }
-        val login = userLogin.text.toString().trim()
-        val email = userEmail.text.toString().trim()
-        val code = buttonsendcode.text.toString().trim()
-
-        if(login == "" || email == "") {//Отправка логина и почты и получение ответа от сервера
-            Toast.makeText(this, "Не все поля заполнены", Toast.LENGTH_LONG).show()
-        }
-
-        else {
-
-            Toast.makeText(this, "Код отправлен на $email", Toast.LENGTH_LONG).show()
-            buttonsendcode.isEnabled = true
-            buttonsendcode.requestFocus()
-
-        }
-    }
-
 }
