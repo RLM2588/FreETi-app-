@@ -9,9 +9,9 @@ import com.example.freeti.repository.TestRepository
 import com.example.freeti.tokens.TokenManager
 
 class AppContainer(private val context: Context) {
-    //private val database = AppDataBase.getInstance(context)
+    private val database = AppDataBase.getInstance(context)
 
-    //private val tasksDao = database.tasksDao()
+    private val tasksDao = database.tasksDao()
 
     private val tokenManager = TokenManager(context)
 

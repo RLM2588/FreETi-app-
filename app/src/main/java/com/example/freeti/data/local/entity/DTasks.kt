@@ -16,7 +16,7 @@ data class DTasks (
     var start: Long, //timestamp
     var time_end : Long, //timestamp
     var status: String,// TODO сделать enum надо + остальные поля, остановился тут, узнать как сделать конвертер и тп
-    var private: String,
+    var privacy: String,
     var importance: Int,
     var push_template_id: Int,
     @ColumnInfo(defaultValue = "FFFFFF")
