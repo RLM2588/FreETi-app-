@@ -3,22 +3,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp">
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editTextSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Введите начало никнейма"
+        android:padding="12dp"
+        android:background="@android:drawable/editbox_background" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/textViewHint"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="🔍 Поиск других людей"
-        android:textSize="24sp"
-        android:layout_marginBottom="32dp" />
+        android:text="Возможно, вы имели в виду:"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp"
+        android:visibility="gone" />
 
-    <!-- Здесь можно пользователей добавить ну или четотакео -->
-
-    <Button
-        android:id="@+id/btnBackFromSearch"
-        android:layout_width="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewResults"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="⬅ Назад" />
+        android:visibility="gone" />
 
 </LinearLayout>
