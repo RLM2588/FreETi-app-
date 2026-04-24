@@ -9,6 +9,6 @@ data class SyncMetadata(
     @PrimaryKey
     var yearMonth: String,          // "2025-03"
     var lastSyncAt: Long,           // timestamp последней синхронизации (мс)
-    var last_updated_at: Long,
-    var lastAccessAt: Long          // timestamp последнего открытия (мс)
+    var lastAccessAt: Long,          // timestamp последнего открытия (мс)
+    var last_updated_at: Long
 )

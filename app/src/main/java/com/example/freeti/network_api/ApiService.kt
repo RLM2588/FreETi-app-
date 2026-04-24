@@ -1,9 +1,7 @@
 package com.example.freeti.network_api
 
-import com.example.freeti.data.local.entity.DTasks
 import com.example.freeti.network_entity.AuthResponse
 import com.example.freeti.network_entity.LoginRequest
-import com.example.freeti.network_entity.NRepeatTasks
 import com.example.freeti.network_entity.NTasks
 import com.example.freeti.network_entity.TestRequest
 import com.example.freeti.network_entity.TestResponse
@@ -12,19 +10,20 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ApiService {
-    @GET("tasks/{id}")
-    suspend fun getTasks(@Path("id") user_id: Int): List<NTasks>
-
-    @GET("tasks/{id}/repeat") //TODO как лучше?
-    suspend fun getRepeatTasks(@Path("id") user_id: Int): List<NRepeatTasks>
-
-    @POST("tasks")
-    suspend fun postTasks(@Body tasks: List<DTasks>) // TODO :List<DTasks>??
-
-    @POST("tasks")
-    suspend fun postTask(@Body tasks: DTasks) // TODO : DTasks??
+    //@GET("tasks/{id}")
+    //suspend fun getTasks(@Path("id") user_id: Int): List<NTasks>
+//
+    //@GET("tasks/{id}/repeat") //TODO как лучше?
+    //suspend fun getRepeatTasks(@Path("id") user_id: Int): List<NRepeatTasks>
+//
+    //@POST("tasks")
+    //suspend fun postTasks(@Body tasks: List<DTasks>) // TODO :List<DTasks>??
+//
+    //@POST("tasks")
+    //suspend fun postTask(@Body tasks: DTasks) // TODO : DTasks??
 
 
     @POST("auth/login")
@@ -32,4 +31,16 @@ interface ApiService {
 
     @POST("test/out_inp")
     suspend fun test(@Body request: TestRequest): Response<TestResponse>
+
+    @GET("tasks")
+    suspend fun getTasksForMonth(
+        @Query("yearMonth") yearMonth: String
+    ): List<NTasks>
+
+    // Получить задачи за месяц, изменённые после указанного времени
+    @GET("tasks")
+    suspend fun getTasksForMonthSince(
+        @Query("yearMonth") yearMonth: String,
+        @Query("since") since: Long   // updated_at > since
+    ): List<NTasks>
 }

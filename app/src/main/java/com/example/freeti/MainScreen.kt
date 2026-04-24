@@ -1,5 +1,6 @@
 package com.example.freeti
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -8,8 +9,17 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
+import com.example.freeti.data.local.entity.DTasks
+import com.example.freeti.view_model.TasksViewModel
+import com.example.freeti.view_model.TasksViewModelFactory
+import com.example.freeti.views.TaskTimelineView
 import com.google.android.material.datepicker.MaterialDatePicker
+import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.TimeZone
 
@@ -18,14 +28,18 @@ class MainScreen : AppCompatActivity() {
     private lateinit var date_number: TextView
     private lateinit var day_week: TextView
     private lateinit var tasks_without_time: RecyclerView
-    private lateinit var tasks_view: RecyclerView
+    private lateinit var tasks_view: TaskTimelineView
     private lateinit var new_task: Button
     private lateinit var privacy_button: Button
+    private lateinit var main_refresh_button: Button
     private lateinit var month_and_year: TextView
     private lateinit var calendar: Calendar
 
+    private lateinit var viewModel: TasksViewModel
+
      // константы
     private val privacy_text: List<String> = listOf("Публичное", "Для друзей", "Приватное")
+    private val privacy_text_ENUM: List<String> = listOf("PUBLIC", "FRIENDS", "PRIVATE")
     private val week_text: List<String> = listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс")
     private val monthes_text: List<String> = listOf("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль",
         "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь")
@@ -47,6 +61,14 @@ class MainScreen : AppCompatActivity() {
         }
 
         // Инициализация
+        val app = application as MyApp
+        viewModel = ViewModelProvider(
+            this,
+            TasksViewModelFactory(app.appContainer.myTasksDao, app.appContainer.taskSyncManager)
+        ).get(TasksViewModel::class.java)
+
+        viewModel.addTestTasks()
+
         settings_button = findViewById(R.id.main_settings)
         date_number = findViewById(R.id.main_date)
         day_week = findViewById(R.id.main_day_week)
@@ -55,12 +77,42 @@ class MainScreen : AppCompatActivity() {
         new_task = findViewById(R.id.main_new_task)
         privacy_button = findViewById(R.id.main_privacy)
         month_and_year = findViewById(R.id.main_month)
+        main_refresh_button = findViewById(R.id.main_refresh)
 
         calendar = Calendar.getInstance()
 
         setDate()
 
-        // Настройки / кнопка перехода в профиль
+        viewModel.setDate(calendar.timeInMillis)
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.tasksForDay.collect { tasks ->
+                    updateTasksList(tasks)
+                }
+            }
+        }
+
+        // Настройки
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.tasksForDay.collect { tasks ->
+                    tasks_view.setTasks(tasks)
+                }
+            }
+        }
+        // клик
+        tasks_view.onTaskClickListener = object : TaskTimelineView.OnTaskClickListener {
+            override fun onTaskClick(task: DTasks) {
+                val intent = Intent(this@MainScreen, EditTaskActivity::class.java)
+                intent.putExtra("task_id", task.id)
+                startActivity(intent)
+            }
+        }
+
+        main_refresh_button.setOnClickListener {
+            viewModel.forceRefresh()
+        }
         settings_button.setOnClickListener {
             Toast.makeText(this, "Тут будет профиль", Toast.LENGTH_SHORT).show() //Удалить
             // TODO жду старницы профиль: startActivity(Intent(this, ProfileActivity::class.java))
@@ -113,14 +165,23 @@ class MainScreen : AppCompatActivity() {
         // TODO хз еще где, но смена приватности
     }
 
+    private fun updateTasksList(tasks: List<DTasks>) {
+        // обновляем адаптер
+    }
+
+    private fun getCurrentYearMonth(): String {
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        return "$year-$month"
+    }
+
     private fun setPrivacy(k: Boolean = true) {
         if (k) {
             iterator_privacy = (iterator_privacy + 1) % 3
             Toast.makeText(this, privacy_text[iterator_privacy], Toast.LENGTH_SHORT).show()
         }
         privacy_button.setBackgroundColor(privacy_color[iterator_privacy].toInt())
-        //privacy_button.setText(privacy_text[iterator_privacy])
-        // TODO по менять сами задачи на нужные из бд
+        viewModel.setPrivacy(privacy_text_ENUM[iterator_privacy])
     }
 
     private fun setDate() {
@@ -132,6 +193,7 @@ class MainScreen : AppCompatActivity() {
         date_number.text = day.toString()
         month_and_year.text = "${monthes_text[month]} $year"
         day_week.text = week_text[(weekday + 5) % 7]
+        viewModel.setDate(calendar.timeInMillis)
     }
 
     private fun addDays(delta: Int) {

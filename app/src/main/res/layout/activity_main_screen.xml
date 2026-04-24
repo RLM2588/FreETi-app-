@@ -33,6 +33,16 @@
         android:layout_marginBottom="5dp"
         android:background="#ABABAB"/>
 
+    <Button
+        android:id="@+id/main_refresh"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toEndOf="@+id/main_month"
+        android:layout_marginStart="40dp"/>
+        <!--android:background="#F00F00FF"/> хз пчему цвет не применяется -->
+
     <TextView
         android:layout_width="28dp"
         android:layout_height="wrap_content"
@@ -69,14 +79,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/main_settings"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/main_tasks"
+    <ScrollView
+        android:id="@+id/main_tasks2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_tasks_without_time"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintVertical_bias="0.0">
+
+        <HorizontalScrollView
+            android:id="@+id/timeline_horizontal_scroll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fillViewport="true">
+
+            <com.example.freeti.views.TaskTimelineView
+                android:id="@+id/main_tasks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </HorizontalScrollView>
+    </ScrollView>
 
     <Button
         android:id="@+id/main_new_task"
@@ -101,7 +126,7 @@
         android:textColor="#000000"
         android:textSize="11sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/main_tasks"
+        app:layout_constraintTop_toTopOf="@+id/main_tasks2"
         android:layout_marginEnd="5dp"
         android:layout_marginTop="30dp"/>
 
