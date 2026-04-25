@@ -18,4 +18,12 @@
     <string name="register_sign_in">Sign in</string>
     <string name="register_sign_in_question">Have an account?\u0020</string>
 
+    <string name="groups_name">My groups</string>
+    <string name="groups_search">Groups search</string>
+    <string name="groups_create_group">Create a new group</string>
+    <string name="groups_create_named">Name of group</string>
+    <string name="groups_create_cancel">Cancel</string>
+    <string name="groups_create_create">Create</string>
+
+
 </resources>

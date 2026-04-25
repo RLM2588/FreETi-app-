@@ -17,4 +17,11 @@
     <string name="register_sign_in">Войти</string>
     <string name="register_sign_in_question">Уже есть аккаунт?\u0020</string>
 
+    <string name="groups_name">Мои группы</string>
+    <string name="groups_search">Поиск групп</string>
+    <string name="groups_create_group">Создать новую группу</string>
+    <string name="groups_create_named">Название группы</string>
+    <string name="groups_create_cancel">Отмена</string>
+    <string name="groups_create_create">Создать</string>
+
 </resources>

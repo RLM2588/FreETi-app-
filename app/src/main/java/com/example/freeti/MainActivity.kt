@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         main_screen.setOnClickListener {
-            startActivity(Intent(this, LoginActivity::class.java))
+            startActivity(Intent(this, GroupsActivity::class.java))
         }
     }
 }

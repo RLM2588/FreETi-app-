@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/bg"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/groups_create_group"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/for_text"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/editTextGroupName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart ="0dp"
+        android:hint="@string/groups_create_named"
+        android:textColor="@color/for_text"
+        android:textColorHint="@color/for_hint"
+        android:inputType="text"
+        android:padding="12dp"
+        /> <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="end"
+    android:layout_marginTop="18dp">
+
+    <Button
+        android:id="@+id/btnCancel"
+        style="?attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/groups_create_cancel"
+        android:textColor="@color/for_text" />
+
+    <Button
+        android:id="@+id/btnConfirm"
+        style="?attr/borderlessButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/groups_create_create"
+        android:textColor="@color/for_text"
+        android:textStyle="bold" />
+</LinearLayout>
+
+</LinearLayout>
