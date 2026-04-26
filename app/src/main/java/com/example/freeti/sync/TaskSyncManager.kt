@@ -25,8 +25,14 @@ class TaskSyncManager(
                 apiService.getTasksForMonthSince(yearMonth, metadata.last_updated_at)
             }
 
-            val entities = tasksFromNetwork.map { it.toEntity() }
+            // Получаем список id локальных неотправленных задач
+            val unsyncedIds = myTaskDao.getUnsyncedTaskIds().toSet()
+            // Фильтруем сетевые задачи, оставляя только те, которые не конфликтуют
+            val safeTasks = tasksFromNetwork.filter { it.id !in unsyncedIds }
+
+            val entities = safeTasks.map { it.toEntity() }
             myTaskDao.insertAll(entities)
+
             val time_updated = myTaskDao.getMaxUpdatedAtForMonth(yearMonth)
             if (time_updated != null) {
                 metadataDao.upsert(
@@ -39,9 +45,7 @@ class TaskSyncManager(
                 )
             }
         } catch (e: Exception) {
-            // Просто логируем, не мешаем оффлайн-работе
             e.printStackTrace()
-            android.util.Log.w("TaskSyncManager", "Sync failed for $yearMonth: ${e.message}")
         }
     }
 
@@ -74,6 +78,28 @@ class TaskSyncManager(
         for (month in oldMonths) {
             myTaskDao.deleteTasksForMonth(month)
             metadataDao.deleteMetadata(month)
+        }
+    }
+
+    suspend fun syncPendingTasks() {
+        try {
+            val pendingTasks = myTaskDao.getUnsyncedTasks()
+            for (task in pendingTasks) {
+                // Преобразуем в NTasks (нужен метод toNetworkEntity или аналогичный)
+                val networkTask = task.toNetworkEntity()  // нужно реализовать
+                val response = apiService.updateTask(task.id, networkTask)
+                if (response.isSuccessful) {
+                    val updatedTask = response.body()
+                    if (updatedTask != null) {
+                        myTaskDao.markTaskSynced(task.id, updatedTask.updated_at)
+                    }
+                } else {
+                    // Ошибка – оставляем задачу в очереди
+                    continue
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 }

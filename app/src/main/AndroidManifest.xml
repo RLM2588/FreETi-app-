@@ -16,9 +16,8 @@
         android:theme="@style/Theme.FreETi"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".EditTaskActivity"
+            android:name=".NewTaskActivity"
             android:exported="false" />
-        <!-- потом убрать, временно разрешаем http для тестов -->
         <activity
             android:name=".MainScreen"
             android:exported="false" />

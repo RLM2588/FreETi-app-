@@ -20,7 +20,7 @@ class TaskTimelineView @JvmOverloads constructor(
     var columnWidth: Float = 360f   // фиксированная ширина одной колонки
 
     private val timePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.DKGRAY
+        color = Color.BLACK
         textSize = 28f
         textAlign = Paint.Align.RIGHT
     }
@@ -109,41 +109,15 @@ class TaskTimelineView @JvmOverloads constructor(
             for (task in columns[colIndex]) {
                 val startSlot = getSlotIndex(task.start)
                 val endSlot = getSlotIndex(task.time_end)
-                //// в onDraw, внутри цикла по задачам
-                //val verticalGap = 12f // отступ между разными задачами в одной колонке (px)
-//
-                //val taskTop = startSlot * rowHeight + verticalGap / 2
-                //val taskBottom = endSlot * rowHeight + rowHeight - verticalGap / 2
-//
-                //val padding = 12f
-                //val rect = RectF(xStart + padding, taskTop + padding,
-                //    xStart + columnWidth - padding, taskBottom - padding)
-//
-// цветной прямо//угольник
-                //val color = parseColor(task.colour)
-                //taskRectPaint.color = color
-                //canvas.drawRoundRect(rect, 12f, 12f, taskRectPaint)
-//
-// текст теперь //рисуем по центру вертикально
-                //val centerY = rect.centerY()
-//
-// название//
-                //val titleText = task.title
-                //val maxTextWidth = columnWidth - 2 * padding - 8f
-                //titlePaint.textSize = minOf(36f, maxTextWidth / titleText.length.coerceAtLeast(1) * 2.0f)
-                //canvas.drawText(titleText, rect.left + 4f, centerY - 8f, titlePaint)
-//
-// время//
-                //val timeText = "${formatTime(task.start)}–${formatTime(task.time_end)}"
-                //timePaintSm.textSize = minOf(28f, maxTextWidth / timeText.length.coerceAtLeast(1) * 1.8f)
-                //canvas.drawText(timeText, rect.left + 4f, centerY + timePaintSm.textSize - 4f, timePaintSm)
-                //
-                val taskTop = startSlot * rowHeight
-                val taskBottom = endSlot * rowHeight + rowHeight
+
+                val taskTop = startSlot * rowHeight + rowHeight / 2
+                val taskBottom = endSlot * rowHeight + rowHeight - rowHeight / 2
 
                 val padding = 12f
-                val rect = RectF(xStart + padding, taskTop + padding,
-                    xStart + columnWidth - padding, taskBottom - padding)
+                val rect = RectF(
+                    xStart + padding, taskTop + padding,
+                    xStart + columnWidth - padding, taskBottom - padding
+                )
 
                 val color = parseColor(task.colour)
                 taskRectPaint.color = color
@@ -151,15 +125,14 @@ class TaskTimelineView @JvmOverloads constructor(
 
                 // Название задачи
                 val titleText = task.title
-                // Подгоняем размер, если не влезает по ширине
                 val maxTextWidth = columnWidth - 2 * padding - 8f
                 titlePaint.textSize = minOf(36f, maxTextWidth / titleText.length.coerceAtLeast(1) * 2.0f)
                 canvas.drawText(titleText, rect.left + 4f, rect.top + titlePaint.textSize + 4f, titlePaint)
 
-                // Время задачи
+                // Время задачи – теперь чуть выше, чтобы не слипалось с соседней
                 val timeText = "${formatTime(task.start)}–${formatTime(task.time_end)}"
                 timePaintSm.textSize = minOf(28f, maxTextWidth / timeText.length.coerceAtLeast(1) * 1.8f)
-                canvas.drawText(timeText, rect.left + 4f, rect.bottom - 12f, timePaintSm)
+                canvas.drawText(timeText, rect.left + 4f, rect.bottom - 8f, timePaintSm)
             }
         }
     }

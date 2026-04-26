@@ -13,8 +13,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.freeti.data.local.entity.DTasks
+import com.example.freeti.adapters_pack.TasksNoTimeAdapter
 import com.example.freeti.view_model.TasksViewModel
 import com.example.freeti.view_model.TasksViewModelFactory
 import com.example.freeti.views.TaskTimelineView
@@ -47,6 +49,7 @@ class MainScreen : AppCompatActivity() {
 
     // итераторы
     var iterator_privacy = 2
+    private lateinit var app: MyApp
 
 
 
@@ -61,7 +64,7 @@ class MainScreen : AppCompatActivity() {
         }
 
         // Инициализация
-        val app = application as MyApp
+        app = application as MyApp
         viewModel = ViewModelProvider(
             this,
             TasksViewModelFactory(app.appContainer.myTasksDao, app.appContainer.taskSyncManager)
@@ -94,6 +97,28 @@ class MainScreen : AppCompatActivity() {
         }
 
         // Настройки
+        tasks_without_time.layoutManager = GridLayoutManager(this, 2)
+
+        val noTimeAdapter = TasksNoTimeAdapter(
+            onDoneClick = { task -> viewModel.markTaskDone(task) },
+            onLongClick = { task -> viewModel.moveTaskToNextDay(task) },
+            onEditClick = { task ->
+                val intent = Intent(this, NewTaskActivity::class.java)
+                intent.putExtra("task_id", task.id)
+                startActivity(intent)
+            }
+        )
+        tasks_without_time.adapter = noTimeAdapter
+
+        // Observe
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.tasksWithoutTime.collect { tasks ->
+                    noTimeAdapter.submitList(tasks)
+                }
+            }
+        }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.tasksForDay.collect { tasks ->
@@ -104,7 +129,7 @@ class MainScreen : AppCompatActivity() {
         // клик
         tasks_view.onTaskClickListener = object : TaskTimelineView.OnTaskClickListener {
             override fun onTaskClick(task: DTasks) {
-                val intent = Intent(this@MainScreen, EditTaskActivity::class.java)
+                val intent = Intent(this@MainScreen, NewTaskActivity::class.java)
                 intent.putExtra("task_id", task.id)
                 startActivity(intent)
             }
@@ -120,14 +145,11 @@ class MainScreen : AppCompatActivity() {
 
         // Переход в календарь
         date_number.setOnClickListener {
-            Toast.makeText(this, "Тут будет календарь", Toast.LENGTH_SHORT).show() //Удалить
-            // TODO Ожидает страницы календарь: startActivity(Intent(this, CalendarActivity::class.java))
+            showMaterialDatePicker()
         }
 
         month_and_year.setOnClickListener {
             showMaterialDatePicker()
-            //Toast.makeText(this, "Тут будет календарь", Toast.LENGTH_SHORT).show() //Удалить
-            // TODO Ожидает страницы календарь: startActivity(Intent(this, CalendarActivity::class.java))
         }
 
         // Кнопка приватности
@@ -138,8 +160,7 @@ class MainScreen : AppCompatActivity() {
 
         // на новую задачу открываем окно для создания
         new_task.setOnClickListener {
-            Toast.makeText(this, "Тут будет cтраница новой задачи", Toast.LENGTH_SHORT).show() //Удалить
-            // TODO Ожидает страницы новая задача: startActivity(Intent(this, NewTaskActivity::class.java))
+            startActivity(Intent(this, NewTaskActivity::class.java))
         }
 
         // Кнопка дня недели
@@ -161,8 +182,13 @@ class MainScreen : AppCompatActivity() {
             }
             true
         }
+    }
 
-        // TODO хз еще где, но смена приватности
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            app.appContainer.taskSyncManager.syncPendingTasks()
+        }
     }
 
     private fun updateTasksList(tasks: List<DTasks>) {

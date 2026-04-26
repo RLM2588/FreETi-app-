@@ -47,6 +47,25 @@ class TasksViewModel(
         initialValue = emptyList()
     )
 
+    val tasksWithoutTime: StateFlow<List<DTasks>> = combine(
+        _selectedDateMillis,
+        _privacy
+    ) { dateMillis, privacy ->
+        dateMillis to privacy
+    }.flatMapLatest { (dateMillis, privacy) ->
+        if (dateMillis == null) {
+            flowOf(emptyList())
+        } else {
+            val start = getStartOfDayUtc(dateMillis)
+            val end = getStartOfNextDayUtc(dateMillis)  // начало следующего дня
+            taskDao.observeTasksWithoutTime(start, end, privacy)
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = emptyList()
+    )
+
     fun setDate(millis: Long) {
         if (_selectedDateMillis.value == millis) return
         _selectedDateMillis.value = millis
@@ -67,6 +86,7 @@ class TasksViewModel(
         val yearMonth = convertMillisToYearMonth(currentDateMillis)
         viewModelScope.launch {
             syncManager.syncMonth(yearMonth, force = true)
+            syncManager.syncPendingTasks()   // заодно пробуем отправить накопившиеся изменения
         }
     }
 
@@ -99,6 +119,37 @@ class TasksViewModel(
         cal.set(Calendar.MILLISECOND, 0)
         cal.add(Calendar.DAY_OF_MONTH, 1)
         return cal.timeInMillis
+    }
+
+    fun markTaskDone(task: DTasks) {
+        viewModelScope.launch {
+            val newStatus = if (task.status == "ACTIVE") "DONE" else "ACTIVE"   // переключаем
+            val updatedTask = task.copy(
+                status = newStatus,
+                updated_at = System.currentTimeMillis(),
+                is_synced = false
+            )
+            taskDao.insertAll(listOf(updatedTask))
+        }
+    }
+
+    fun moveTaskToNextDay(task: DTasks) {
+        viewModelScope.launch {
+            val cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+            cal.timeInMillis = task.start
+            cal.add(Calendar.DAY_OF_MONTH, 1)
+            cal.set(Calendar.HOUR_OF_DAY, 0)
+            cal.set(Calendar.MINUTE, 0)
+            cal.set(Calendar.SECOND, 0)
+            cal.set(Calendar.MILLISECOND, 0)
+            val newStart = cal.timeInMillis
+            val updatedTask = task.copy(
+                start = newStart,
+                updated_at = System.currentTimeMillis(),
+                is_synced = false
+            )
+            taskDao.insertAll(listOf(updatedTask))
+        }
     }
 
     // в TasksViewModel.kt
@@ -197,6 +248,90 @@ class TasksViewModel(
                     body = "Сдать отчёт",
                     start = todayStart + 20 * 3600_000L,                // 16:00
                     time_end = todayStart + 21 * 3600_000L,              // 18:00
+                    status = "ACTIVE",
+                    privacy = "PUBLIC",
+                    importance = 3,
+                    push_template_id = 0,
+                    colour = "FFF3A1",          // розовый
+                    updated_at = System.currentTimeMillis(),
+                    is_delete = false
+                ),
+                DTasks(
+                    id = "test_31",
+                    title = "без времени",
+                    body = "Сдать отчёт",
+                    start = todayStart + 20 * 3600_000L,                // 16:00
+                    time_end = 0,              // 18:00
+                    status = "ACTIVE",
+                    privacy = "PUBLIC",
+                    importance = 3,
+                    push_template_id = 0,
+                    colour = "FFF3A1",          // розовый
+                    updated_at = System.currentTimeMillis(),
+                    is_delete = false
+                ),
+                DTasks(
+                    id = "test_32",
+                    title = "тестовая без",
+                    body = "Сдать отчёт",
+                    start = todayStart + 20 * 3600_000L,                // 16:00
+                    time_end = 0,              // 18:00
+                    status = "ACTIVE",
+                    privacy = "PUBLIC",
+                    importance = 3,
+                    push_template_id = 0,
+                    colour = "FFF3A1",          // розовый
+                    updated_at = System.currentTimeMillis(),
+                    is_delete = false
+                ),
+                DTasks(
+                    id = "test_311",
+                    title = "времени",
+                    body = "Сдать отчёт",
+                    start = todayStart + 12 * 3600_000L,                // 16:00
+                    time_end = 0,              // 18:00
+                    status = "ACTIVE",
+                    privacy = "PUBLIC",
+                    importance = 3,
+                    push_template_id = 0,
+                    colour = "FFF3A1",          // розовый
+                    updated_at = System.currentTimeMillis(),
+                    is_delete = false
+                ),
+                DTasks(
+                    id = "test_321",
+                    title = "хммммм",
+                    body = "Сдать отчёт",
+                    start = todayStart + 20 * 3600_000L,                // 16:00
+                    time_end = 0,              // 18:00
+                    status = "ACTIVE",
+                    privacy = "PUBLIC",
+                    importance = 3,
+                    push_template_id = 0,
+                    colour = "FFF3A1",          // розовый
+                    updated_at = System.currentTimeMillis(),
+                    is_delete = false
+                ),
+                DTasks(
+                    id = "test_312",
+                    title = "проект",
+                    body = "Сдать отчёт",
+                    start = todayStart + 21 * 3600_000L,                // 16:00
+                    time_end = 0,              // 18:00
+                    status = "ACTIVE",
+                    privacy = "PUBLIC",
+                    importance = 3,
+                    push_template_id = 0,
+                    colour = "FFF3A1",          // розовый
+                    updated_at = System.currentTimeMillis(),
+                    is_delete = false
+                ),
+                DTasks(
+                    id = "test_322",
+                    title = "матан",
+                    body = "Сдать отчёт",
+                    start = todayStart + 10 * 3600_000L,                // 16:00
+                    time_end = 0,              // 18:00
                     status = "ACTIVE",
                     privacy = "PUBLIC",
                     importance = 3,

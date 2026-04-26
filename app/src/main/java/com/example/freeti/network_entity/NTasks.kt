@@ -6,9 +6,9 @@ data class NTasks (
     val id: String,
     val title: String,
     val body: String,
-    val start: Long, //timestamp
-    val time_end : Long, //timestamp
-    val status: String,// TODO enum / string?
+    val start: Long,
+    val time_end : Long,
+    val status: String,
     val privacy: String,
     val importance: Int,
     val push_template_id: Int,
