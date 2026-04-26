@@ -2,10 +2,7 @@ package com.example.freeti.data.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.freeti.enum_classes.EPrivacy
-import com.example.freeti.enum_classes.EStatus
 import com.example.freeti.network_entity.NTasks
-
 
 @Entity(tableName = "tasks")
 data class DTasks (

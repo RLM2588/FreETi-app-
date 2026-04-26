@@ -23,7 +23,7 @@ class TasksViewModel(
     private val syncManager: TaskSyncManager
 ) : ViewModel() {
     private val _selectedDateMillis = MutableStateFlow<Long?>(null)
-    val selectedDateMillis: StateFlow<Long?> = _selectedDateMillis.asStateFlow()
+    //val selectedDateMillis: StateFlow<Long?> = _selectedDateMillis.asStateFlow()
 
     private val _privacy = MutableStateFlow("PUBLIC")
     val privacy: StateFlow<String> = _privacy.asStateFlow()

@@ -67,6 +67,7 @@ class TaskTimelineView @JvmOverloads constructor(
             cal.add(java.util.Calendar.DAY_OF_MONTH, 1)
             dayEndMillis = cal.timeInMillis
         }
+        dayEndMillis += 3600_000L
         columns = distributeTasks(tasks)
         val totalMinutes = TimeUnit.MILLISECONDS.toMinutes(dayEndMillis - dayStartMillis)
         totalRows = (totalMinutes / cellDurationMinutes).toInt()
@@ -89,7 +90,7 @@ class TaskTimelineView @JvmOverloads constructor(
 
         val width = width.toFloat()
         val height = height.toFloat()
-        val colCount = maxOf(1, columns.size)
+        //val colCount = maxOf(1, columns.size)
 
         // Горизонтальные линии сетки + время слева
         for (row in 0..totalRows) {
@@ -110,8 +111,8 @@ class TaskTimelineView @JvmOverloads constructor(
                 val startSlot = getSlotIndex(task.start)
                 val endSlot = getSlotIndex(task.time_end)
 
-                val taskTop = startSlot * rowHeight + rowHeight / 2
-                val taskBottom = endSlot * rowHeight + rowHeight - rowHeight / 2
+                val taskTop = startSlot * rowHeight + 3 * rowHeight / 8
+                val taskBottom = endSlot * rowHeight + rowHeight - 3 * rowHeight / 8
 
                 val padding = 12f
                 val rect = RectF(
@@ -183,7 +184,7 @@ class TaskTimelineView @JvmOverloads constructor(
         if (event.action == MotionEvent.ACTION_DOWN) {
             val x = event.x
             val y = event.y
-            val colCount = maxOf(1, columns.size)
+            //val colCount = maxOf(1, columns.size)
             for (colIndex in columns.indices) {
                 val xStart = timeColumnWidth + colIndex * columnWidth
                 if (x < xStart || x > xStart + columnWidth) continue

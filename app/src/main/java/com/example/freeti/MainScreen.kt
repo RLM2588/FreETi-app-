@@ -88,14 +88,6 @@ class MainScreen : AppCompatActivity() {
 
         viewModel.setDate(calendar.timeInMillis)
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.tasksForDay.collect { tasks ->
-                    updateTasksList(tasks)
-                }
-            }
-        }
-
         // Настройки
         tasks_without_time.layoutManager = GridLayoutManager(this, 2)
 
@@ -191,15 +183,11 @@ class MainScreen : AppCompatActivity() {
         }
     }
 
-    private fun updateTasksList(tasks: List<DTasks>) {
-        // обновляем адаптер
-    }
-
-    private fun getCurrentYearMonth(): String {
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        return "$year-$month"
-    }
+    //private fun getCurrentYearMonth(): String {
+    //    val year = calendar.get(Calendar.YEAR)
+    //    val month = calendar.get(Calendar.MONTH)
+    //    return "$year-$month"
+    //}
 
     private fun setPrivacy(k: Boolean = true) {
         if (k) {
