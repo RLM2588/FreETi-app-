@@ -25,5 +25,8 @@
     <string name="groups_create_cancel">Cancel</string>
     <string name="groups_create_create">Create</string>
 
+    <string name="search_search">Enter name</string>
+    <string name="search_hint">Did you mean?</string>
+
 
 </resources>

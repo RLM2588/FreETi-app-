@@ -24,4 +24,7 @@
     <string name="groups_create_cancel">Отмена</string>
     <string name="groups_create_create">Создать</string>
 
+    <string name="search_search">Введите имя</string>
+    <string name="search_hint">Возможно, вы имели в виду</string>
+
 </resources>
