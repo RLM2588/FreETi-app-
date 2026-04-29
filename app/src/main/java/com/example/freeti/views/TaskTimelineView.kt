@@ -3,10 +3,13 @@ package com.example.freeti.views
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import androidx.core.view.GestureDetectorCompat
 import com.example.freeti.data.local.entity.DTasks
 import java.util.concurrent.TimeUnit
+import kotlin.math.max
 
 class TaskTimelineView @JvmOverloads constructor(
     context: Context,
@@ -52,6 +55,32 @@ class TaskTimelineView @JvmOverloads constructor(
     }
     var onTaskClickListener: OnTaskClickListener? = null
 
+    private lateinit var gestureDetector: GestureDetectorCompat
+
+    init {
+        gestureDetector = GestureDetectorCompat(context, object : GestureDetector.SimpleOnGestureListener() {
+            override fun onLongPress(e: MotionEvent) {
+                val x = e.x
+                val y = e.y
+                val colCount = maxOf(1, columns.size)
+                for (colIndex in columns.indices) {
+                    val xStart = timeColumnWidth + colIndex * columnWidth
+                    if (x < xStart || x > xStart + columnWidth) continue
+                    for (task in columns[colIndex]) {
+                        val startSlot = getSlotIndex(task.start)
+                        val endSlot = getSlotIndex(task.time_end)
+                        val taskTop = startSlot * rowHeight
+                        val taskBottom = endSlot * rowHeight + rowHeight
+                        if (y >= taskTop && y <= taskBottom) {
+                            onTaskClickListener?.onTaskClick(task)
+                            return
+                        }
+                    }
+                }
+            }
+        })
+    }
+
     fun setTasks(newTasks: List<DTasks>) {
         tasks = newTasks
         if (tasks.isNotEmpty()) {
@@ -67,6 +96,7 @@ class TaskTimelineView @JvmOverloads constructor(
             cal.add(java.util.Calendar.DAY_OF_MONTH, 1)
             dayEndMillis = cal.timeInMillis
         }
+        dayStartMillis -= 3600_000L
         dayEndMillis += 3600_000L
         columns = distributeTasks(tasks)
         val totalMinutes = TimeUnit.MILLISECONDS.toMinutes(dayEndMillis - dayStartMillis)
@@ -79,8 +109,8 @@ class TaskTimelineView @JvmOverloads constructor(
         val colCount = maxOf(1, columns.size)
         val desiredWidth = timeColumnWidth + colCount * columnWidth
         val desiredHeight = rowHeight * totalRows
-        val width = resolveSize(desiredWidth.toInt(), widthMeasureSpec)
-        val height = resolveSize(desiredHeight.toInt(), heightMeasureSpec)
+        val width = resolveSize(max(widthMeasureSpec, desiredWidth.toInt()), widthMeasureSpec)
+        val height = resolveSize(max(heightMeasureSpec, desiredHeight.toInt()), heightMeasureSpec)
         setMeasuredDimension(width, height)
     }
 
@@ -113,6 +143,15 @@ class TaskTimelineView @JvmOverloads constructor(
 
                 val taskTop = startSlot * rowHeight + 3 * rowHeight / 8
                 val taskBottom = endSlot * rowHeight + rowHeight - 3 * rowHeight / 8
+
+                val padding2 = 6f
+                val rect2 = RectF(
+                    xStart + padding2, taskTop + padding2,
+                    xStart + columnWidth - padding2, taskBottom - padding2
+                )
+
+                taskRectPaint.color = Color.BLACK
+                canvas.drawRoundRect(rect2, 12f, 12f, taskRectPaint)
 
                 val padding = 12f
                 val rect = RectF(
@@ -181,25 +220,10 @@ class TaskTimelineView @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_DOWN) {
-            val x = event.x
-            val y = event.y
-            //val colCount = maxOf(1, columns.size)
-            for (colIndex in columns.indices) {
-                val xStart = timeColumnWidth + colIndex * columnWidth
-                if (x < xStart || x > xStart + columnWidth) continue
-                for (task in columns[colIndex]) {
-                    val startSlot = getSlotIndex(task.start)
-                    val endSlot = getSlotIndex(task.time_end)
-                    val taskTop = startSlot * rowHeight
-                    val taskBottom = endSlot * rowHeight + rowHeight
-                    if (y >= taskTop && y <= taskBottom) {
-                        onTaskClickListener?.onTaskClick(task)
-                        return true
-                    }
-                }
-            }
+        return if (gestureDetector.onTouchEvent(event)) {
+            true
+        } else {
+            super.onTouchEvent(event)
         }
-        return super.onTouchEvent(event)
     }
 }

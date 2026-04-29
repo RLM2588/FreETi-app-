@@ -131,13 +131,16 @@ class MainScreen : AppCompatActivity() {
             viewModel.forceRefresh()
         }
         settings_button.setOnClickListener {
-            Toast.makeText(this, "Тут будет профиль", Toast.LENGTH_SHORT).show() //Удалить
-            // TODO жду старницы профиль: startActivity(Intent(this, ProfileActivity::class.java))
+            startActivity(Intent(this, ProfileActivity::class.java))
         }
 
-        // Переход в календарь
         date_number.setOnClickListener {
-            showMaterialDatePicker()
+            addDays(1)
+        }
+
+        date_number.setOnLongClickListener {
+            addDays(-1)
+            true
         }
 
         month_and_year.setOnClickListener {
@@ -152,7 +155,9 @@ class MainScreen : AppCompatActivity() {
 
         // на новую задачу открываем окно для создания
         new_task.setOnClickListener {
-            startActivity(Intent(this, NewTaskActivity::class.java))
+            val intent = Intent(this@MainScreen, NewTaskActivity::class.java)
+            intent.putExtra("daytime", calendar.timeInMillis)
+            startActivity(intent)
         }
 
         // Кнопка дня недели

@@ -28,6 +28,7 @@ import java.util.UUID
 
 class NewTaskActivity : AppCompatActivity() {
     private var taskId: String? = null
+    private var day: Long? = null
     private var startTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
     private var endTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
     private lateinit var t_title: EditText
@@ -82,25 +83,29 @@ class NewTaskActivity : AppCompatActivity() {
         t_esc = findViewById(R.id.task_esc)
 
         taskId = intent.getStringExtra("task_id")
+        day = intent.getLongExtra("daytime", System.currentTimeMillis())
+
         if (taskId != null) {
             t_mode.text = "Редактирование"
             t_delete.visibility = View.VISIBLE
             loadTaskForEdit(taskId!!)
         } else {
-            val now = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-            startTime.apply {
-                timeInMillis = now.timeInMillis
-                set(Calendar.HOUR_OF_DAY, 9)
-                set(Calendar.MINUTE, 0)
-                set(Calendar.SECOND, 0)
-                set(Calendar.MILLISECOND, 0)
-            }
-            endTime.apply {
-                timeInMillis = now.timeInMillis
-                set(Calendar.HOUR_OF_DAY, 10)
-                set(Calendar.MINUTE, 0)
-                set(Calendar.SECOND, 0)
-                set(Calendar.MILLISECOND, 0)
+            day?.let { val dayLong = it
+                startTime.apply { timeInMillis = dayLong
+                    set(Calendar.HOUR_OF_DAY, 9)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                endTime.apply {
+                    timeInMillis = dayLong
+                    set(Calendar.HOUR_OF_DAY, 10)
+                    set(Calendar.MINUTE, 0)
+                    set(Calendar.SECOND, 0)
+                    set(Calendar.MILLISECOND, 0)
+                }
+                updateStartDisplay()
+                updateEndDisplay()
             }
         }
 
@@ -120,7 +125,7 @@ class NewTaskActivity : AppCompatActivity() {
             t_layout_end.visibility = if (isChecked) View.GONE else View.VISIBLE
         }
 
-        ArrayAdapter(this, android.R.layout.simple_spinner_item, arrayOf("1", "2", "3")).also {
+        ArrayAdapter(this, android.R.layout.simple_spinner_item, arrayOf("Простая", "Важная", "Крайне важная")).also {
             adapter -> adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             t_importance.adapter = adapter
         }
@@ -187,10 +192,11 @@ class NewTaskActivity : AppCompatActivity() {
         val body = t_body.text.toString().trim()
         val colorHex = t_et_color.text.toString().trim().ifBlank { "FFFFFF" }
         val isNoTime = t_no_time.isChecked
-        val importance = t_importance.selectedItem.toString().toInt()
+        val importance = t_importance.selectedItemPosition + 1
 
         val finalStart = startTime.timeInMillis
-        val finalEnd = if (isNoTime) 0L else endTime.timeInMillis
+        var finalEnd = if (isNoTime) 0L else endTime.timeInMillis
+        finalEnd = maxOf(finalStart + 600_000L, finalEnd) //TODO пока минимально - пол часа
 
         val task = DTasks(
             id = taskId ?: UUID.randomUUID().toString(), //TODO уточнить
@@ -211,6 +217,8 @@ class NewTaskActivity : AppCompatActivity() {
         lifecycleScope.launch {
             (application as MyApp).appContainer.myTasksDao.insertAll(listOf(task))
         }
+
+        Toast.makeText(this, "Задача сохранена", Toast.LENGTH_SHORT).show()
     }
 
     private fun setPrivacy(k: Boolean = true) {

@@ -3,6 +3,7 @@ package com.example.freeti.network_api
 import com.example.freeti.network_entity.AuthResponse
 import com.example.freeti.network_entity.LoginRequest
 import com.example.freeti.network_entity.NTasks
+import com.example.freeti.network_entity.NUsers
 import com.example.freeti.network_entity.TestRequest
 import com.example.freeti.network_entity.TestResponse
 import retrofit2.Response
@@ -50,4 +51,20 @@ interface ApiService {
         @Path("id") taskId: String,
         @Body task: NTasks
     ): Response<NTasks>
+
+    @PUT("users/{id}")
+    suspend fun updateUser(
+        @Path("id") userId: Int,
+        @Body user: NUsers
+    ): Response<NUsers>
+
+    @GET("users")
+    suspend fun getUser(
+        @Query("id") id: Int
+    ): Response<NUsers>
+
+    @GET("users")
+    suspend fun getUsersSearch(
+        @Query("username") username: String
+    ): List<NUsers>
 }

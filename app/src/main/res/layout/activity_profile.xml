@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <!-- ПУСТОЙ круг -->
+        <TextView
+            android:id="@+id/faceText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="" />
+
+        <!-- ПРОЗРАЧНАЯ строка с ВИДИМЫМ текстом -->
+        <EditText
+            android:id="@+id/faceInput"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLength="4"
+            android:rotation="90"
+            android:text=":)"
+            android:textSize="61sp"
+            android:translationX="20dp" />
+
+    </FrameLayout>
+    <!--
+    <ImageView
+        android:id="@+id/profileImage"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_launcher_foreground"
+        android:background="@android:drawable/dialog_holo_light_frame" />
+     -->
+
+
+    <!-- Строка для имени (всегда видна и редактируема) -->
+    <EditText
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:hint="Ваше имя"
+        android:maxLength="20"
+        android:paddingBottom="4dp"
+        android:singleLine="true"
+
+        android:text=""
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:cornerRadius="8dp"
+        android:textSize="16sp" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnContacts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:cornerRadius="8dp"
+        android:textSize="16sp" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnGroups"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:cornerRadius="8dp"
+        android:textSize="16sp" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:cornerRadius="8dp"
+        android:textSize="16sp" />
+
+
+</LinearLayout>
