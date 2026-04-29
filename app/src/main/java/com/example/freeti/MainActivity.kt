@@ -16,6 +16,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var search : TextView
 
+    private lateinit var screentusk : TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -29,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         main_screen = findViewById(R.id.main_screen_text_button)
         reg_butt = findViewById(R.id.register_text_button)
         search = findViewById(R.id.search_button)
+        screentusk = findViewById(R.id.tusk_screen_button)
         reg_butt.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
@@ -38,6 +41,9 @@ class MainActivity : AppCompatActivity() {
         }
         search.setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
+        }
+        screentusk.setOnClickListener {
+            startActivity(Intent(this, MainScreen::class.java))
         }
     }
 }

@@ -27,4 +27,11 @@
     <string name="search_search">Введите имя</string>
     <string name="search_hint">Возможно, вы имели в виду</string>
 
+    <string name="user_name">Имя пользователя</string>
+    <string name="search">Поиск людей</string>
+    <string name="contacts">Друзья/избранное</string>
+    <string name="groups">Группы</string>
+    <string name="back">⬅ Вернуться</string>
+
+
 </resources>

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NewTaskActivity"
+    android:background="@color/bg">
+
+    <TextView
+        android:id="@+id/task_title_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Новая задача"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/for_text"/>
+
+    <Button
+        android:id="@+id/task_privacy"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+
+        android:rotation="90"
+        android:text="_"
+        android:textColor="#000000"
+        android:textSize="11sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="5dp"
+        android:layout_marginTop="200dp"/>
+
+    <Button
+        android:id="@+id/task_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#88CC99"
+        android:text="Save"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"/>
+
+    <Button
+        android:id="@+id/task_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#88AA99"
+        android:text="ok"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/task_save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"/>
+
+    <Button
+        android:id="@+id/task_delete"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Удалить"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/task_layout_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/task_ok"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:layout_width="28dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/task_esc"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="17dp"
+        android:backgroundTint="#ABABAB"/>
+
+    <EditText
+        android:id="@+id/task_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:hint="title"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="160dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="70dp"/>
+
+    <EditText
+        android:id="@+id/task_body"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:hint="body"
+        app:layout_constraintTop_toBottomOf="@+id/task_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="70dp"/>
+
+    <Spinner
+        android:id="@+id/task_importance"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:hint="importance"
+        app:layout_constraintTop_toBottomOf="@+id/task_body"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="70dp"/>
+
+    <LinearLayout
+        android:id="@+id/task_layout_start"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/task_importance"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="70dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Начало:"
+            android:layout_gravity="center_vertical"/>
+
+        <Button
+            android:id="@+id/task_date_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#6677AA"
+            android:text="Дата" />
+
+        <Button
+            android:id="@+id/task_time_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#6677AA"
+            android:text="Время"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Дата и время конца (или без времени) -->
+    <LinearLayout
+        android:id="@+id/task_layout_end"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/task_layout_start"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="70dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Конец:   "
+            android:layout_gravity="center_vertical"/>
+
+        <Button
+            android:id="@+id/task_date_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#6677AA"
+            android:text="Дата" />
+
+        <Button
+            android:id="@+id/task_time_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#6677AA"
+            android:text="Время"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Чекбокс "Без времени" -->
+    <CheckBox
+        android:id="@+id/task_no_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Без точного времени"
+        app:layout_constraintTop_toBottomOf="@id/task_layout_end"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="70dp"/>
+
+    <!-- Выбор цвета -->
+    <LinearLayout
+        android:id="@+id/task_layout_color"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/task_no_time"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="70dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Цвет (#):"
+            android:layout_gravity="center_vertical"/>
+
+        <EditText
+            android:id="@+id/task_et_color"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="FFAA00"
+            android:maxLength="6"
+            android:inputType="text"
+            android:layout_marginStart="8dp" />
+
+        <View
+            android:id="@+id/task_view_color_preview"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:background="@android:color/darker_gray" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
