@@ -22,6 +22,13 @@ class TaskTimelineView @JvmOverloads constructor(
     var rowHeight: Float = 80f
     var columnWidth: Float = 360f   // фиксированная ширина одной колонки
 
+    private var downX = 0f
+    private var downY = 0f
+    private var downTime = 0L
+    private var isLongPressPossible = false
+    private val longPressThreshold = 500L // миллисекунды
+    private val touchSlop = 10f
+
     private val timePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.BLACK
         textSize = 28f
@@ -55,31 +62,6 @@ class TaskTimelineView @JvmOverloads constructor(
     }
     var onTaskClickListener: OnTaskClickListener? = null
 
-    private lateinit var gestureDetector: GestureDetectorCompat
-
-    init {
-        gestureDetector = GestureDetectorCompat(context, object : GestureDetector.SimpleOnGestureListener() {
-            override fun onLongPress(e: MotionEvent) {
-                val x = e.x
-                val y = e.y
-                val colCount = maxOf(1, columns.size)
-                for (colIndex in columns.indices) {
-                    val xStart = timeColumnWidth + colIndex * columnWidth
-                    if (x < xStart || x > xStart + columnWidth) continue
-                    for (task in columns[colIndex]) {
-                        val startSlot = getSlotIndex(task.start)
-                        val endSlot = getSlotIndex(task.time_end)
-                        val taskTop = startSlot * rowHeight
-                        val taskBottom = endSlot * rowHeight + rowHeight
-                        if (y >= taskTop && y <= taskBottom) {
-                            onTaskClickListener?.onTaskClick(task)
-                            return
-                        }
-                    }
-                }
-            }
-        })
-    }
 
     fun setTasks(newTasks: List<DTasks>) {
         tasks = newTasks
@@ -220,10 +202,51 @@ class TaskTimelineView @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        return if (gestureDetector.onTouchEvent(event)) {
-            true
-        } else {
-            super.onTouchEvent(event)
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                downX = event.x
+                downY = event.y
+                downTime = System.currentTimeMillis()
+                isLongPressPossible = true
+                return true
+            }
+            MotionEvent.ACTION_MOVE -> {
+                if (isLongPressPossible) {
+                    val dx = Math.abs(event.x - downX)
+                    val dy = Math.abs(event.y - downY)
+                    if (dx > touchSlop || dy > touchSlop) {
+                        isLongPressPossible = false
+                    }
+                }
+                return true
+            }
+            MotionEvent.ACTION_UP -> {
+                if (isLongPressPossible) {
+                    val elapsed = System.currentTimeMillis() - downTime
+                    if (elapsed >= longPressThreshold) {
+                        val x = downX
+                        val y = downY
+                        //val colCount = maxOf(1, columns.size)
+                        for (colIndex in columns.indices) {
+                            val xStart = timeColumnWidth + colIndex * columnWidth
+                            if (x < xStart || x > xStart + columnWidth) continue
+                            for (task in columns[colIndex]) {
+                                val startSlot = getSlotIndex(task.start)
+                                val endSlot = getSlotIndex(task.time_end)
+                                val taskTop = startSlot * rowHeight
+                                val taskBottom = endSlot * rowHeight + rowHeight
+                                if (y >= taskTop && y <= taskBottom) {
+                                    onTaskClickListener?.onTaskClick(task)
+                                    break
+                                }
+                            }
+                        }
+                    }
+                }
+                isLongPressPossible = false
+                return true
+            }
+            else -> return super.onTouchEvent(event)
         }
     }
 }

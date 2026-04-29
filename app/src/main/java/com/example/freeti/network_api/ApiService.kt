@@ -15,19 +15,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
-    //@GET("tasks/{id}")
-    //suspend fun getTasks(@Path("id") user_id: Int): List<NTasks>
-//
-    //@GET("tasks/{id}/repeat") //TODO как лучше?
-    //suspend fun getRepeatTasks(@Path("id") user_id: Int): List<NRepeatTasks>
-//
-    //@POST("tasks")
-    //suspend fun postTasks(@Body tasks: List<DTasks>) // TODO :List<DTasks>??
-//
-    //@POST("tasks")
-    //suspend fun postTask(@Body tasks: DTasks) // TODO : DTasks??
-
-
     @POST("auth/login")
     suspend fun login(@Body request: LoginRequest): Response<AuthResponse>
 
