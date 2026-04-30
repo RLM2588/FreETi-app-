@@ -37,8 +37,8 @@ class TasksViewModel(
         if (dateMillis == null) {
             flowOf(emptyList())
         } else {
-            val start = getStartOfDayUtc(dateMillis)
-            val end = getStartOfNextDayUtc(dateMillis)  // начало следующего дня
+            val start = getStartOfLocalDayUtc(dateMillis)
+            val end = getStartOfNextLocalDayUtc(dateMillis)  // начало следующего дня
             taskDao.getTasksForDateRange(start, end, privacy)
         }
     }.stateIn(
@@ -56,8 +56,8 @@ class TasksViewModel(
         if (dateMillis == null) {
             flowOf(emptyList())
         } else {
-            val start = getStartOfDayUtc(dateMillis)
-            val end = getStartOfNextDayUtc(dateMillis)  // начало следующего дня
+            val start = getStartOfLocalDayUtc(dateMillis)
+            val end = getStartOfNextLocalDayUtc(dateMillis)  // начало следующего дня
 
             taskDao.observeTasksWithoutTime(start, end)
         }
@@ -92,7 +92,7 @@ class TasksViewModel(
     }
 
     private fun convertMillisToYearMonth(millis: Long): String {
-        val calendar = Calendar.getInstance(TimeZone.getDefault())
+        val calendar = Calendar.getInstance()
         calendar.timeInMillis = millis
 
         val year = calendar.get(Calendar.YEAR)
@@ -101,18 +101,18 @@ class TasksViewModel(
         return String.format(Locale.US, "%04d-%02d", year, month)
     }
 
-    fun getStartOfDayUtc(millis: Long): Long {
-        val cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+    fun getStartOfLocalDayUtc(millis: Long): Long {
+        val cal = Calendar.getInstance()
         cal.timeInMillis = millis
-
         cal.set(Calendar.HOUR_OF_DAY, 0)
         cal.set(Calendar.MINUTE, 0)
         cal.set(Calendar.SECOND, 0)
         cal.set(Calendar.MILLISECOND, 0)
         return cal.timeInMillis
     }
-    fun getStartOfNextDayUtc(millis: Long): Long {
-        val cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+
+    fun getStartOfNextLocalDayUtc(millis: Long): Long {
+        val cal = Calendar.getInstance()
         cal.timeInMillis = millis
         cal.set(Calendar.HOUR_OF_DAY, 0)
         cal.set(Calendar.MINUTE, 0)
@@ -136,7 +136,7 @@ class TasksViewModel(
 
     fun moveTaskToNextDay(task: DTasks) {
         viewModelScope.launch {
-            val cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+            val cal = Calendar.getInstance()
             cal.timeInMillis = task.start
             cal.add(Calendar.DAY_OF_MONTH, 1)
             cal.set(Calendar.HOUR_OF_DAY, 0)
@@ -157,7 +157,7 @@ class TasksViewModel(
     fun addTestTasks() {
         viewModelScope.launch {
             // Убедимся, что у нас есть начало сегодняшнего дня (UTC)
-            val todayStart = getStartOfDayUtc(System.currentTimeMillis())
+            val todayStart = getStartOfLocalDayUtc(System.currentTimeMillis())
             val testTasks = listOf(
                 DTasks(
                     id = "test_1",

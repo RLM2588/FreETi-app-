@@ -29,8 +29,8 @@ import java.util.UUID
 class NewTaskActivity : AppCompatActivity() {
     private var taskId: String? = null
     private var day: Long? = null
-    private var startTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-    private var endTime = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+    private var startTime = Calendar.getInstance() // TimeZone.getTimeZone("UTC")
+    private var endTime = Calendar.getInstance()
     private lateinit var t_title: EditText
     private lateinit var t_body: EditText
     private lateinit var t_importance: Spinner

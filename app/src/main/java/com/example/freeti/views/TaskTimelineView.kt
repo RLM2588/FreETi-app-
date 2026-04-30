@@ -68,7 +68,7 @@ class TaskTimelineView @JvmOverloads constructor(
             dayStartMillis = tasks.minOf { it.start }
             dayEndMillis = tasks.maxOf { it.time_end }
         } else {
-            val cal = java.util.Calendar.getInstance(java.util.TimeZone.getTimeZone("UTC"))
+            val cal = java.util.Calendar.getInstance()
             cal.set(java.util.Calendar.HOUR_OF_DAY, 0)
             cal.set(java.util.Calendar.MINUTE, 0)
             cal.set(java.util.Calendar.SECOND, 0)
@@ -168,7 +168,7 @@ class TaskTimelineView @JvmOverloads constructor(
     }
 
     private fun formatTime(millis: Long): String {
-        val cal = java.util.Calendar.getInstance(java.util.TimeZone.getTimeZone("UTC"))
+        val cal = java.util.Calendar.getInstance()   // локальный
         cal.timeInMillis = millis
         return String.format("%02d:%02d", cal.get(java.util.Calendar.HOUR_OF_DAY), cal.get(java.util.Calendar.MINUTE))
     }
