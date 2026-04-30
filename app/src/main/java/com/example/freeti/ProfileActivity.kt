@@ -57,7 +57,7 @@ class ProfileActivity : AppCompatActivity() {
         //}
 
         btnSetting.setOnClickListener {
-            //
+            startActivity(Intent(this, SettingsActivity::class.java))
         }
 
         // Кнопка назад → вернуться на MainActivity

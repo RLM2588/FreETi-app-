@@ -1,6 +1,7 @@
 package com.example.freeti
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var test_out_button : Button
     private lateinit var test_inp : TextView
     private lateinit var test_inp_button : Button
+    private lateinit var pref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,12 +32,16 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        pref = getSharedPreferences("settings", MODE_PRIVATE)
+        if(pref.getBoolean("AutoToMain", false)) {startActivity(Intent(this, MainScreen::class.java))}
 
         main_screen = findViewById(R.id.main_screen_text_button)
         test_out = findViewById(R.id.test_text_to_send)
         test_out_button = findViewById(R.id.test_send)
         test_inp = findViewById(R.id.test_input_text)
         test_inp_button = findViewById(R.id.test_input)
+
+        //AutoToMain
 
         test_out_button.setOnClickListener {
             GlobalScope.launch(Dispatchers.Main) {

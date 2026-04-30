@@ -71,10 +71,11 @@ class MainScreen : AppCompatActivity() {
             this,
             TasksViewModelFactory(app.appContainer.myTasksDao, app.appContainer.taskSyncManager)
         ).get(TasksViewModel::class.java)
+        pref = getSharedPreferences("settings", MODE_PRIVATE)
 
-        viewModel.addTestTasks()
-
-        pref = getSharedPreferences("privacy", MODE_PRIVATE)
+        if(!pref.getBoolean("noTestAdd", false)) {
+            viewModel.addTestTasks()
+        }
 
         settings_button = findViewById(R.id.main_settings)
         date_number = findViewById(R.id.main_date)

@@ -95,6 +95,7 @@ class NewTaskActivity : AppCompatActivity() {
             t_delete.visibility = View.VISIBLE
             loadTaskForEdit(taskId!!)
         } else {
+            setPrivacy(false)
             day?.let { val dayLong = it
                 startTime.apply { timeInMillis = dayLong
                     set(Calendar.HOUR_OF_DAY, 9)
@@ -114,7 +115,6 @@ class NewTaskActivity : AppCompatActivity() {
             }
         }
 
-        setPrivacy(false)
         t_privacy.setOnClickListener {
             setPrivacy()
         }
@@ -277,6 +277,7 @@ class NewTaskActivity : AppCompatActivity() {
                     endTime.timeInMillis = task.time_end
                     t_no_time.isChecked = false
                 }
+                setPrivacy(false)
                 updateStartDisplay()
                 updateEndDisplay()
             } else {
