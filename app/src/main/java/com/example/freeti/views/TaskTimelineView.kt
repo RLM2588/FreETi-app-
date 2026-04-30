@@ -3,10 +3,10 @@ package com.example.freeti.views
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
-import androidx.core.view.GestureDetectorCompat
+import androidx.core.content.ContextCompat
+import com.example.freeti.R
 import com.example.freeti.data.local.entity.DTasks
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
@@ -30,13 +30,13 @@ class TaskTimelineView @JvmOverloads constructor(
     private val touchSlop = 10f
 
     private val timePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.BLACK
-        textSize = 28f
+        color = ContextCompat.getColor(context, R.color.for_text)
+        textSize = 36f
         textAlign = Paint.Align.RIGHT
     }
     private val gridPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.LTGRAY
-        strokeWidth = 2f
+        color = ContextCompat.getColor(context, R.color.for_text)
+        strokeWidth = 1.5f
     }
     private val taskRectPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
@@ -47,8 +47,8 @@ class TaskTimelineView @JvmOverloads constructor(
         isFakeBoldText = true
     }
     private val timePaintSm = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.DKGRAY
-        textSize = 26f
+        color = Color.BLACK
+        textSize = 32f
     }
 
     private var tasks: List<DTasks> = emptyList()
@@ -61,7 +61,6 @@ class TaskTimelineView @JvmOverloads constructor(
         fun onTaskClick(task: DTasks)
     }
     var onTaskClickListener: OnTaskClickListener? = null
-
 
     fun setTasks(newTasks: List<DTasks>) {
         tasks = newTasks
@@ -110,7 +109,7 @@ class TaskTimelineView @JvmOverloads constructor(
             canvas.drawLine(timeColumnWidth, y, width, y, gridPaint)
             if (row < totalRows) {
                 val slotMillis = dayStartMillis + TimeUnit.MINUTES.toMillis((row * cellDurationMinutes).toLong())
-                canvas.drawText(formatTime(slotMillis), timeColumnWidth - 16f, y + rowHeight - 12f, timePaint)
+                canvas.drawText(formatTime(slotMillis), timeColumnWidth - 16f, y - 2f, timePaint)
             }
         }
         // Вертикальная линия между временем и задачами
@@ -119,12 +118,21 @@ class TaskTimelineView @JvmOverloads constructor(
         // Рисуем задачи
         for (colIndex in columns.indices) {
             val xStart = timeColumnWidth + colIndex * columnWidth
-            for (task in columns[colIndex]) {
-                val startSlot = getSlotIndex(task.start)
-                val endSlot = getSlotIndex(task.time_end)
+            val column = columns[colIndex]
+            for (inx in 0..<(column).size) {
+                val task = column[inx]
 
-                val taskTop = startSlot * rowHeight + 3 * rowHeight / 8
-                val taskBottom = endSlot * rowHeight + rowHeight - 3 * rowHeight / 8
+                val startSlot = getSlotIndexSt(task.start)
+                val endSlot = getSlotIndexFn(task.time_end)
+                var taskTop = startSlot * rowHeight
+                var taskBottom = endSlot * rowHeight + rowHeight
+
+                if (!(inx == 0 || getSlotIndexSt(column[inx].start) != getSlotIndexFn(column[inx - 1].time_end))) {
+                    taskTop += 3 * rowHeight / 8
+                }
+                if (!(inx == column.size - 1 || getSlotIndexSt(column[inx+1].start) != getSlotIndexFn(column[inx].time_end))) {
+                    taskBottom -= 3 * rowHeight / 8
+                }
 
                 val padding2 = 6f
                 val rect2 = RectF(
@@ -148,7 +156,7 @@ class TaskTimelineView @JvmOverloads constructor(
                 // Название задачи
                 val titleText = task.title
                 val maxTextWidth = columnWidth - 2 * padding - 8f
-                titlePaint.textSize = minOf(36f, maxTextWidth / titleText.length.coerceAtLeast(1) * 2.0f)
+                titlePaint.textSize = minOf(titlePaint.textSize, maxTextWidth / titleText.length.coerceAtLeast(1) * 2.0f)
                 canvas.drawText(titleText, rect.left + 4f, rect.top + titlePaint.textSize + 4f, titlePaint)
 
                 // Время задачи – теперь чуть выше, чтобы не слипалось с соседней
@@ -165,8 +173,13 @@ class TaskTimelineView @JvmOverloads constructor(
         return String.format("%02d:%02d", cal.get(java.util.Calendar.HOUR_OF_DAY), cal.get(java.util.Calendar.MINUTE))
     }
 
-    private fun getSlotIndex(timestamp: Long): Int {
+    private fun getSlotIndexSt(timestamp: Long): Int {
         val diffMinutes = TimeUnit.MILLISECONDS.toMinutes(timestamp - dayStartMillis)
+        return (diffMinutes / cellDurationMinutes).toInt()
+    }
+
+    private fun getSlotIndexFn(timestamp: Long): Int {
+        val diffMinutes = TimeUnit.MILLISECONDS.toMinutes(timestamp - dayStartMillis) - 1
         return (diffMinutes / cellDurationMinutes).toInt()
     }
 
@@ -231,8 +244,8 @@ class TaskTimelineView @JvmOverloads constructor(
                             val xStart = timeColumnWidth + colIndex * columnWidth
                             if (x < xStart || x > xStart + columnWidth) continue
                             for (task in columns[colIndex]) {
-                                val startSlot = getSlotIndex(task.start)
-                                val endSlot = getSlotIndex(task.time_end)
+                                val startSlot = getSlotIndexSt(task.start)
+                                val endSlot = getSlotIndexFn(task.time_end)
                                 val taskTop = startSlot * rowHeight
                                 val taskBottom = endSlot * rowHeight + rowHeight
                                 if (y >= taskTop && y <= taskBottom) {

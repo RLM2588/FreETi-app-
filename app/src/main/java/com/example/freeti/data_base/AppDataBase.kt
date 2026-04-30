@@ -21,7 +21,7 @@ import com.example.freeti.sync.SyncMetadata
     entities = [DAvatar::class, DContacts::class, DOtherTasks::class, DGroupEvents::class,
         DGroups::class, DGroupsUsers::class, DPushTemplate::class,
         DTasks::class, DUsers::class, DVote::class, DVoting::class, SyncMetadata::class],
-    version = 2,
+    version = 3,
     exportSchema = true // уточнить что это, но знаю что это что-то для миграции
 )
 

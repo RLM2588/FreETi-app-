@@ -26,6 +26,7 @@ class TokenManager(context: Context) {
         private const val KEY_ACCESS_TOKEN = "access_token"
         private const val KEY_REFRESH_TOKEN = "refresh_token"
         private const val KEY_USER_ID = "user_id"
+        private const val KEY_LOGIN = "user_login"
         private const val KEY_EXPIRES_IN = "expires_in"      // в секундах
         private const val KEY_TOKEN_ISSUED_AT = "issued_at"  // момент получения токена (мс)
     }
@@ -36,6 +37,7 @@ class TokenManager(context: Context) {
             .putString(KEY_ACCESS_TOKEN, authResponse.accessToken)
             .putString(KEY_REFRESH_TOKEN, authResponse.refreshToken)
             .putInt(KEY_USER_ID, authResponse.user_id?: 0)
+            .putString(KEY_LOGIN, authResponse.user_login)
             .putLong(KEY_EXPIRES_IN, authResponse.expires_in ?: 0L)
             .putLong(KEY_TOKEN_ISSUED_AT, now)
             .apply()
@@ -50,11 +52,13 @@ class TokenManager(context: Context) {
     fun getAccessToken(): String? = prefs.getString(KEY_ACCESS_TOKEN, null)
     fun getRefreshToken(): String? = prefs.getString(KEY_REFRESH_TOKEN, null)
     fun getUserId(): Int = prefs.getInt(KEY_USER_ID, 0)
+    fun getLogin(): String = prefs.getString(KEY_LOGIN, "uniqlogin").toString()
     fun getExpiresIn(): Long = prefs.getLong(KEY_EXPIRES_IN, 0L)
     fun getTokenIssuedAt(): Long = prefs.getLong(KEY_TOKEN_ISSUED_AT, 0L)
+
     fun getAuthResponse() : AuthResponse {
         return AuthResponse(getAccessToken(),
-            getRefreshToken(), getExpiresIn(),getUserId())
+            getRefreshToken(), getLogin(), getExpiresIn(),getUserId())
     }
 
     fun isAccessTokenExpired(): Boolean {

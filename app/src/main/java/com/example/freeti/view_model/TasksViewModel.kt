@@ -58,7 +58,8 @@ class TasksViewModel(
         } else {
             val start = getStartOfDayUtc(dateMillis)
             val end = getStartOfNextDayUtc(dateMillis)  // начало следующего дня
-            taskDao.observeTasksWithoutTime(start, end, privacy)
+
+            taskDao.observeTasksWithoutTime(start, end)
         }
     }.stateIn(
         scope = viewModelScope,

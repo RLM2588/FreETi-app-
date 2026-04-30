@@ -38,10 +38,12 @@ class NewTaskActivity : AppCompatActivity() {
     private lateinit var t_mode: TextView
     private lateinit var t_et_color: EditText
     private lateinit var t_no_time: CheckBox
+    private lateinit var t_is_done: CheckBox
     private lateinit var t_date_start: Button
     private lateinit var t_time_start: Button
     private lateinit var t_date_end: Button
     private lateinit var t_time_end: Button
+    private lateinit var t_move: Button
     private lateinit var t_layout_end: LinearLayout
     private lateinit var t_view_color_preview: View
     private lateinit var t_ok: Button
@@ -54,6 +56,7 @@ class NewTaskActivity : AppCompatActivity() {
     private val privacy_color: List<Long> = listOf(0xFFAA5555, 0xFF5555AA, 0xFF55AA55)
 
     var iterator_privacy = 2
+    var is_plus_day = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,6 +84,8 @@ class NewTaskActivity : AppCompatActivity() {
         t_save = findViewById(R.id.task_save)
         t_privacy = findViewById(R.id.task_privacy)
         t_esc = findViewById(R.id.task_esc)
+        t_is_done = findViewById(R.id.task_is_done)
+        t_move = findViewById(R.id.task_move)
 
         taskId = intent.getStringExtra("task_id")
         day = intent.getLongExtra("daytime", System.currentTimeMillis())
@@ -123,6 +128,24 @@ class NewTaskActivity : AppCompatActivity() {
 
         t_no_time.setOnCheckedChangeListener { _, isChecked ->
             t_layout_end.visibility = if (isChecked) View.GONE else View.VISIBLE
+        }
+
+        t_move.setOnClickListener {
+            if (is_plus_day) {
+                startTime.apply { add(Calendar.DAY_OF_MONTH, 1)  }
+                endTime.apply { add(Calendar.DAY_OF_MONTH, 1)  }
+            } else {
+                startTime.apply { add(Calendar.DAY_OF_MONTH, -1)  }
+                endTime.apply { add(Calendar.DAY_OF_MONTH, -1)  }
+            }
+            updateStartDisplay()
+            updateEndDisplay()
+        }
+
+        t_move.setOnLongClickListener {
+            is_plus_day = !is_plus_day
+            t_move.text = if(is_plus_day) "+day" else "-day"
+            true
         }
 
         ArrayAdapter(this, android.R.layout.simple_spinner_item, arrayOf("Простая", "Важная", "Крайне важная")).also {
@@ -195,8 +218,7 @@ class NewTaskActivity : AppCompatActivity() {
         val importance = t_importance.selectedItemPosition + 1
 
         val finalStart = startTime.timeInMillis
-        var finalEnd = if (isNoTime) 0L else endTime.timeInMillis
-        finalEnd = maxOf(finalStart + 600_000L, finalEnd) //TODO пока минимально - пол часа
+        val finalEnd = if (isNoTime) 0L else maxOf(finalStart + 600_000L, endTime.timeInMillis)
 
         val task = DTasks(
             id = taskId ?: UUID.randomUUID().toString(), //TODO уточнить
@@ -204,7 +226,7 @@ class NewTaskActivity : AppCompatActivity() {
             body = body,
             start = finalStart,
             time_end = finalEnd,
-            status = "ACTIVE",
+            status = if(t_is_done.isChecked) "DONE" else "ACTIVE",
             privacy = privacy_text_ENUM[iterator_privacy],
             importance = importance,
             push_template_id = 0, //TODO потом добавить уведомления
@@ -236,6 +258,16 @@ class NewTaskActivity : AppCompatActivity() {
                 t_title.setText(task.title)
                 t_body.setText(task.body)
                 t_importance.setSelection(task.importance - 1)
+                val text_ptivacy = task.privacy
+
+                if (text_ptivacy == "PUBLIC") {
+                    iterator_privacy = 0
+                } else if (text_ptivacy == "FRIENDS") {
+                    iterator_privacy = 1
+                } else {
+                    iterator_privacy = 2
+                }
+                t_is_done.isChecked = if (task.status == "ACTIVE") false else true
                 t_et_color.setText(task.colour)
                 startTime.timeInMillis = task.start
                 if (task.time_end == 0L) {

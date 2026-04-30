@@ -8,17 +8,20 @@ import com.example.freeti.network_entity.NUsers
 data class DUsers (
     @PrimaryKey
     var id: Int,
+    var login: String,
     var username: String,
     var avatar: String
 ) {
     fun toNetworkEntity(): NUsers {
         return NUsers(id = this.id,
+            login = this.login,
             username = this.username,
             avatar = this.avatar)
     }
 
     fun defaultUser(id: Int) = DUsers(
         id = id,
+        login = "uniqlogin",
         username = "User",
         avatar = ":)"
     )

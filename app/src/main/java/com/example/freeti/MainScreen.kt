@@ -1,8 +1,10 @@
 package com.example.freeti
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -26,7 +28,7 @@ import java.util.Calendar
 import java.util.TimeZone
 
 class MainScreen : AppCompatActivity() {
-    private lateinit var settings_button: TextView // потом возможно button
+    private lateinit var settings_button: ImageButton // потом возможно button
     private lateinit var date_number: TextView
     private lateinit var day_week: TextView
     private lateinit var tasks_without_time: RecyclerView
@@ -51,7 +53,7 @@ class MainScreen : AppCompatActivity() {
     var iterator_privacy = 2
     private lateinit var app: MyApp
 
-
+    private lateinit var pref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +73,8 @@ class MainScreen : AppCompatActivity() {
         ).get(TasksViewModel::class.java)
 
         viewModel.addTestTasks()
+
+        pref = getSharedPreferences("privacy", MODE_PRIVATE)
 
         settings_button = findViewById(R.id.main_settings)
         date_number = findViewById(R.id.main_date)
@@ -198,6 +202,9 @@ class MainScreen : AppCompatActivity() {
         if (k) {
             iterator_privacy = (iterator_privacy + 1) % 3
             Toast.makeText(this, privacy_text[iterator_privacy], Toast.LENGTH_SHORT).show()
+            pref.edit().putInt("privacy_iter", iterator_privacy).apply()
+        } else {
+            iterator_privacy = pref.getInt("privacy_iter", 2)
         }
         privacy_button.setBackgroundColor(privacy_color[iterator_privacy].toInt())
         viewModel.setPrivacy(privacy_text_ENUM[iterator_privacy])

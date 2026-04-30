@@ -16,6 +16,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var btnGroups: Button
     private lateinit var btnBack: Button
     private lateinit var btnSave: Button
+    private lateinit var btnSetting: Button
     private lateinit var userName: TextView
     private lateinit var userAvatar: TextView
     private var currentUser: DUsers? = null
@@ -30,7 +31,8 @@ class ProfileActivity : AppCompatActivity() {
         btnGroups = findViewById(R.id.btnGroups)
         btnBack = findViewById(R.id.btnBack)
         userName = findViewById(R.id.userName)
-        //btnSave = findViewById(R.id.btnSave)
+        btnSave = findViewById(R.id.btnSave)
+        btnSetting = findViewById(R.id.btnSettings)
         userAvatar = findViewById(R.id.faceInput)
 
         val app = application as MyApp
@@ -54,6 +56,10 @@ class ProfileActivity : AppCompatActivity() {
         //    startActivity(Intent(this, GroupsActivity::class.java))
         //}
 
+        btnSetting.setOnClickListener {
+            //
+        }
+
         // Кнопка назад → вернуться на MainActivity
         btnBack.setOnClickListener {
             finish() // или это вроде startActivity + flags, но finish проще, так что похуй
@@ -70,8 +76,9 @@ class ProfileActivity : AppCompatActivity() {
 
             val updatedUser = currentUser?.copy(
                 username = newUsername,
-                avatar = newAvatar
-            ) ?: DUsers(id = userId, username = newUsername, avatar = newAvatar)
+                avatar = newAvatar,
+                login = tokenManager.getLogin()
+            ) ?: DUsers(id = userId, login = tokenManager.getLogin(), username = newUsername, avatar = newAvatar)
 
             lifecycleScope.launch {
                 try {
@@ -83,6 +90,7 @@ class ProfileActivity : AppCompatActivity() {
                         response.body()?.let { serverUser ->
                             val serverEntity = DUsers(
                                 id = serverUser.id,
+                                login = serverUser.login,
                                 username = serverUser.username,
                                 avatar = serverUser.avatar
                             )
@@ -96,7 +104,7 @@ class ProfileActivity : AppCompatActivity() {
         lifecycleScope.launch {
             var user = userDao.getUserForId(userId)
             if (user == null) {
-                val defaultUser = DUsers(id = userId, username = "User", avatar = ":)")
+                val defaultUser = DUsers(id = userId, login = "uniqlogin", username = "User", avatar = ":)")
                 userDao.insertAll(listOf(defaultUser))
                 currentUser = defaultUser
 
@@ -106,6 +114,7 @@ class ProfileActivity : AppCompatActivity() {
                         response.body()?.let { serverUser ->
                             val serverEntity = DUsers(
                                 id = serverUser.id,
+                                login = serverUser.login,
                                 username = serverUser.username,
                                 avatar = serverUser.avatar
                             )

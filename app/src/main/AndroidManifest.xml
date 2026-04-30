@@ -16,6 +16,9 @@
         android:theme="@style/Theme.FreETi"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".NewTaskActivity"
             android:exported="false" />
         <activity

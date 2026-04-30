@@ -4,33 +4,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="24dp"
+    android:background="@color/bg"
+    android:fitsSystemWindows="true">
 
     <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_gravity="center_horizontal"
+        >
 
         <!-- ПУСТОЙ круг -->
         <TextView
             android:id="@+id/faceText"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/circle_background"
+
             android:text="" />
 
         <!-- ПРОЗРАЧНАЯ строка с ВИДИМЫМ текстом -->
         <EditText
             android:id="@+id/faceInput"
-            android:layout_width="120dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@null"
             android:gravity="center"
             android:includeFontPadding="false"
             android:maxLength="4"
             android:rotation="90"
-            android:text=":)"
-            android:textSize="61sp"
-            android:translationX="20dp" />
+            android:text=":0"
+            android:textColor="@color/bg"
+            android:textSize="120sp"/>
 
     </FrameLayout>
     <!--
@@ -40,7 +46,7 @@
         android:layout_height="120dp"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/ic_launcher_foreground"
-        android:background="@android:drawable/dialog_holo_light_frame" />
+        android:background="@android:drawable/dialog_holo_for_text_frame" />
      -->
 
 
@@ -51,6 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="12dp"
+        android:backgroundTint="@color/bg"
         android:gravity="center"
         android:hint="Ваше имя"
         android:maxLength="20"
@@ -59,15 +66,32 @@
 
         android:text=""
         android:textColor="@color/white"
+        android:textColorHint="@color/for_text"
         android:textSize="24sp"
         android:textStyle="bold" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:backgroundTint="@color/for_text"
+        android:text="Save profile"
+        android:textColor="@color/bg"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:textSize="16sp"
+        app:cornerRadius="8dp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:text="@string/search"
         app:cornerRadius="8dp"
+        android:backgroundTint="@color/for_text"
+        android:textColor="@color/bg"
         android:textSize="16sp" />
 
 
@@ -76,7 +100,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:text="@string/contacts"
         app:cornerRadius="8dp"
+        android:backgroundTint="@color/for_text"
+        android:textColor="@color/bg"
         android:textSize="16sp" />
 
 
@@ -85,17 +112,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:text="@string/groups"
         app:cornerRadius="8dp"
+        android:backgroundTint="@color/for_text"
+        android:textColor="@color/bg"
         android:textSize="16sp" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="@color/for_text"
+        android:text="Settings"
+        android:textColor="@color/bg"
+        android:textSize="16sp"
+        app:cornerRadius="8dp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnBack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        app:cornerRadius="8dp"
-        android:textSize="16sp" />
-
+        android:backgroundTint="@color/for_text"
+        android:text="@string/back"
+        android:textColor="@color/bg"
+        android:textSize="16sp"
+        app:cornerRadius="8dp" />
 
 </LinearLayout>
