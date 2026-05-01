@@ -21,11 +21,19 @@
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
+        <activity android:name=".FriendProfileActivity"
+            android:label="Профиль друга" />
         <activity
             android:name=".NewTaskActivity"
             android:exported="false" />
         <activity
             android:name=".MainScreen"
+            android:exported="false" />
+        <activity
+            android:name=".SearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GroupsActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

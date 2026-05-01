@@ -42,19 +42,18 @@ class ProfileActivity : AppCompatActivity() {
 
         val userId = tokenManager.getUserId()
 
-        //btnSearch.setOnClickListener {
-        //    startActivity(Intent(this, SearchActivity::class.java))
-        //}
-//
+        btnSearch.setOnClickListener {
+            startActivity(Intent(this, SearchActivity::class.java))
+        }
+
         //// Кнопка Contacts → избранное/друзья
         //btnContacts.setOnClickListener {
         //    startActivity(Intent(this, ContactsActivity::class.java))
         //}
-//
-        //// Кнопка Groups → страница Егора Ж
-        //btnGroups.setOnClickListener {
-        //    startActivity(Intent(this, GroupsActivity::class.java))
-        //}
+
+        btnGroups.setOnClickListener {
+            startActivity(Intent(this, GroupsActivity::class.java))
+        }
 
         btnSetting.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
