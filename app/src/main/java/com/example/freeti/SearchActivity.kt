@@ -1,18 +1,18 @@
 package com.example.freeti
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class SearchActivity : AppCompatActivity() {
 
-    // Это пародия на базу данных. Формально мы должны брать из сервера, но сервера пока нет(
+    // Тестовые данные (позже заменишь на серверные)
     private val allUsers = listOf(
         User("nikita", "Никита"),
         User("nikolay", "Николай"),
@@ -38,9 +38,12 @@ class SearchActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Адаптер изначально с пустым списком
+        // Адаптер: при клике открываем FriendProfileActivity
         val adapter = UserAdapter(emptyList()) { user ->
-            Toast.makeText(this, "Выбран: ${user.name} (${user.nickname})", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, FriendProfileActivity::class.java)
+            intent.putExtra("nickname", user.nickname)
+            intent.putExtra("name", user.name)
+            startActivity(intent)
         }
         recyclerView.adapter = adapter
 

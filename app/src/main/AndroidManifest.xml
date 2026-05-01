@@ -26,6 +26,9 @@
             android:name=".LoginActivity"
             android:exported="false" />
 
+        <activity android:name=".FriendProfileActivity"
+            android:label="Профиль друга" />
+
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
