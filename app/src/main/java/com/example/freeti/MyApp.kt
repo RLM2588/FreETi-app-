@@ -22,9 +22,11 @@ class AppContainer(private val context: Context) {
     val myTasksDao = database.myTasksDao()
     private val syncMetaDao = database.syncMetadataDao()
 
-    private val tokenManager = TokenManager(context)
+    val userDao = database.usersDao()
 
-    private val apiService = NetworkClient.provideApiService()
+    val tokenManager = TokenManager(context)
+
+    val apiService = NetworkClient.provideApiService()
 
     val authRepository = AuthRepository(apiService, tokenManager)
     val testRepository = TestRepository(apiService)

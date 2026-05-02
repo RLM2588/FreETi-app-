@@ -21,7 +21,7 @@ import com.example.freeti.sync.SyncMetadata
     entities = [DAvatar::class, DContacts::class, DOtherTasks::class, DGroupEvents::class,
         DGroups::class, DGroupsUsers::class, DPushTemplate::class,
         DTasks::class, DUsers::class, DVote::class, DVoting::class, SyncMetadata::class],
-    version = 1,
+    version = 3,
     exportSchema = true // уточнить что это, но знаю что это что-то для миграции
 )
 
@@ -29,6 +29,7 @@ import com.example.freeti.sync.SyncMetadata
 abstract class AppDataBase : RoomDatabase(){
     abstract fun tasksDao(): TasksDao
     abstract fun myTasksDao(): MyTasksDao
+    abstract fun usersDao(): UserDao
     abstract fun syncMetadataDao(): SyncMetadataDao
 
     companion object {
@@ -42,6 +43,7 @@ abstract class AppDataBase : RoomDatabase(){
                     AppDataBase::class.java,
                     "freeti_database"
                 )
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance

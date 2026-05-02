@@ -1,7 +1,7 @@
 package com.example.freeti
 
 import android.content.Intent
-import android.icu.text.StringSearch
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Toast
@@ -13,7 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 class MainActivity : AppCompatActivity() {
     private lateinit var main_screen : TextView
     private lateinit var reg_butt : TextView
-
+    private lateinit var pref: SharedPreferences
     private lateinit var search : TextView
 
     private lateinit var screentusk : TextView
@@ -27,6 +27,8 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        pref = getSharedPreferences("settings", MODE_PRIVATE)
+        if(pref.getBoolean("AutoToMain", false)) {startActivity(Intent(this, MainScreen::class.java))}
 
         main_screen = findViewById(R.id.main_screen_text_button)
         reg_butt = findViewById(R.id.register_text_button)

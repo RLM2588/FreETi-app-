@@ -71,6 +71,19 @@
         android:textStyle="bold" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:backgroundTint="@color/for_text"
+        android:text="Save profile"
+        android:textColor="@color/bg"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:textSize="16sp"
+        app:cornerRadius="8dp" />
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -105,6 +118,16 @@
         android:textColor="@color/bg"
         android:textSize="16sp" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="@color/for_text"
+        android:text="Settings"
+        android:textColor="@color/bg"
+        android:textSize="16sp"
+        app:cornerRadius="8dp" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnBack"
@@ -116,17 +139,5 @@
         android:textColor="@color/bg"
         android:textSize="16sp"
         app:cornerRadius="8dp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_save"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:backgroundTint="@color/for_text"
-        android:text="Save profile"
-        android:textColor="@color/bg"
-        android:textSize="16sp"
-        app:cornerRadius="8dp" />
-
 
 </LinearLayout>

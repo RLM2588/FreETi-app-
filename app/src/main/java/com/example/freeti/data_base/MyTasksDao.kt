@@ -38,9 +38,6 @@ interface MyTasksDao {
     fun getTasksForDateRange(start: Long, end: Long, privacy : String): Flow<List<DTasks>>
 
 
-    //@Query("SELECT * FROM tasks WHERE start >= :start AND start < :end AND is_delete = 0 AND time_end = 0 AND privacy = :privacy ORDER BY start ASC, id ASC")
-    //fun observeTasksWithoutTime(start: Long, end: Long, privacy: String): Flow<List<DTasks>>
-
     @Query("SELECT * FROM tasks WHERE start >= :start AND start < :end AND is_delete = 0 AND time_end = 0 ORDER BY start ASC, id ASC")
     fun observeTasksWithoutTime(start: Long, end: Long): Flow<List<DTasks>>
 
