@@ -20,6 +20,8 @@
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
+        <activity android:name=".FriendProfileActivity"
+            android:label="Профиль друга" />
         <activity
             android:name=".NewTaskActivity"
             android:exported="false" />

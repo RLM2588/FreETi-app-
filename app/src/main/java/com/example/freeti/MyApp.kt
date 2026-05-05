@@ -8,6 +8,8 @@ import androidx.work.WorkManager
 import com.example.freeti.data_base.AppDataBase
 import com.example.freeti.network_api.NetworkClient
 import com.example.freeti.repository.AuthRepository
+import com.example.freeti.repository.GroupRepository
+import com.example.freeti.repository.OtherTaskRepository
 import com.example.freeti.repository.TestRepository
 import com.example.freeti.sync.SyncConfig
 import com.example.freeti.sync.TaskSyncManager
@@ -20,6 +22,8 @@ class AppContainer(private val context: Context) {
 
     private val tasksDao = database.tasksDao()
     val myTasksDao = database.myTasksDao()
+    val otherTaskDao = database.otherTaskDao()
+    val groupsDao = database.groupsDao()
     private val syncMetaDao = database.syncMetadataDao()
 
     val userDao = database.usersDao()
@@ -30,6 +34,9 @@ class AppContainer(private val context: Context) {
 
     val authRepository = AuthRepository(apiService, tokenManager)
     val testRepository = TestRepository(apiService)
+    val otherRepository = OtherTaskRepository(apiService, otherTaskDao)
+
+    val groupRepository = GroupRepository(groupsDao, apiService)
 
 
     val taskSyncManager = TaskSyncManager(myTasksDao, syncMetaDao, apiService,

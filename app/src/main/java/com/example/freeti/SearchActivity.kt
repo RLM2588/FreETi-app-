@@ -1,36 +1,42 @@
 package com.example.freeti
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.freeti.adapters_pack.UserAdapter
+import com.example.freeti.data.local.entity.DUsers
+import com.example.freeti.repository.SearchRepository
+import com.example.freeti.view_model.SearchViewModel
+import com.example.freeti.view_model.SearchViewModelFactory
+import kotlinx.coroutines.launch
 
 class SearchActivity : AppCompatActivity() {
 
-    // Это пародия на базу данных. Формально мы должны брать из сервера, но сервера пока нет(
-    private val allUsers = listOf(
-        User("nikita", "Никита"),
-        User("nikolay", "Николай"),
-        User("alex", "Алексей"),
-        User("alexandra", "Александра"),
-        User("maria", "Мария"),
-        User("mariya", "Мария"),
-        User("john", "Джон"),
-        User("jonny", "Джонни"),
-        User("olga", "Ольга"),
-        User("pavel", "Павел"),
-        User("anna", "Анна"),
-        User("andrey", "Андрей")
-    )
+    private lateinit var viewModel: SearchViewModel
+    private lateinit var adapter: UserAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+
+        val appContainer = (application as MyApp).appContainer
+        val repository = SearchRepository(
+            appContainer.userDao,
+            appContainer.apiService,
+            appContainer.tokenManager
+        )
+        val factory = SearchViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, factory)[SearchViewModel::class.java]
 
         val editTextSearch = findViewById<EditText>(R.id.editTextSearch)
         val hintTextView = findViewById<TextView>(R.id.textViewHint)
@@ -38,36 +44,33 @@ class SearchActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Адаптер изначально с пустым списком
-        val adapter = UserAdapter(emptyList()) { user ->
-            Toast.makeText(this, "Выбран: ${user.name} (${user.nickname})", Toast.LENGTH_SHORT).show()
+        adapter = UserAdapter(emptyList()) { user ->
+            Toast.makeText(this, "Выбран: ${user.username} (@${user.login})", Toast.LENGTH_SHORT)
+                .show()
+            val intent = Intent(this@SearchActivity, FriendProfileActivity::class.java)
+            intent.putExtra("other_id", user.id)
+            startActivity(intent)
         }
         recyclerView.adapter = adapter
 
-        editTextSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val prefix = s.toString().trim().lowercase()
-                if (prefix.isEmpty()) {
-                    hintTextView.visibility = android.view.View.GONE
-                    recyclerView.visibility = android.view.View.GONE
-                    adapter.updateList(emptyList())
-                    return
-                }
-
-                val filtered = allUsers.filter { it.nickname.startsWith(prefix) }
-                if (filtered.isNotEmpty()) {
-                    hintTextView.visibility = android.view.View.VISIBLE
-                    recyclerView.visibility = android.view.View.VISIBLE
-                    adapter.updateList(filtered)
+        lifecycleScope.launch {
+            viewModel.users.collect { userList ->
+                adapter.updateList(userList)
+                if (userList.isEmpty()) {
+                    hintTextView.visibility = View.GONE
+                    recyclerView.visibility = View.GONE
                 } else {
-                    hintTextView.visibility = android.view.View.GONE
-                    recyclerView.visibility = android.view.View.GONE
-                    adapter.updateList(emptyList())
+                    hintTextView.visibility = View.VISIBLE
+                    recyclerView.visibility = View.VISIBLE
                 }
             }
+        }
 
+        editTextSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.search(s.toString())
+            }
             override fun afterTextChanged(s: Editable?) {}
         })
     }

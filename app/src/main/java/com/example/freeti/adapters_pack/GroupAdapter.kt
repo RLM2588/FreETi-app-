@@ -1,4 +1,4 @@
-package com.example.freeti
+package com.example.freeti.adapters_pack
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,11 +6,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.freeti.R
+import com.example.freeti.data.local.entity.DGroups
 import com.google.android.material.card.MaterialCardView
 
 class GroupAdapter(
-    private var groups: List<Group>,
-    private val onItemClick: (Group) -> Unit
+    private var groups: List<DGroups>,
+    private val onItemClick: (DGroups) -> Unit
 ) : RecyclerView.Adapter<GroupAdapter.GroupViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupViewHolder {
@@ -25,7 +27,7 @@ class GroupAdapter(
 
     override fun getItemCount() = groups.size
 
-    fun updateList(newList: List<Group>) {
+    fun updateList(newList: List<DGroups>) {
         groups = newList
         notifyDataSetChanged()
     }
@@ -35,8 +37,8 @@ class GroupAdapter(
         private val imageGroup: ImageView = itemView.findViewById(R.id.imageGroup)
         private val textGroupName: TextView = itemView.findViewById(R.id.textGroupName)
 
-        fun bind(group: Group) {
-            textGroupName.text = group.name
+        fun bind(group: DGroups) {
+            textGroupName.text = group.title
             imageGroup.setImageResource(group.imageResId)
 
             cardView.setOnClickListener {

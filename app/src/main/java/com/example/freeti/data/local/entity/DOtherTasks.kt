@@ -2,6 +2,8 @@ package com.example.freeti.data.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.freeti.network_entity.NOtherTasks
+import com.example.freeti.network_entity.NTasks
 
 
 @Entity(tableName = "other_tasks")
@@ -18,6 +20,21 @@ data class DOtherTasks (
     var importance: Int,
     var push_template_id: Int,
     @ColumnInfo(defaultValue = "FFFFFF")
-    var colour: String,
-    var updated_at: Long
-)
+    var colour: String
+) {
+    fun toNetworkEntity(): NOtherTasks {
+        return NOtherTasks(
+            id = this.id,
+            title = this.title,
+            body = this.body,
+            user_id = this.user_id,
+            start = this.start,
+            time_end = this.time_end,
+            status = this.status,
+            privacy = this.privacy,
+            importance = this.importance,
+            push_template_id = this.push_template_id,
+            colour = this.colour
+        )
+    }
+}

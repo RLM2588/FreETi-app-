@@ -2,6 +2,8 @@ package com.example.freeti.network_api
 
 import com.example.freeti.network_entity.AuthResponse
 import com.example.freeti.network_entity.LoginRequest
+import com.example.freeti.network_entity.NGroups
+import com.example.freeti.network_entity.NOtherTasks
 import com.example.freeti.network_entity.NTasks
 import com.example.freeti.network_entity.NUsers
 import com.example.freeti.network_entity.TestRequest
@@ -39,6 +41,18 @@ interface ApiService {
         @Body task: NTasks
     ): Response<NTasks>
 
+    @POST("tasks/{id}")
+    suspend fun addTask(
+        @Path("id") taskId: String,
+        @Body task: NTasks
+    ): Response<NTasks> // TODO необходимо ли
+
+    @GET("othertasks")
+    suspend fun getOtherTasksForDay(
+        @Query("yearMonth") yearMonth: String,
+        @Query("id") since: Int
+    ): Response<List<NOtherTasks>>
+
     @PUT("users/{id}")
     suspend fun updateUser(
         @Path("id") userId: Int,
@@ -54,4 +68,19 @@ interface ApiService {
     suspend fun getUsersSearch(
         @Query("username") username: String
     ): List<NUsers>
+
+    @GET("users")
+    suspend fun getUsersSearchByLogin(
+        @Query("login") login: String
+    ): List<NUsers>
+
+    @GET("groups")
+    suspend fun getGroups(): List<NGroups>
+
+    @POST("groups")
+    suspend fun createGroup(@Body group: NGroups): Response<NGroups>
+
+    // если нужен метод обновления
+    @PUT("groups")
+    suspend fun updateGroup(@Body group: NGroups): Response<NGroups>
 }

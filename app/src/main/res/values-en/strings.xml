@@ -34,5 +34,12 @@
     <string name="groups">Groups</string>
     <string name="back">⬅ Go back</string>
 
+    <string name="privacy_public">Public</string>
+    <string name="privacy_friends">For friends</string>
+    <string name="privacy_private">Private</string>
+
+    <string name="newtask_plusday">+ day</string>
+    <string name="newtask_minusday">- day</string>
+
 
 </resources>

@@ -21,7 +21,7 @@ import com.example.freeti.sync.SyncMetadata
     entities = [DAvatar::class, DContacts::class, DOtherTasks::class, DGroupEvents::class,
         DGroups::class, DGroupsUsers::class, DPushTemplate::class,
         DTasks::class, DUsers::class, DVote::class, DVoting::class, SyncMetadata::class],
-    version = 3,
+    version = 5,
     exportSchema = true // уточнить что это, но знаю что это что-то для миграции
 )
 
@@ -30,6 +30,8 @@ abstract class AppDataBase : RoomDatabase(){
     abstract fun tasksDao(): TasksDao
     abstract fun myTasksDao(): MyTasksDao
     abstract fun usersDao(): UserDao
+    abstract fun otherTaskDao(): OtherTasksDao
+    abstract fun groupsDao(): GroupsDao
     abstract fun syncMetadataDao(): SyncMetadataDao
 
     companion object {

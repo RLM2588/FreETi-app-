@@ -1,17 +1,20 @@
 package com.example.freeti.views
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.example.freeti.R
-import com.example.freeti.data.local.entity.DTasks
+import com.example.freeti.data.local.entity.DOtherTasks
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
-class TaskTimelineView @JvmOverloads constructor(
+class OtherTaskTimelineView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -51,19 +54,18 @@ class TaskTimelineView @JvmOverloads constructor(
         textSize = 32f
     }
 
-    private var tasks: List<DTasks> = emptyList()
-    private var columns: List<List<DTasks>> = emptyList()
+    private var tasks: List<DOtherTasks> = emptyList()
+    private var columns: List<List<DOtherTasks>> = emptyList()
     private var dayStartMillis: Long = 0L
     private var dayEndMillis: Long = 0L
     private var totalRows: Int = 0
 
     interface OnTaskClickListener {
-        fun onTaskClick(task: DTasks)
+        fun onTaskClick(task: DOtherTasks)
     }
-
     var onTaskClickListener: OnTaskClickListener? = null
 
-    fun setTasks(newTasks: List<DTasks>) {
+    fun setTasks2(newTasks: List<DOtherTasks>) {
         tasks = newTasks
         if (tasks.isNotEmpty()) {
             dayStartMillis = tasks.minOf { it.start }
@@ -192,9 +194,9 @@ class TaskTimelineView @JvmOverloads constructor(
         }
     }
 
-    private fun distributeTasks(tasks: List<DTasks>): List<List<DTasks>> {
+    private fun distributeTasks(tasks: List<DOtherTasks>): List<List<DOtherTasks>> {
         val sorted = tasks.sortedBy { it.start }
-        val columns = mutableListOf<MutableList<DTasks>>()
+        val columns = mutableListOf<MutableList<DOtherTasks>>()
         for (task in sorted) {
             var placed = false
             for (column in columns) {
@@ -211,7 +213,7 @@ class TaskTimelineView @JvmOverloads constructor(
         return columns
     }
 
-    private fun tasksOverlap(a: DTasks, b: DTasks): Boolean {
+    private fun tasksOverlap(a: DOtherTasks, b: DOtherTasks): Boolean {
         return a.start < b.time_end && b.start < a.time_end
     }
 

@@ -68,6 +68,7 @@ class TasksNoTimeAdapter(
             }
             //КОНЕЦ ШАМАНСТВА
 
+
             // Чекбокс
             binding.doneCheckbox.setOnCheckedChangeListener(null)
             binding.doneCheckbox.isChecked = task.status == "DONE"

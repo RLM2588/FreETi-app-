@@ -9,6 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
@@ -50,13 +51,14 @@ class MainScreen : AppCompatActivity() {
     private val week_text: List<String> = listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс")
     private val monthes_text: List<String> = listOf("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль",
         "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь")
-    private val privacy_color: List<Long> = listOf(0xFFAA5555, 0xFF5555AA, 0xFF55AA55)
+    private lateinit var privacy_color: List<Long>
 
     private val privacy_icons: List<Int> = listOf(
-        R.drawable.outline_globe_24,   // Индекс 0: PUBLIC
-        R.drawable.baseline_groups_24,    // Индекс 1: FRIENDS
-        R.drawable.baseline_person_24      // Индекс 2: PRIVATE[cite: 2]
+        R.drawable.outline_globe_24,   // PUBLIC
+        R.drawable.baseline_groups_24,    // FRIENDS
+        R.drawable.baseline_person_24      // PRIVATE
     )
+
 
     // итераторы
     var iterator_privacy = 2
@@ -85,6 +87,11 @@ class MainScreen : AppCompatActivity() {
         if(!pref.getBoolean("noTestAdd", false)) {
             viewModel.addTestTasks()
         }
+
+        privacy_color = listOf(getColor(R.color.for_privacy_public)
+            .toLong(), getColor(R.color.for_privacy_friend)
+            .toLong(), getColor(R.color.for_privacy_private)
+            .toLong())
 
         settings_button = findViewById(R.id.main_settings)
         date_number = findViewById(R.id.main_date)
