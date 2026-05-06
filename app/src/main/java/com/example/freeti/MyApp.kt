@@ -3,6 +3,7 @@ package com.example.freeti
 import android.app.Application
 import android.content.Context
 import com.example.freeti.data_base.AppDataBase
+import com.example.freeti.network_api.ApiService
 import com.example.freeti.network_api.NetworkClient
 import com.example.freeti.repository.AuthRepository
 import com.example.freeti.repository.TestRepository
@@ -13,11 +14,14 @@ class AppContainer(private val context: Context) {
 
     private val tasksDao = database.tasksDao()
 
-    private val tokenManager = TokenManager(context)
+    val tokenManager = TokenManager(context)
 
-    private val apiService = NetworkClient.provideApiService()
+    val apiService: ApiService = NetworkClient.provideApiService(tokenManager) {
+        authRepository
+    }
 
     val authRepository = AuthRepository(apiService, tokenManager)
+
     val testRepository = TestRepository(apiService)
 }
 

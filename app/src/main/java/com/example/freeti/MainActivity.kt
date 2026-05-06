@@ -10,6 +10,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModel
+import com.example.freeti.network_api.NetworkClient
+import com.example.freeti.repository.AuthRepository
+import com.example.freeti.tokens.TokenManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -39,13 +43,27 @@ class MainActivity : AppCompatActivity() {
 
         test_out_button.setOnClickListener {
             GlobalScope.launch(Dispatchers.Main) {
-                val result = MyApp.container.testRepository.send(test_out.text.toString())
-                result.onSuccess {
-                    test_inp.text = it
-                }.onFailure {
-                    Toast.makeText(this@MainActivity, it.message, Toast.LENGTH_SHORT).show()
+                if (test_out.text.toString() == "") {
+                    val result = MyApp.container.testRepository.send("NIGGA")
+                    result.onSuccess {
+                        test_inp.text = it
+                    }.onFailure {
+                        test_inp.text = it.message
+                        Toast.makeText(this@MainActivity, it.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+                else {
+                    val result = MyApp.container.testRepository.send(test_out.text.toString())
+                    result.onSuccess {
+                        test_inp.text = it
+                    }.onFailure {
+                        test_inp.text = it.message
+                        Toast.makeText(this@MainActivity, it.message, Toast.LENGTH_SHORT).show()
+                    }
                 }
             } // TODO пока так для теста, но будущие запросы через ViewModel
+
+
         }
 
         test_inp_button.setOnClickListener {
@@ -53,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         main_screen.setOnClickListener {
-            startActivity(Intent(this, MainScreen::class.java))
+            startActivity(Intent(this, LoginActivity::class.java))
         }
     }
 }
