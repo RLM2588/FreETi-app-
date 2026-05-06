@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:gravity="center_vertical">
+
+    <!-- Блок аватарки слева -->
+    <FrameLayout
+        android:layout_width="60dp"
+        android:layout_height="60dp">
+
+        <!-- Круг (фон) -->
+        <TextView
+            android:id="@+id/member_faceText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:background="@drawable/circle_background"
+            android:text="" />
+
+        <!-- Текст поверх круга, повёрнут на 90° -->
+        <TextView
+            android:id="@+id/member_faceInput"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:maxLength="4"
+            android:rotation="90"
+            android:text=":0"
+            android:textColor="@color/bg"
+            android:textSize="40sp" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#333333"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textUserRole"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#666666" />
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/buttonPromote"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="повысить"
+        android:textSize="14sp"
+        android:backgroundTint="#4CAF50"
+        android:textColor="@android:color/white"
+        android:layout_marginEnd="8dp" />
+
+
+    <Button
+        android:id="@+id/buttonKick"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="выгнать"
+        android:textSize="14sp"
+        android:backgroundTint="#F44336"
+        android:textColor="@android:color/white" />
+
+</LinearLayout>

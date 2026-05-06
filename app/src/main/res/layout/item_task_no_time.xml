@@ -11,6 +11,7 @@
     android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
+        android:id="@+id/task_content_container"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:orientation="horizontal"
@@ -31,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textColor="@color/for_text"
-            android:textSize="12sp"
+            android:textSize="16sp"
             android:textStyle="bold"/>
 
         <!-- Кнопка выполнено -->
@@ -39,8 +40,8 @@
             android:id="@+id/done_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleX="1.5"
-            android:scaleY="1.5"
-            android:buttonTint="@color/design_default_color_primary"/>
+            android:scaleX="1.4"
+            android:scaleY="1.4"
+            android:buttonTint="@color/for_text"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

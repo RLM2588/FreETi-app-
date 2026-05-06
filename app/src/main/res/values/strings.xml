@@ -34,4 +34,12 @@
     <string name="back">⬅ Вернуться</string>
 
 
+    <string name="privacy_public">Публичное</string>
+    <string name="privacy_friends">Для друзей</string>
+    <string name="privacy_private">Приватное</string>
+
+    <string name="newtask_plusday">+ день</string>
+    <string name="newtask_minusday">- день</string>
+
+
 </resources>

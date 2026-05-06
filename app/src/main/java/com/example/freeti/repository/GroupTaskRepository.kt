@@ -1,21 +1,22 @@
 package com.example.freeti.repository
 
-import com.example.freeti.data_base.OtherTasksDao
+import com.example.freeti.data_base.GroupTasksDao
 import com.example.freeti.network_api.ApiService
+import kotlin.collections.map
 
-class OtherTaskRepository(
+class GroupTaskRepository(
     private val api: ApiService,
-    private val dao: OtherTasksDao
+    private val dao: GroupTasksDao
 ) {
-    suspend fun getTasks(yearMonth: String, user_id: Int): Boolean {
+    suspend fun getTasks(yearMonth: String, group_id: String): Boolean {
         return try {
-            val response = api.getOtherTasksForDay(yearMonth, user_id)
+            val response = api.getGroupTasksForDay(yearMonth, group_id)
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
                     val dTasks = body.map { it.toEntity() }
                     if (dTasks.isNotEmpty()) {
-                        dao.deleteTasksForMonth(yearMonth, user_id)
+                        dao.deleteTasksForMonth(yearMonth, group_id)
                         dao.insertAll(dTasks)
                     }
                 } else {

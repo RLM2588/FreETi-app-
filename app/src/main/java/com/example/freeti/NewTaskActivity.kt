@@ -17,10 +17,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.freeti.data.local.entity.DTasks
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.TimeZone
@@ -48,12 +50,24 @@ class NewTaskActivity : AppCompatActivity() {
     private lateinit var t_view_color_preview: View
     private lateinit var t_ok: Button
     private lateinit var t_save: Button
-    private lateinit var t_privacy: Button
-    private lateinit var t_esc: Button
+    private lateinit var t_privacy: com.google.android.material.button.MaterialButton
+    private lateinit var t_esc: FloatingActionButton
 
-    private val privacy_text: List<String> = listOf("Публичное", "Для друзей", "Приватное")
+    private val privacy_text: List<String> by lazy {
+        listOf(
+            getString(R.string.privacy_public),
+            getString(R.string.privacy_friends),
+            getString(R.string.privacy_private)
+        )
+    }
     private val privacy_text_ENUM: List<String> = listOf("PUBLIC", "FRIENDS", "PRIVATE")
-    private val privacy_color: List<Long> = listOf(0xFFAA5555, 0xFF5555AA, 0xFF55AA55)
+    private val privacy_color: List<Long> = listOf(0xFFa76a6b, 0xFF617d9a, 0xFF6aa776)
+
+    private val privacy_icons: List<Int> = listOf(
+        R.drawable.outline_globe_24,   // для PUBLIC
+        R.drawable.baseline_groups_24,  // для FRIENDS
+        R.drawable.baseline_person_24      // для PRIVATE
+    )
 
     var iterator_privacy = 2
     var is_plus_day = true
@@ -144,7 +158,7 @@ class NewTaskActivity : AppCompatActivity() {
 
         t_move.setOnLongClickListener {
             is_plus_day = !is_plus_day
-            t_move.text = if(is_plus_day) "+day" else "-day"
+            t_move.text = if(is_plus_day) getString(R.string.newtask_plusday) else getString(R.string.newtask_minusday)
             true
         }
 
@@ -246,9 +260,20 @@ class NewTaskActivity : AppCompatActivity() {
     private fun setPrivacy(k: Boolean = true) {
         if (k) {
             iterator_privacy = (iterator_privacy + 1) % 3
+        }
+
+        // Меняем текст
+        t_privacy.text = privacy_text[iterator_privacy]
+
+        // Меняем цвет фона
+        t_privacy.setBackgroundColor(privacy_color[iterator_privacy].toInt())
+
+        // Меняем иконку
+        t_privacy.setIconResource(privacy_icons[iterator_privacy])
+
+        if (k) {
             Toast.makeText(this, privacy_text[iterator_privacy], Toast.LENGTH_SHORT).show()
         }
-        t_privacy.setBackgroundColor(privacy_color[iterator_privacy].toInt())
     }
 
     private fun loadTaskForEdit(id: String) {

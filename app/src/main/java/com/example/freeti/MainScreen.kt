@@ -9,6 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
@@ -23,6 +24,7 @@ import com.example.freeti.view_model.TasksViewModel
 import com.example.freeti.view_model.TasksViewModelFactory
 import com.example.freeti.views.TaskTimelineView
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.TimeZone
@@ -33,11 +35,13 @@ class MainScreen : AppCompatActivity() {
     private lateinit var day_week: TextView
     private lateinit var tasks_without_time: RecyclerView
     private lateinit var tasks_view: TaskTimelineView
-    private lateinit var new_task: Button
-    private lateinit var privacy_button: Button
-    private lateinit var main_refresh_button: Button
+    private lateinit var new_task: FloatingActionButton
+    private lateinit var privacy_button: FloatingActionButton
+    private lateinit var main_refresh_button: ImageButton
     private lateinit var month_and_year: TextView
     private lateinit var calendar: Calendar
+    private lateinit var nextDayButton: ImageButton
+    private lateinit var prevDayButton: ImageButton
 
     private lateinit var viewModel: TasksViewModel
 
@@ -47,7 +51,14 @@ class MainScreen : AppCompatActivity() {
     private val week_text: List<String> = listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс")
     private val monthes_text: List<String> = listOf("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль",
         "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь")
-    private val privacy_color: List<Long> = listOf(0xFFAA5555, 0xFF5555AA, 0xFF55AA55)
+    private lateinit var privacy_color: List<Long>
+
+    private val privacy_icons: List<Int> = listOf(
+        R.drawable.outline_globe_24,   // PUBLIC
+        R.drawable.baseline_groups_24,    // FRIENDS
+        R.drawable.baseline_person_24      // PRIVATE
+    )
+
 
     // итераторы
     var iterator_privacy = 2
@@ -77,6 +88,11 @@ class MainScreen : AppCompatActivity() {
             viewModel.addTestTasks()
         }
 
+        privacy_color = listOf(getColor(R.color.for_privacy_public)
+            .toLong(), getColor(R.color.for_privacy_friend)
+            .toLong(), getColor(R.color.for_privacy_private)
+            .toLong())
+
         settings_button = findViewById(R.id.main_settings)
         date_number = findViewById(R.id.main_date)
         day_week = findViewById(R.id.main_day_week)
@@ -92,11 +108,18 @@ class MainScreen : AppCompatActivity() {
         setDate()
 
         viewModel.setDate(calendar.timeInMillis)
+        // мои малышки начало
+
+        nextDayButton = findViewById(R.id.main_next_day)
+        prevDayButton = findViewById(R.id.main_prev_day)
+        // мои малышки конец
 
         // Настройки
         tasks_without_time.layoutManager = GridLayoutManager(this, 2)
 
         val noTimeAdapter = TasksNoTimeAdapter(
+
+
             onDoneClick = { task -> viewModel.markTaskDone(task) },
             onLongClick = { task -> viewModel.moveTaskToNextDay(task) },
             onEditClick = { task ->
@@ -114,6 +137,14 @@ class MainScreen : AppCompatActivity() {
                     noTimeAdapter.submitList(tasks)
                 }
             }
+        }
+        // конпочки перехода
+        nextDayButton.setOnClickListener {
+            addDays(1)
+        }
+
+        prevDayButton.setOnClickListener {
+            addDays(-1)
         }
 
         lifecycleScope.launch {
@@ -207,7 +238,10 @@ class MainScreen : AppCompatActivity() {
         } else {
             iterator_privacy = pref.getInt("privacy_iter", 2)
         }
-        privacy_button.setBackgroundColor(privacy_color[iterator_privacy].toInt())
+        privacy_button.setImageResource(privacy_icons[iterator_privacy])
+        privacy_button.backgroundTintList = android.content.res.ColorStateList.valueOf(
+            privacy_color[iterator_privacy].toInt()
+        )
         viewModel.setPrivacy(privacy_text_ENUM[iterator_privacy])
     }
 

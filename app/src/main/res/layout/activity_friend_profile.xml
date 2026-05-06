@@ -120,32 +120,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
+
                 <TextView
 
+                    android:id="@+id/other_date"
                     android:layout_width="28dp"
                     android:layout_height="wrap_content"
                     android:text="17"
-                    android:textSize="24sp"
-                    android:id="@+id/other_date"
-                    android:textColor="@color/for_text"/>
+                    android:textColor="@color/for_text"
+                    android:textSize="24sp" />
 
                 <TextView
+                    android:id="@+id/other_day_week"
                     android:layout_width="36dp"
                     android:layout_height="wrap_content"
                     android:text="Пн"
-                    android:textSize="24sp"
-                    android:id="@+id/other_day_week"
-                    android:textColor="@color/for_text"/>
+                    android:textColor="@color/for_text"
+                    android:textSize="24sp" />
 
                 <TextView
+                    android:id="@+id/other_month"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="март 2007"
-                    android:textSize="24sp"
-                    android:id="@+id/other_month"
                     android:layout_marginStart="10dp"
                     android:layout_marginBottom="5dp"
-                    android:textColor="@color/for_text"/>
+                    android:text="март 2007"
+                    android:textColor="@color/for_text"
+                    android:textSize="24sp" />
 
                 <Button
                     android:id="@+id/other_privacy"
@@ -153,7 +154,7 @@
                     android:layout_height="wrap_content"
                     android:text="privacy"
                     android:textColor="@color/for_text"
-                    android:textSize="11sp"/>
+                    android:textSize="11sp" />
             </LinearLayout>
 
             <ScrollView

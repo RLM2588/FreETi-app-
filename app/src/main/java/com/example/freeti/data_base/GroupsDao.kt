@@ -19,6 +19,9 @@ interface GroupsDao {
     @Query("SELECT * FROM tgroups WHERE is_deleted = 0 ORDER BY title")
     fun getAllGroupsFlow(): Flow<List<DGroups>>
 
+    @Query("SELECT * FROM tgroups WHERE id = :id ORDER BY title")
+    fun getGroup(id: String): DGroups
+
     // Несинхронизированные группы
     @Query("SELECT * FROM tgroups WHERE is_deleted = 0 AND isSynced = 0")
     suspend fun getUnsyncedGroups(): List<DGroups>

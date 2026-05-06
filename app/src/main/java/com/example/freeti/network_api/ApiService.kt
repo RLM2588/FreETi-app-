@@ -1,8 +1,11 @@
 package com.example.freeti.network_api
 
+import com.example.freeti.Member
 import com.example.freeti.network_entity.AuthResponse
 import com.example.freeti.network_entity.LoginRequest
+import com.example.freeti.network_entity.NGroupEvents
 import com.example.freeti.network_entity.NGroups
+import com.example.freeti.network_entity.NGroupsUsers
 import com.example.freeti.network_entity.NOtherTasks
 import com.example.freeti.network_entity.NTasks
 import com.example.freeti.network_entity.NUsers
@@ -53,6 +56,12 @@ interface ApiService {
         @Query("id") since: Int
     ): Response<List<NOtherTasks>>
 
+    @GET("grouptasks")
+    suspend fun getGroupTasksForDay(
+        @Query("yearMonth") yearMonth: String,
+        @Query("id") since: String
+    ): Response<List<NGroupEvents>>
+
     @PUT("users/{id}")
     suspend fun updateUser(
         @Path("id") userId: Int,
@@ -83,4 +92,22 @@ interface ApiService {
     // если нужен метод обновления
     @PUT("groups")
     suspend fun updateGroup(@Body group: NGroups): Response<NGroups>
+
+    @PUT("member_switch")
+    suspend fun switchMember(
+        @Path("user_id") memberId: Int,
+        @Path("group_id") groupId: String
+    ): Response<NGroupsUsers>
+
+    @PUT("member_delete")
+    suspend fun deleteMember(
+        @Path("user_id") memberId: Int,
+        @Path("group_id") groupId: String
+    ): Response<Boolean>
+
+    @GET("group_members")
+    suspend fun getGroupMembers(@Path("group_id") groupId: String): Response<List<NGroupsUsers>>
+
+    @GET("group_users")
+    suspend fun getGroupUsers(@Path("group_id") groupId: String): Response<List<NUsers>>
 }

@@ -36,6 +36,10 @@
             android:name=".GroupsActivity"
             android:exported="false" />
         <activity
+            android:name=".GroupDetailsActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

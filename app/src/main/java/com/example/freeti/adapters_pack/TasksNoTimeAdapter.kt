@@ -52,6 +52,22 @@ class TasksNoTimeAdapter(
                 Color.LTGRAY
             }
             binding.colorIndicator.setBackgroundColor(color)
+            // НАЧАЛО ШАМАНСТВА
+            val isDone = task.status == "DONE"
+            if (isDone) {
+
+                binding.taskTitle.paintFlags =
+                    binding.taskTitle.paintFlags or android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
+
+                binding.taskContentContainer.alpha = 0.4f
+            }
+            else {
+
+                binding.taskTitle.paintFlags = binding.taskTitle.paintFlags and android.graphics.Paint.STRIKE_THRU_TEXT_FLAG.inv()
+                binding.taskContentContainer.alpha = 1.0f
+            }
+            //КОНЕЦ ШАМАНСТВА
+
 
             // Чекбокс
             binding.doneCheckbox.setOnCheckedChangeListener(null)
