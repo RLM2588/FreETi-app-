@@ -63,9 +63,11 @@ dependencies {
     // Для токенов:
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
 
-    implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
-    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-runtime:2.7.1")
+    implementation("androidx.room:room-ktx:2.7.1")
+    implementation(libs.androidx.work.runtime)
+    implementation(libs.play.services.phenotype)
+    kapt("androidx.room:room-compiler:2.7.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

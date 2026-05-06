@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">FreETi</string>
+    <string name="greetings_1">Добро пожаловать</string>
+    <string name="log_in_user_name">Имя пользователя</string>
+    <string name="log_in_password">Пароль</string>
+    <string name="log_in_button_1">Войти</string>
+    <string name="log_in_button_2">Зарегистрироваться</string>
+    <string name="no_acc">Нет аккаунта?</string>
+    <string name="register_title">Создайте аккаунт</string>
+    <string name="register_log_in">Логин</string>
+    <string name="register_mail">Почта</string>
+    <string name="register_verify_code">Код подтверждения</string>
+    <string name="register_verify_code_send">Отправить код потверждения</string>
+    <string name="register_password">Пароль</string>
+    <string name="register_password_repeat">Повторите пароль</string>
+    <string name="register_registrations">Зарегистрироваться</string>
+    <string name="register_sign_in">Войти</string>
+    <string name="register_sign_in_question">Уже есть аккаунт?\u0020</string>
+
 </resources>
