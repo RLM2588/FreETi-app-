@@ -20,17 +20,17 @@ class ProfileActivity : AppCompatActivity() {
         val userName = findViewById<TextView>(R.id.userName)
 
         btnSearch.setOnClickListener {
-            startActivity(Intent(this, SearchActivity::class.java))
+            //startActivity(Intent(this, SearchActivity::class.java))
         }
 
         // Кнопка Contacts → избранное/друзья
         btnContacts.setOnClickListener {
-            startActivity(Intent(this, ContactsActivity::class.java))
+            //startActivity(Intent(this, ContactsActivity::class.java))
         }
 
         // Кнопка Groups → страница Егора Ж
         btnGroups.setOnClickListener {
-            startActivity(Intent(this, GroupsActivity::class.java))
+            //startActivity(Intent(this, GroupsActivity::class.java))
         }
 
         // Кнопка назад → вернуться на MainActivity

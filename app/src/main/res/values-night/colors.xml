@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-
-
-
-    <color name="lightmain">#F0F2F5</color>
-    <color name="lightsecond">#6B7F8F</color>
-
+    <!-- Цвета для тёмной темы -->
 
 
     <color name="dark">#2f353b</color>
     <color name="light">#909faf</color>
     <color name="white">#ffffff</color>
     <color name="transparent">#00000000</color>
+
+
+
+
+    <color name="lightmain">#F0F2F5</color>
+    <color name="lightsecond">#6B7F8F</color>
 
 
 

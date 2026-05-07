@@ -35,15 +35,7 @@
             android:translationX="20dp" />
 
     </FrameLayout>
-    <!--
-    <ImageView
-        android:id="@+id/profileImage"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_launcher_foreground"
-        android:background="@android:drawable/dialog_holo_light_frame" />
-     -->
+
 
 
     <!-- Строка для имени (всегда видна и редактируема) -->
@@ -53,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="12dp"
-        android:backgroundTint="@color/dark"
+        android:backgroundTint="?android:attr/textColorHint"
         android:gravity="center"
         android:hint="Ваше имя"
         android:maxLength="20"
@@ -61,7 +53,7 @@
         android:singleLine="true"
 
         android:text=""
-        android:textColor="@color/white"
+        android:textColor="?android:attr/textColor"
         android:textColorHint="@color/light"
         android:textSize="24sp"
         android:textStyle="bold" />
