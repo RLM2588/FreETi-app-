@@ -13,6 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FreETi" >
 
+        <activity android:name=".PollsListActivity" android:label="Голосования" />
+        <activity android:name=".CreatePollActivity" android:label="Новое голосование" />
+        <activity android:name=".PollDetailActivity" android:label="Детали голосования" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true" >
@@ -41,6 +45,7 @@
         <activity
             android:name=".SearchActivity"
             android:exported="false" />
+
 
         <activity
             android:name=".ContactsActivity"

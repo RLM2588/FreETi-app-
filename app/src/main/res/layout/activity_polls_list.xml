@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@android:color/white"
+        android:elevation="4dp"
+        android:padding="8dp">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="?attr/homeAsUpIndicator"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Назад" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Голосования"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black" />
+
+        <Button
+            android:id="@+id/btnAddPoll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Создать" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewPolls"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

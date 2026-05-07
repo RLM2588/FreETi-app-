@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="?attr/homeAsUpIndicator"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Назад" />
+
+    <EditText
+        android:id="@+id/editTextQuestion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Вопрос голосования"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:id="@+id/optionsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/btnAddOption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Добавить вариант"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/btnCreatePoll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Создать голосование"
+        android:layout_marginTop="16dp"
+        style="?android:attr/buttonStyle" />
+
+</LinearLayout>

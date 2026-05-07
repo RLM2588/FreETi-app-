@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import android.widget.Button
 
 class MainActivity : AppCompatActivity() {
     private lateinit var main_screen : TextView
@@ -24,6 +25,10 @@ class MainActivity : AppCompatActivity() {
         main_screen = findViewById(R.id.main_screen_text_button)
         main_screen.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
+        }
+        val btnPolls = findViewById<Button>(R.id.btnPolls)
+        btnPolls.setOnClickListener {
+            startActivity(Intent(this, PollsListActivity::class.java))
         }
     }
 }
