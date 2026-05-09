@@ -18,4 +18,28 @@
     <string name="register_sign_in">Sign in</string>
     <string name="register_sign_in_question">Have an account?\u0020</string>
 
+    <string name="groups_name">My groups</string>
+    <string name="groups_search">Groups search</string>
+    <string name="groups_create_group">Create a new group</string>
+    <string name="groups_create_named">Name of group</string>
+    <string name="groups_create_cancel">Cancel</string>
+    <string name="groups_create_create">Create</string>
+
+    <string name="search_search">Enter name</string>
+    <string name="search_hint">Did you mean?</string>
+
+    <string name="user_name">Username</string>
+    <string name="search">Search</string>
+    <string name="contacts">Contacts</string>
+    <string name="groups">Groups</string>
+    <string name="back">⬅ Go back</string>
+
+    <string name="privacy_public">Public</string>
+    <string name="privacy_friends">For friends</string>
+    <string name="privacy_private">Private</string>
+
+    <string name="newtask_plusday">+ day</string>
+    <string name="newtask_minusday">- day</string>
+
+
 </resources>

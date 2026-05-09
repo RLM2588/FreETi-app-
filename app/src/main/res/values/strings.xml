@@ -17,4 +17,29 @@
     <string name="register_sign_in">Войти</string>
     <string name="register_sign_in_question">Уже есть аккаунт?\u0020</string>
 
+    <string name="groups_name">Мои группы</string>
+    <string name="groups_search">Поиск групп</string>
+    <string name="groups_create_group">Создать новую группу</string>
+    <string name="groups_create_named">Название группы</string>
+    <string name="groups_create_cancel">Отмена</string>
+    <string name="groups_create_create">Создать</string>
+
+    <string name="search_search">Введите имя</string>
+    <string name="search_hint">Возможно, вы имели в виду</string>
+
+    <string name="user_name">Имя пользователя</string>
+    <string name="search">Поиск людей</string>
+    <string name="contacts">Друзья/избранное</string>
+    <string name="groups">Группы</string>
+    <string name="back">⬅ Вернуться</string>
+
+
+    <string name="privacy_public">Публичное</string>
+    <string name="privacy_friends">Для друзей</string>
+    <string name="privacy_private">Приватное</string>
+
+    <string name="newtask_plusday">+ день</string>
+    <string name="newtask_minusday">- день</string>
+
+
 </resources>

@@ -1,38 +1,70 @@
 package com.example.freeti
 
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.freeti.data.local.entity.DTasks
+import com.example.freeti.adapters_pack.TasksNoTimeAdapter
+import com.example.freeti.view_model.TasksViewModel
+import com.example.freeti.view_model.TasksViewModelFactory
+import com.example.freeti.views.TaskTimelineView
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.launch
 import java.util.Calendar
+import java.util.TimeZone
 
 class MainScreen : AppCompatActivity() {
-    private lateinit var settings_button: TextView // потом возможно button
+    private lateinit var settings_button: ImageButton // потом возможно button
     private lateinit var date_number: TextView
     private lateinit var day_week: TextView
     private lateinit var tasks_without_time: RecyclerView
-    private lateinit var tasks_view: RecyclerView
-    private lateinit var new_task: Button
-    private lateinit var privacy_button: Button
+    private lateinit var tasks_view: TaskTimelineView
+    private lateinit var new_task: FloatingActionButton
+    private lateinit var privacy_button: FloatingActionButton
+    private lateinit var main_refresh_button: ImageButton
     private lateinit var month_and_year: TextView
     private lateinit var calendar: Calendar
+    private lateinit var nextDayButton: ImageButton
+    private lateinit var prevDayButton: ImageButton
+
+    private lateinit var viewModel: TasksViewModel
 
      // константы
     private val privacy_text: List<String> = listOf("Публичное", "Для друзей", "Приватное")
+    private val privacy_text_ENUM: List<String> = listOf("PUBLIC", "FRIENDS", "PRIVATE")
     private val week_text: List<String> = listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс")
     private val monthes_text: List<String> = listOf("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль",
         "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь")
-    private val privacy_color: List<Long> = listOf(0xFFAA5555, 0xFF5555AA, 0xFF55AA55)
+    private lateinit var privacy_color: List<Long>
+
+    private val privacy_icons: List<Int> = listOf(
+        R.drawable.outline_globe_24,   // PUBLIC
+        R.drawable.baseline_groups_24,    // FRIENDS
+        R.drawable.baseline_person_24      // PRIVATE
+    )
+
 
     // итераторы
     var iterator_privacy = 2
+    private lateinit var app: MyApp
 
-
+    private lateinit var pref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +77,22 @@ class MainScreen : AppCompatActivity() {
         }
 
         // Инициализация
+        app = application as MyApp
+        viewModel = ViewModelProvider(
+            this,
+            TasksViewModelFactory(app.appContainer.myTasksDao, app.appContainer.taskSyncManager)
+        ).get(TasksViewModel::class.java)
+        pref = getSharedPreferences("settings", MODE_PRIVATE)
+
+        if(!pref.getBoolean("noTestAdd", false)) {
+            viewModel.addTestTasks()
+        }
+
+        privacy_color = listOf(getColor(R.color.for_privacy_public)
+            .toLong(), getColor(R.color.for_privacy_friend)
+            .toLong(), getColor(R.color.for_privacy_private)
+            .toLong())
+
         settings_button = findViewById(R.id.main_settings)
         date_number = findViewById(R.id.main_date)
         day_week = findViewById(R.id.main_day_week)
@@ -53,26 +101,84 @@ class MainScreen : AppCompatActivity() {
         new_task = findViewById(R.id.main_new_task)
         privacy_button = findViewById(R.id.main_privacy)
         month_and_year = findViewById(R.id.main_month)
+        main_refresh_button = findViewById(R.id.main_refresh)
 
         calendar = Calendar.getInstance()
 
         setDate()
 
-        // Настройки / кнопка перехода в профиль
-        settings_button.setOnClickListener {
-            Toast.makeText(this, "Тут будет профиль", Toast.LENGTH_SHORT).show() //Удалить
-            // TODO жду старницы профиль: startActivity(Intent(this, ProfileActivity::class.java))
+        viewModel.setDate(calendar.timeInMillis)
+        // мои малышки начало
+
+        nextDayButton = findViewById(R.id.main_next_day)
+        prevDayButton = findViewById(R.id.main_prev_day)
+        // мои малышки конец
+
+        // Настройки
+        tasks_without_time.layoutManager = GridLayoutManager(this, 2)
+
+        val noTimeAdapter = TasksNoTimeAdapter(
+            onDoneClick = { task -> viewModel.markTaskDone(task) },
+            onLongClick = { task -> viewModel.moveTaskToNextDay(task) },
+            onEditClick = { task ->
+                val intent = Intent(this, NewTaskActivity::class.java)
+                intent.putExtra("task_id", task.id)
+                startActivity(intent)
+            }
+        )
+        tasks_without_time.adapter = noTimeAdapter
+
+        // Observe
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.tasksWithoutTime.collect { tasks ->
+                    noTimeAdapter.submitList(tasks)
+                }
+            }
+        }
+        // конпочки перехода
+        nextDayButton.setOnClickListener {
+            addDays(1)
         }
 
-        // Переход в календарь
+        prevDayButton.setOnClickListener {
+            addDays(-1)
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.tasksForDay.collect { tasks ->
+                    tasks_view.setTasks(tasks)
+                }
+            }
+        }
+        // клик
+        tasks_view.onTaskClickListener = object : TaskTimelineView.OnTaskClickListener {
+            override fun onTaskClick(task: DTasks) {
+                val intent = Intent(this@MainScreen, NewTaskActivity::class.java)
+                intent.putExtra("task_id", task.id)
+                startActivity(intent)
+            }
+        }
+
+        main_refresh_button.setOnClickListener {
+            viewModel.forceRefresh()
+        }
+        settings_button.setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
+        }
+
         date_number.setOnClickListener {
-            Toast.makeText(this, "Тут будет календарь", Toast.LENGTH_SHORT).show() //Удалить
-            // TODO Ожидает страницы календарь: startActivity(Intent(this, CalendarActivity::class.java))
+            addDays(1)
+        }
+
+        date_number.setOnLongClickListener {
+            addDays(-1)
+            true
         }
 
         month_and_year.setOnClickListener {
-            Toast.makeText(this, "Тут будет календарь", Toast.LENGTH_SHORT).show() //Удалить
-            // TODO Ожидает страницы календарь: startActivity(Intent(this, CalendarActivity::class.java))
+            showMaterialDatePicker()
         }
 
         // Кнопка приватности
@@ -83,8 +189,9 @@ class MainScreen : AppCompatActivity() {
 
         // на новую задачу открываем окно для создания
         new_task.setOnClickListener {
-            Toast.makeText(this, "Тут будет cтраница новой задачи", Toast.LENGTH_SHORT).show() //Удалить
-            // TODO Ожидает страницы новая задача: startActivity(Intent(this, NewTaskActivity::class.java))
+            val intent = Intent(this@MainScreen, NewTaskActivity::class.java)
+            intent.putExtra("daytime", calendar.timeInMillis)
+            startActivity(intent)
         }
 
         // Кнопка дня недели
@@ -106,21 +213,37 @@ class MainScreen : AppCompatActivity() {
             }
             true
         }
-
-        // TODO хз еще где, но смена приватности
     }
 
-    fun setPrivacy(k: Boolean = true) {
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            app.appContainer.taskSyncManager.syncPendingTasks()
+        }
+    }
+
+    //private fun getCurrentYearMonth(): String {
+    //    val year = calendar.get(Calendar.YEAR)
+    //    val month = calendar.get(Calendar.MONTH)
+    //    return "$year-$month"
+    //}
+
+    private fun setPrivacy(k: Boolean = true) {
         if (k) {
             iterator_privacy = (iterator_privacy + 1) % 3
             Toast.makeText(this, privacy_text[iterator_privacy], Toast.LENGTH_SHORT).show()
+            pref.edit().putInt("privacy_iter", iterator_privacy).apply()
+        } else {
+            iterator_privacy = pref.getInt("privacy_iter", 2)
         }
-        privacy_button.setBackgroundColor(privacy_color[iterator_privacy].toInt())
-        //privacy_button.setText(privacy_text[iterator_privacy])
-        // TODO по менять сами задачи на нужные из бд
+        privacy_button.setImageResource(privacy_icons[iterator_privacy])
+        privacy_button.backgroundTintList = android.content.res.ColorStateList.valueOf(
+            privacy_color[iterator_privacy].toInt()
+        )
+        viewModel.setPrivacy(privacy_text_ENUM[iterator_privacy])
     }
 
-    fun setDate() {
+    private fun setDate() {
         val day = calendar.get(Calendar.DAY_OF_MONTH)
         val month = calendar.get(Calendar.MONTH)
         val year = calendar.get(Calendar.YEAR)
@@ -129,10 +252,36 @@ class MainScreen : AppCompatActivity() {
         date_number.text = day.toString()
         month_and_year.text = "${monthes_text[month]} $year"
         day_week.text = week_text[(weekday + 5) % 7]
+        viewModel.setDate(calendar.timeInMillis)
     }
 
-    fun addDays(delta: Int) {
+    private fun addDays(delta: Int) {
         calendar.add(Calendar.DAY_OF_MONTH, delta)
         setDate()
+    }
+
+    private fun showMaterialDatePicker() {
+        // Создаем "строитель" диалога выбора даты
+        val datePicker = MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Выберите дату")               // Заголовок
+            .setSelection(MaterialDatePicker.todayInUtcMilliseconds()) // Текущая дата по умолчанию
+            .build()
+
+        // Устанавливаем слушатель нажатия кнопки "ОК"
+        datePicker.addOnPositiveButtonClickListener { selection ->
+            // selection — это выбранная дата в миллисекундах от начала эпохи (UTC)
+            val calendar1 = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+            calendar1.timeInMillis = selection
+
+            // Обновляем ваш календарь (переменную calendar)
+            this.calendar.timeInMillis = selection
+            // Обновляем текст на экране
+            setDate()
+            // Опционально: показываем Toast с выбранной датой
+            Toast.makeText(this, "Выбрано: ${date_number.text}.${month_and_year.text}", Toast.LENGTH_SHORT).show()
+        }
+
+        // Показываем диалог
+        datePicker.show(supportFragmentManager, "MATERIAL_DATE_PICKER_TAG")
     }
 }
