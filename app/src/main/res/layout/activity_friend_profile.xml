@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg">
+
+    <!-- Верхняя панель с кнопкой назад и заголовком -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/bg"
+        android:elevation="4dp"
+        android:padding="8dp">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="?attr/homeAsUpIndicator"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Назад" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Профиль"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Основное содержимое -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="24dp"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <FrameLayout
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                >
+
+                <!-- ПУСТОЙ круг -->
+                <TextView
+                    android:id="@+id/other_faceText"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/circle_background"
+
+                    android:text="" />
+
+                <!-- ПРОЗРАЧНАЯ строка с ВИДИМЫМ текстом -->
+                <TextView
+                    android:id="@+id/iv_friend_avatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:maxLength="4"
+                    android:rotation="90"
+                    android:text=":0"
+                    android:textColor="@color/bg"
+                    android:textSize="80sp"/>
+
+            </FrameLayout>
+
+            <!-- Никнейм -->
+            <TextView
+                android:id="@+id/tv_friend_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="nickname"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/for_text"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center">
+                <!-- Кнопка «Добавить в контакты» -->
+                <Button
+                    android:id="@+id/btn_add_contact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="AddContact"
+                    android:textColor="@color/for_text"
+                    android:gravity="start"
+                    android:layout_marginTop="12dp"/>
+
+                <!-- Кнопка «Сделать другом» -->
+                <Button
+                    android:id="@+id/btn_make_friend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="Friend"
+                    android:textColor="@color/for_text"
+                    android:layout_marginTop="12dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <TextView
+
+                    android:layout_width="28dp"
+                    android:layout_height="wrap_content"
+                    android:text="17"
+                    android:textSize="24sp"
+                    android:id="@+id/other_date"
+                    android:textColor="@color/for_text"/>
+
+                <TextView
+                    android:layout_width="36dp"
+                    android:layout_height="wrap_content"
+                    android:text="Пн"
+                    android:textSize="24sp"
+                    android:id="@+id/other_day_week"
+                    android:textColor="@color/for_text"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="март 2007"
+                    android:textSize="24sp"
+                    android:id="@+id/other_month"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:textColor="@color/for_text"/>
+
+                <Button
+                    android:id="@+id/other_privacy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="privacy"
+                    android:textColor="@color/for_text"
+                    android:textSize="11sp"/>
+            </LinearLayout>
+
+            <ScrollView
+                android:id="@+id/other_tasks2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+                android:layout_marginTop="20dp">
+
+                <HorizontalScrollView
+                    android:id="@+id/timeline_horizontal_scroll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true">
+
+                    <com.example.freeti.views.OtherTaskTimelineView
+                        android:id="@+id/other_tasks"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </HorizontalScrollView>
+            </ScrollView>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

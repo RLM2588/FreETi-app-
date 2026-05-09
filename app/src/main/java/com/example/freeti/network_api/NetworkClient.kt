@@ -19,7 +19,7 @@ import okhttp3.*
 
 object NetworkClient {
     // Базовый URL сервера
-    private const val BASE_URL = "http://192.168.0.105:8085/api/" // TODO вставить в будщем свой сервер
+    private const val BASE_URL = "http://192.168.1.36:8091/api/" // TODO вставить в будщем свой сервер
 
 
     fun provideApiService(tokenManager: TokenManager, authProvider: () -> AuthRepository): ApiService {

@@ -50,7 +50,7 @@ class AuthRepository(
             val response = api.finalRegister(FinalRegisterRequest(login, email, code, password))
             if (response.isSuccessful) {
                 if (response.body() != null) {
-                    val authres = response.body()?: AuthResponse("null", "null")
+                    val authres = response.body()?: AuthResponse("null", "null", -1, "null")
                     tokenManager.saveTokens(authres)
                     answ = "Success"
                 } else {
