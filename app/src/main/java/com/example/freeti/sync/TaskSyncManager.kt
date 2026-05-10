@@ -1,5 +1,6 @@
 package com.example.freeti.sync
 
+import android.util.Log
 import com.example.freeti.data_base.MyTasksDao
 import com.example.freeti.data_base.SyncMetadataDao
 import com.example.freeti.network_api.ApiService
@@ -26,6 +27,8 @@ class TaskSyncManager(
                 apiService.getTasksForMonthSince(yearMonth, metadata.last_updated_at)
             }
 
+            Log.d("nigga", tasksFromNetwork.body()!![0].start.toString())
+
             // Получаем список id локальных неотправленных задач
             val unsyncedIds = myTaskDao.getUnsyncedTaskIds().toSet()
             // Фильтруем сетевые задачи, оставляя только те, которые не конфликтуют
@@ -35,6 +38,7 @@ class TaskSyncManager(
                 //val safeTasks = tasksFromNetwork.body();
 
                 val entities = safeTasks.map { it.toEntity() }
+                Log.d("niggaentity", entities[0].start.toString())
                 myTaskDao.insertAll(entities)
 
                 val time_updated = myTaskDao.getMaxUpdatedAtForMonth(yearMonth)

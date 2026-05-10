@@ -13,6 +13,7 @@ import com.example.freeti.network_entity.RefreshTokenRequest
 import com.example.freeti.network_entity.RegisterRequest
 import com.example.freeti.network_entity.TestRequest
 import com.example.freeti.network_entity.TestResponse
+import com.example.freeti.network_entity.UserResponse
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -24,6 +25,9 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
+    @GET("auth/username_id")
+    suspend fun get_username_id(): Response<UserResponse>
+
     @POST("auth/register")
     suspend fun register(@Body request: RegisterRequest): Response<String>
 
