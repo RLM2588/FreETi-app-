@@ -4,8 +4,8 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.example.freeti.data.local.entity.DContacts
-import retrofit2.http.Query
 
 @Dao
 interface ContactsDao {
@@ -18,12 +18,7 @@ interface ContactsDao {
     @Delete
     suspend fun delete(contact: DContacts)   // Room сам найдёт по primaryKey
 
-    @Query("""
-        SELECT * FROM contacts 
-        WHERE (user1 = :myId AND user2 = :otherId) 
-           OR (user1 = :otherId AND user2 = :myId)
-        LIMIT 1
-    """)
+    @Query("SELECT * FROM contacts WHERE (user1 = :myId AND user2 = :otherId) OR (user1 = :otherId AND user2 = :myId) LIMIT 1")
     suspend fun getContactStatus(myId: Int, otherId: Int): DContacts?
 
     @Query("DELETE FROM contacts WHERE (user1 = :userId OR user2 = :userId) AND isFriend = 0")

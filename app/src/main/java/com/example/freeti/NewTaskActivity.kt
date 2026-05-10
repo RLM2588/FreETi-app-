@@ -101,6 +101,13 @@ class NewTaskActivity : AppCompatActivity() {
         t_is_done = findViewById(R.id.task_is_done)
         t_move = findViewById(R.id.task_move)
 
+        val white_color = findViewById<View>(R.id.white_color)
+        val red_color = findViewById<View>(R.id.red_color)
+        val green_color = findViewById<View>(R.id.green_color)
+        val blue_color = findViewById<View>(R.id.blue_color)
+        val grbl_color = findViewById<View>(R.id.grbl_color)
+        val gray_color = findViewById<View>(R.id.gray_color)
+
         taskId = intent.getStringExtra("task_id")
         day = intent.getLongExtra("daytime", System.currentTimeMillis())
 
@@ -180,6 +187,13 @@ class NewTaskActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
+
+        white_color.setOnClickListener { t_et_color.setText("FFFFFF") }
+        red_color.setOnClickListener { t_et_color.setText("BB3344") }
+        green_color.setOnClickListener { t_et_color.setText("22AA55") }
+        blue_color.setOnClickListener { t_et_color.setText("3355AB") }
+        grbl_color.setOnClickListener { t_et_color.setText("33AAAA") }
+        gray_color.setOnClickListener { t_et_color.setText("888888") }
 
         t_ok.setOnClickListener {
             val ttext = t_title.text

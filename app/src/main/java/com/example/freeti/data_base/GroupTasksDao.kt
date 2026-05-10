@@ -1,9 +1,11 @@
 package com.example.freeti.data_base
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.freeti.data.local.entity.DContacts
 import com.example.freeti.data.local.entity.DGroupEvents
 import kotlinx.coroutines.flow.Flow
 
@@ -11,6 +13,12 @@ import kotlinx.coroutines.flow.Flow
 interface GroupTasksDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(tasks: List<DGroupEvents>)
+
+    @Delete
+    suspend fun delete(task: DGroupEvents)
+
+    @Query("DELETE FROM group_events WHERE id = :id")
+    suspend fun deleteTask(id: String)
 
     // Удалить все задачи за день (при очистке)
     @Query("DELETE FROM group_events WHERE strftime('%Y-%m-%d', start/1000, 'unixepoch') = :yearMonth AND group_id = :id")

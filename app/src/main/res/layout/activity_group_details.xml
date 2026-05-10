@@ -62,15 +62,8 @@
                     android:layout_height="wrap_content"
                     android:text="расписание"
                     android:layout_weight="1"
-                    android:id="@+id/group_tasks_view"/>
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="голосования"
-                    android:layout_weight="1"
-                    android:layout_gravity="end"
-                    android:id="@+id/group_golosov_button"/>
+                    android:id="@+id/group_tasks_view"
+                    android:backgroundTint="@color/black"/>
 
                 <Button
                     android:layout_width="wrap_content"
@@ -78,7 +71,8 @@
                     android:text="участники"
                     android:layout_weight="1"
                     android:layout_gravity="end"
-                    android:id="@+id/group_members"/>
+                    android:id="@+id/group_members"
+                    android:backgroundTint="@color/black"/>
             </LinearLayout>
 
             <LinearLayout

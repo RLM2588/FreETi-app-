@@ -4,6 +4,7 @@ import com.example.freeti.Member
 import com.example.freeti.network_entity.AuthResponse
 import com.example.freeti.network_entity.LoginRequest
 import com.example.freeti.network_entity.NContacts
+import com.example.freeti.network_entity.NGroupEventSearch
 import com.example.freeti.network_entity.NGroupEvents
 import com.example.freeti.network_entity.NGroups
 import com.example.freeti.network_entity.NGroupsUsers
@@ -116,6 +117,12 @@ interface ApiService {
         @Path("group_id") groupId: String
     ): Response<Boolean>
 
+    @POST("groups/newevent")
+    suspend fun addEvent(
+        @Path("group_id") groupId: String,
+        @Body event: NGroupEventSearch
+    ): Response<List<NGroupEvents>>
+
     @GET("contacts")
     suspend fun getContacts(): List<NContacts>   // или Response<List<NContacts>>
 
@@ -123,6 +130,11 @@ interface ApiService {
     suspend fun getUsersByIds(
         @Query("ids") ids: String
     ): List<NUsers>
+
+    @PUT("groups/delete_event")
+    suspend fun deleteGroupEvent(
+        @Path("event_id") event_id: String
+    ): Response<Boolean>
 
     @PUT("contacts")
     suspend fun upsertContact(@Body contact: NContacts): Response<NContacts>

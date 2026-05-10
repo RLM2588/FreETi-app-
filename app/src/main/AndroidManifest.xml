@@ -15,14 +15,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FreETi"
         android:usesCleartextTraffic="true">
-
+        <activity
+            android:name=".NewEventGroupActivity"
+            android:exported="false" />
         <activity
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
-        <activity android:name=".FriendProfileActivity"
+        <activity
+            android:name=".FriendProfileActivity"
             android:label="Профиль друга" />
         <activity
             android:name=".NewTaskActivity"
@@ -42,7 +45,6 @@
         <activity
             android:name=".GroupDetailsActivity"
             android:exported="false" />
-
         <activity
             android:name=".MainActivity"
             android:exported="true">

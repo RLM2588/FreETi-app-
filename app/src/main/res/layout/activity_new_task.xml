@@ -267,6 +267,55 @@
                     android:layout_marginStart="8dp"/>
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="#FFFFFF"
+                    android:layout_marginStart="12dp"
+                    android:id="@+id/white_color"/>
+
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="#BB3344"
+                    android:layout_marginStart="12dp"
+                    android:id="@+id/red_color"/>
+
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="#22AA55"
+                    android:layout_marginStart="12dp"
+                    android:id="@+id/green_color"/>
+
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="#3355AB"
+                    android:layout_marginStart="12dp"
+                    android:id="@+id/blue_color"/>
+
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="#33AAAA"
+                    android:layout_marginStart="12dp"
+                    android:id="@+id/grbl_color"/>
+
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="#888888"
+                    android:layout_marginStart="12dp"
+                    android:id="@+id/gray_color"/>
+
+            </LinearLayout>
+
             <CheckBox
                 android:id="@+id/task_is_done"
                 android:layout_width="wrap_content"

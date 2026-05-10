@@ -14,6 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.freeti.data.local.entity.DGroupEvents
 import com.example.freeti.data.local.entity.DGroups
 import com.example.freeti.view_model.GroupTasksViewModel
 import com.example.freeti.view_model.GroupTasksViewModelFactory
@@ -45,7 +46,6 @@ class GroupDetailsActivity : AppCompatActivity() {
     private lateinit var textMemberCount: TextView
     private lateinit var buttonCreateEvent: Button
     private lateinit var buttonrasp: Button
-    private lateinit var buttongolosov: Button
     private lateinit var group_members: Button
     private lateinit var tasks_lin: LinearLayout
     private lateinit var view_golosov: View // TODO потом заменим на нужное
@@ -79,7 +79,6 @@ class GroupDetailsActivity : AppCompatActivity() {
         tasks_view = findViewById(R.id.group_tasks)
         month_and_year = findViewById(R.id.group_month)
         buttonrasp = findViewById(R.id.group_tasks_view)
-        buttongolosov = findViewById(R.id.group_golosov_button)
         view_golosov = findViewById(R.id.group_golosov)
         tasks_lin = findViewById(R.id.group_tasks_lin)
         group_members = findViewById(R.id.group_members)
@@ -100,8 +99,23 @@ class GroupDetailsActivity : AppCompatActivity() {
         setDate()
 
         buttonCreateEvent.setOnClickListener {
-            //val intent = Intent(this, CreateEventActivity::class.java)
-            //startActivity(intent)
+            val intent = Intent(this, NewEventGroupActivity::class.java)
+            intent.putExtra("groupId", group.id)
+            intent.putExtra("daytime", calendar.timeInMillis)
+            startActivity(intent)
+        }
+
+        tasks_view.onTaskClickListener = object : GroupTaskTimelineView.OnTaskClickListener {
+            override fun onTaskClick(task: DGroupEvents) {
+                lifecycleScope.launch {
+                    if (app.appContainer.groupTaskRepository.deleteTask(task.id)){
+                        showToast("Успешно")
+                    }
+                    else {
+                        showToast("Ошибка подключения")
+                    }
+                }
+            }
         }
 
         group_members.setOnClickListener {
@@ -111,13 +125,7 @@ class GroupDetailsActivity : AppCompatActivity() {
         }
 
         buttonrasp.setOnClickListener {
-            view_golosov.visibility = View.GONE
             tasks_lin.visibility = View.VISIBLE
-        }
-
-        buttongolosov.setOnClickListener {
-            view_golosov.visibility = View.VISIBLE
-            tasks_lin.visibility = View.GONE
         }
 
         setSupportActionBar(toolbar)
@@ -160,16 +168,18 @@ class GroupDetailsActivity : AppCompatActivity() {
         }
 
         textMemberCount.setOnClickListener {
-            val intent = Intent(this, MembersActivity::class.java)
-            intent.putExtra("group_id", group.id)
-            startActivity(intent)
+            goOnMember()
         }
 
         textGroupName.setOnClickListener {
-            val intent = Intent(this, MembersActivity::class.java)
-            intent.putExtra("group_id", group.id)
-            startActivity(intent)
+            goOnMember()
         }
+    }
+
+    fun goOnMember() {
+        val intent = Intent(this, MembersActivity::class.java)
+        intent.putExtra("group_id", group.id)
+        startActivity(intent)
     }
 
     override fun onResume() {
@@ -229,5 +239,9 @@ class GroupDetailsActivity : AppCompatActivity() {
 
         // Показываем диалог
         datePicker.show(supportFragmentManager, "MATERIAL_DATE_PICKER_TAG")
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this@GroupDetailsActivity, message, Toast.LENGTH_SHORT).show()
     }
 }
