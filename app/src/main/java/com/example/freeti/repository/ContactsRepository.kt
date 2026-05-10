@@ -1,7 +1,6 @@
 package com.example.freeti.repository
 
 import com.example.freeti.data.local.entity.DContacts
-import com.example.freeti.data.local.entity.DUsers
 import com.example.freeti.data_base.ContactsDao
 import com.example.freeti.data_base.UserDao
 import com.example.freeti.data_base.UserWithContactStatus

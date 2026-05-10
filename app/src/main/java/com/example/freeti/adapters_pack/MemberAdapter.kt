@@ -22,7 +22,7 @@ class MemberAdapter(
     }
 
     override fun onBindViewHolder(holder: MemberViewHolder, position: Int) {
-        holder.bind(members[position], position)
+        holder.bind(members[position])
     }
 
     override fun getItemCount() = members.size
@@ -39,7 +39,7 @@ class MemberAdapter(
         private val buttonKick: Button = itemView.findViewById(R.id.buttonKick)
         private val member_faceInput: TextView = itemView.findViewById(R.id.member_faceInput)
 
-        fun bind(member: Member, position: Int) {
+        fun bind(member: Member) {
             textUserName.text = member.username
             textUserRole.text = member.role
             member_faceInput.text = member.avatar

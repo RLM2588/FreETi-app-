@@ -6,7 +6,6 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.freeti.data_base.AppDataBase
-import com.example.freeti.data_base.ContactsDao
 import com.example.freeti.network_api.NetworkClient
 import com.example.freeti.repository.AuthRepository
 import com.example.freeti.repository.ContactsRepository

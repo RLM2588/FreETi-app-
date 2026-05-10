@@ -19,12 +19,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import com.example.freeti.data.local.entity.DTasks
 import com.example.freeti.network_entity.NGroupEventSearch
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 import java.util.Calendar
-import java.util.UUID
 
 class NewEventGroupActivity : AppCompatActivity() {
     private var day: Long? = null

@@ -1,6 +1,5 @@
 package com.example.freeti.network_api
 
-import com.example.freeti.Member
 import com.example.freeti.network_entity.AuthResponse
 import com.example.freeti.network_entity.LoginRequest
 import com.example.freeti.network_entity.NContacts
