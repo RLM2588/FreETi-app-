@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:background="@color/bg">
 
@@ -21,16 +22,19 @@
             android:layout_height="48dp"
             android:src="?attr/homeAsUpIndicator"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Назад" />
+
+            android:contentDescription="Назад"
+            />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Профиль"
-            android:textSize="20sp"
+            android:textSize="28sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
+            android:textColor="@color/for_text"
+            android:fontFamily="@font/montserrat_extrabold"
             android:layout_marginStart="8dp" />
     </LinearLayout>
 
@@ -114,6 +118,14 @@
                     android:text="Friend"
                     android:textColor="@color/for_text"
                     android:layout_marginTop="12dp"/>
+                <Button
+                    android:id="@+id/other_privacy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="privacy"
+                    android:textColor="@color/for_text"
+                    android:textSize="11sp"
+                    android:layout_marginTop="12dp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -147,13 +159,7 @@
                     android:layout_marginBottom="5dp"
                     android:textColor="@color/for_text"/>
 
-                <Button
-                    android:id="@+id/other_privacy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="privacy"
-                    android:textColor="@color/for_text"
-                    android:textSize="11sp"/>
+
             </LinearLayout>
 
             <ScrollView

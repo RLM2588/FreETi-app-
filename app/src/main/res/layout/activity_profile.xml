@@ -1,143 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="24dp"
     android:background="@color/bg"
-    android:fitsSystemWindows="true">
+    android:fillViewport="true">
 
-    <FrameLayout
-        android:layout_width="180dp"
-        android:layout_height="180dp"
-        android:layout_gravity="center_horizontal"
-        >
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
 
-        <!-- ПУСТОЙ круг -->
-        <TextView
-            android:id="@+id/faceText"
-            android:gravity="center"
+        <LinearLayout
+            android:id="@+id/grayArea"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="#1AFFFFFF"
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Back"
+                    android:src="@drawable/outline_arrow_back_24"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/for_text" />
+
+                <FrameLayout
+                    android:id="@+id/faceContainer"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/faceText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/circle_background"
+                        android:gravity="center"
+                        android:text="" />
+
+                    <EditText
+                        android:id="@+id/faceInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@null"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:maxLength="4"
+                        android:rotation="90"
+                        android:text=":0"
+                        android:textColor="@color/bg"
+                        android:textSize="100sp" />
+                </FrameLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnChangeAvatar"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:paddingStart="0dp"
+                android:text="Изменить аватар"
+                android:textColor="@color/for_text" />
+
+            <EditText
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:backgroundTint="@color/bg"
+                android:hint="Имя"
+                android:paddingStart="0dp"
+                android:textColor="@color/for_text"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ваше имя"
+                android:textColor="@color/for_text"
+                android:paddingStart="1dp"
+
+                android:textSize="12sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSave"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@color/for_text"
+                android:text="Save profile"
+                android:textColor="@color/bg"
+                android:textSize="18sp"
+                app:cornerRadius="8dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/circle_background"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/grayArea">
 
-            android:text="" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSearch"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:backgroundTint="@color/for_text"
+                android:text="@string/search"
+                android:textColor="@color/bg"
+                app:icon="@drawable/outline_search_24"
+                app:iconTint="@color/bg"
+                app:iconGravity="textStart"
+                android:textSize="18sp"
+                app:cornerRadius="8dp" />
 
-        <!-- ПРОЗРАЧНАЯ строка с ВИДИМЫМ текстом -->
-        <EditText
-            android:id="@+id/faceInput"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@null"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:maxLength="4"
-            android:rotation="90"
-            android:text=":0"
-            android:textColor="@color/bg"
-            android:textSize="120sp"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnContacts"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/for_text"
+                android:text="@string/contacts"
+                android:textColor="@color/bg"
+                app:icon="@drawable/outline_contacts_24"
+                app:iconTint="@color/bg"
+                app:iconGravity="textStart"
+                android:textSize="18sp"
+                app:cornerRadius="8dp" />
 
-    </FrameLayout>
-    <!--
-    <ImageView
-        android:id="@+id/profileImage"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_launcher_foreground"
-        android:background="@android:drawable/dialog_holo_for_text_frame" />
-     -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGroups"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/for_text"
+                android:text="@string/groups"
+                android:textColor="@color/bg"
+                app:icon="@drawable/baseline_groups_24"
+                app:iconTint="@color/bg"
+                app:iconGravity="textStart"
+                android:textSize="18sp"
+                app:cornerRadius="8dp" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSettings"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/for_text"
+                android:text="Settings"
+                android:textColor="@color/bg"
+                app:icon="@drawable/outline_settings_24"
+                app:iconTint="@color/bg"
+                app:iconGravity="textStart"
+                android:textSize="18sp"
+                app:cornerRadius="8dp" />
+        </LinearLayout>
 
-    <!-- Строка для имени (всегда видна и редактируема) -->
-    <EditText
-        android:id="@+id/userName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="12dp"
-        android:backgroundTint="@color/bg"
-        android:gravity="center"
-        android:hint="Ваше имя"
-        android:maxLength="20"
-        android:paddingBottom="4dp"
-        android:singleLine="true"
-
-        android:text=""
-        android:textColor="@color/white"
-        android:textColorHint="@color/for_text"
-        android:textSize="24sp"
-        android:textStyle="bold" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSave"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="0dp"
-        android:backgroundTint="@color/for_text"
-        android:text="Save profile"
-        android:textColor="@color/bg"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
-        android:textSize="16sp"
-        app:cornerRadius="8dp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSearch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/search"
-        app:cornerRadius="8dp"
-        android:backgroundTint="@color/for_text"
-        android:textColor="@color/bg"
-        android:textSize="16sp" />
-
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnContacts"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/contacts"
-        app:cornerRadius="8dp"
-        android:backgroundTint="@color/for_text"
-        android:textColor="@color/bg"
-        android:textSize="16sp" />
-
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnGroups"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/groups"
-        app:cornerRadius="8dp"
-        android:backgroundTint="@color/for_text"
-        android:textColor="@color/bg"
-        android:textSize="16sp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSettings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:backgroundTint="@color/for_text"
-        android:text="Settings"
-        android:textColor="@color/bg"
-        android:textSize="16sp"
-        app:cornerRadius="8dp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnBack"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:backgroundTint="@color/for_text"
-        android:text="@string/back"
-        android:textColor="@color/bg"
-        android:textSize="16sp"
-        app:cornerRadius="8dp" />
-
-</LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

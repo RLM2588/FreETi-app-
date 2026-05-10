@@ -1,8 +1,11 @@
 package com.example.freeti
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -14,18 +17,20 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var btnSearch: Button
     private lateinit var btnContacts: Button
     private lateinit var btnGroups: Button
-    private lateinit var btnBack: Button
+    private lateinit var btnBack: android.widget.ImageButton
     private lateinit var btnSave: Button
     private lateinit var btnSetting: Button
-    private lateinit var userName: TextView
-    private lateinit var userAvatar: TextView
+    private lateinit var btnChangeAvatar: Button // Новая кнопка
+    private lateinit var userName: EditText
+    private lateinit var userAvatar: EditText // Изменено на EditText для управления фокусом
     private var currentUser: DUsers? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-        // Находим элементусы
+        // Находим элементы
         btnSearch = findViewById(R.id.btnSearch)
         btnContacts = findViewById(R.id.btnContacts)
         btnGroups = findViewById(R.id.btnGroups)
@@ -34,6 +39,7 @@ class ProfileActivity : AppCompatActivity() {
         btnSave = findViewById(R.id.btnSave)
         btnSetting = findViewById(R.id.btnSettings)
         userAvatar = findViewById(R.id.faceInput)
+        btnChangeAvatar = findViewById(R.id.btnChangeAvatar) // Инициализация
 
         val app = application as MyApp
         val userDao = app.appContainer.userDao
@@ -41,6 +47,37 @@ class ProfileActivity : AppCompatActivity() {
         val tokenManager = app.appContainer.tokenManager
 
         val userId = tokenManager.getUserId()
+
+        // Логика кнопки изменения аватара
+        btnChangeAvatar.setOnClickListener {
+            // Разрешаем редактирование
+            userAvatar.isFocusable = true
+            userAvatar.isFocusableInTouchMode = true
+            userAvatar.isCursorVisible = true
+            userAvatar.requestFocus()
+
+            // Принудительно показываем клавиатуру
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(userAvatar, InputMethodManager.SHOW_IMPLICIT)
+        }
+        btnChangeAvatar.setOnClickListener {
+            // Делаем поле редактируемым
+            userAvatar.isFocusableInTouchMode = true
+            userAvatar.isFocusable = true
+            userAvatar.isCursorVisible = true
+
+            // Переносим фокус на поле аватара
+            userAvatar.requestFocus()
+
+            // Показываем клавиатуру
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(userAvatar, InputMethodManager.SHOW_IMPLICIT)
+
+            // Выделяем текст, чтобы сразу можно было стереть старый
+            userAvatar.selectAll()
+        }
+        btnBack.setOnClickListener { finish() }
+
 
         btnSearch.setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
@@ -61,17 +98,25 @@ class ProfileActivity : AppCompatActivity() {
 
         // Кнопка назад → вернуться на MainActivity
         btnBack.setOnClickListener {
-            finish() // или это вроде startActivity + flags, но finish проще, так что похуй
+            finish()
         }
 
         btnSave.setOnClickListener {
             val newUsername = userName.text.toString().trim()
             val newAvatar = userAvatar.text.toString().trim()
 
+            userAvatar.isFocusable = false
+            userAvatar.isFocusableInTouchMode = false
+            userAvatar.isCursorVisible = false
             if (newUsername.isEmpty()) {
                 Toast.makeText(this, "Имя не может быть пустым", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
+            // После сохранения снова отключаем фокус аватара, чтобы избежать случайных нажатий
+            userAvatar.isFocusable = false
+            userAvatar.isFocusableInTouchMode = false
+            userAvatar.isCursorVisible = false
 
             val updatedUser = currentUser?.copy(
                 username = newUsername,
@@ -100,6 +145,7 @@ class ProfileActivity : AppCompatActivity() {
                 } catch (e: Exception) {}
             }
         }
+
         lifecycleScope.launch {
             var user = userDao.getUserForId(userId)
             if (user == null) {
