@@ -81,4 +81,34 @@ class MembersRepository (
             false
         }
     }
+
+    suspend fun deleteGroup(groupId: String): Boolean {
+        return try {
+            val response = api.deleteGroup(groupId)
+            if (response.isSuccessful && response.body() == true) {
+                // Если сервер успешно удалил группу, вычищаем её из локальной БД
+                dao.deleteGroupMembersId(groupId)
+                true
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    suspend fun leaveGroup(groupId: String): Boolean {
+        return try {
+            val response = api.leaveGroup(groupId)
+            if (response.isSuccessful && response.body() == true) {
+                // После выхода просто удаляем кэш группы
+                dao.deleteGroupMembersId(groupId)
+                true
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            false
+        }
+    }
 }

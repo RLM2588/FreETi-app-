@@ -2,6 +2,7 @@ package com.example.freeti
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.freeti.data.local.entity.DUsers
+import com.example.freeti.repository.ContactsRepository
 import com.example.freeti.view_model.OtherTasksViewModel
 import com.example.freeti.view_model.OtherTasksViewModelFactory
 import com.example.freeti.views.OtherTaskTimelineView
@@ -42,6 +44,11 @@ class FriendProfileActivity : AppCompatActivity() {
     private lateinit var app: MyApp
     private lateinit var user: DUsers
     private lateinit var pref: SharedPreferences
+    private lateinit var contactsRepo: ContactsRepository
+    private var myId: Int = 0
+    private var otherId: Int = 0
+    private var isContact = false
+    private var isFriend = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +65,6 @@ class FriendProfileActivity : AppCompatActivity() {
 
         pref = getSharedPreferences("settings", MODE_PRIVATE)
 
-        // Находим элементы
         val btnBack = findViewById<ImageButton>(R.id.btn_back)
         val tvNickname = findViewById<TextView>(R.id.tv_friend_nickname)
         val btnAddContact = findViewById<Button>(R.id.btn_add_contact)
@@ -101,16 +107,34 @@ class FriendProfileActivity : AppCompatActivity() {
             finish()
         }
 
-        // Кнопка «Добавить в контакты» — пока заглушка
         btnAddContact.setOnClickListener {
-            Toast.makeText(this, "Контакт добавлен", Toast.LENGTH_SHORT).show()
-            // Здесь будет реальная логика (сохранение в БД)
+            lifecycleScope.launch {
+                try {
+                    if (isContact) {
+                        contactsRepo.removeContact(myId, otherId)
+                    } else {
+                        contactsRepo.addContact(myId, otherId)
+                    }
+                    refreshContactStatus()
+                } catch (e: Exception) {
+                    Toast.makeText(this@FriendProfileActivity, "Ошибка сети", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
-        // Кнопка «Сделать другом» — заглушка
         btnMakeFriend.setOnClickListener {
-            Toast.makeText(this, "Запрос в друзья отправлен", Toast.LENGTH_SHORT).show()
-            // Здесь будет логика добавления в друзья
+            lifecycleScope.launch {
+                try {
+                    if (isFriend) {
+                        contactsRepo.removeFriend(myId, otherId)
+                    } else {
+                        contactsRepo.addFriend(myId, otherId)
+                    }
+                    refreshContactStatus()
+                } catch (e: Exception) {
+                    Toast.makeText(this@FriendProfileActivity, "Ошибка сети", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
         date_number.setOnClickListener {
@@ -160,6 +184,28 @@ class FriendProfileActivity : AppCompatActivity() {
         }
         privacy_button.setBackgroundColor(privacy_color[iterator_privacy].toInt())
         viewModel.setPrivacy(privacy_text_ENUM[iterator_privacy])
+    }
+
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            refreshContactStatus()
+        }
+    }
+
+    private suspend fun refreshContactStatus() {
+        val contact = contactsRepo.getContactStatus(myId, otherId)
+        isContact = contact != null
+        isFriend = contact?.isFriend == true
+        updateButtons()
+    }
+
+    private fun updateButtons() {
+        val btnAddContact = findViewById<Button>(R.id.btn_add_contact)
+        val btnMakeFriend = findViewById<Button>(R.id.btn_make_friend)
+        btnAddContact.text = if (isContact) "Удалить из контактов" else "Добавить в контакты"
+        btnMakeFriend.visibility = if (isContact) View.VISIBLE else View.GONE
+        btnMakeFriend.text = if (isFriend) "Удалить из друзей" else "Сделать другом"
     }
 
     private fun setDate() {

@@ -3,6 +3,7 @@ package com.example.freeti.network_api
 import com.example.freeti.Member
 import com.example.freeti.network_entity.AuthResponse
 import com.example.freeti.network_entity.LoginRequest
+import com.example.freeti.network_entity.NContacts
 import com.example.freeti.network_entity.NGroupEvents
 import com.example.freeti.network_entity.NGroups
 import com.example.freeti.network_entity.NGroupsUsers
@@ -104,6 +105,30 @@ interface ApiService {
         @Path("user_id") memberId: Int,
         @Path("group_id") groupId: String
     ): Response<Boolean>
+
+    @PUT("member_delete") // member_leave
+    suspend fun leaveGroup(
+        @Path("group_id") groupId: String
+    ): Response<Boolean>
+
+    @PUT("groups/{group_id}")
+    suspend fun deleteGroup(
+        @Path("group_id") groupId: String
+    ): Response<Boolean>
+
+    @GET("contacts")
+    suspend fun getContacts(): List<NContacts>   // или Response<List<NContacts>>
+
+    @GET("users")
+    suspend fun getUsersByIds(
+        @Query("ids") ids: String
+    ): List<NUsers>
+
+    @PUT("contacts")
+    suspend fun upsertContact(@Body contact: NContacts): Response<NContacts>
+
+    @PUT("contacts/delete")
+    suspend fun deleteContact(@Body contact: NContacts): Response<Unit>
 
     @GET("group_members")
     suspend fun getGroupMembers(@Path("group_id") groupId: String): Response<List<NGroupsUsers>>

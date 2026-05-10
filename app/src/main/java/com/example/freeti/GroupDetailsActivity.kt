@@ -14,11 +14,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.transition.Visibility
 import com.example.freeti.data.local.entity.DGroups
 import com.example.freeti.view_model.GroupTasksViewModel
 import com.example.freeti.view_model.GroupTasksViewModelFactory
-import com.example.freeti.view_model.OtherTasksViewModel
 import com.example.freeti.views.GroupTaskTimelineView
 import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.launch
@@ -217,21 +215,15 @@ class GroupDetailsActivity : AppCompatActivity() {
 
     private fun showMaterialDatePicker() {
         val datePicker = MaterialDatePicker.Builder.datePicker()
-            .setTitleText("Выберите дату")               // Заголовок
-            .setSelection(MaterialDatePicker.todayInUtcMilliseconds()) // Текущая дата по умолчанию
+            .setTitleText("Выберите дату")
+            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
             .build()
 
-        // Устанавливаем слушатель нажатия кнопки "ОК"
         datePicker.addOnPositiveButtonClickListener { selection ->
-            // selection — это выбранная дата в миллисекундах от начала эпохи (UTC)
             val calendar1 = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
             calendar1.timeInMillis = selection
-
-            // Обновляем ваш календарь (переменную calendar)
             this.calendar.timeInMillis = selection
-            // Обновляем текст на экране
             setDate()
-            // Опционально: показываем Toast с выбранной датой
             Toast.makeText(this, "Выбрано: ${date_number.text}.${month_and_year.text}", Toast.LENGTH_SHORT).show()
         }
 

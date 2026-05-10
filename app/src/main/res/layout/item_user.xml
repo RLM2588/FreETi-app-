@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="12dp"
-    android:background="?android:attr/selectableItemBackground">
+    android:id="@+id/back_user"
+    android:background="#FFFFFF">
 
     <!-- Блок аватарки слева -->
     <FrameLayout

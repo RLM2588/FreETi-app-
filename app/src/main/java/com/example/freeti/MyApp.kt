@@ -6,8 +6,10 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.freeti.data_base.AppDataBase
+import com.example.freeti.data_base.ContactsDao
 import com.example.freeti.network_api.NetworkClient
 import com.example.freeti.repository.AuthRepository
+import com.example.freeti.repository.ContactsRepository
 import com.example.freeti.repository.GroupRepository
 import com.example.freeti.repository.GroupTaskRepository
 import com.example.freeti.repository.MembersRepository
@@ -32,6 +34,8 @@ class AppContainer(private val context: Context) {
 
     val userDao = database.usersDao()
 
+    val contactsDao = database.contactsDao()
+
     val tokenManager = TokenManager(context)
 
     val apiService = NetworkClient.provideApiService()
@@ -43,6 +47,7 @@ class AppContainer(private val context: Context) {
     val groupRepository = GroupRepository(groupsDao, apiService)
     val groupTaskRepository = GroupTaskRepository(apiService, groupTasksDao)
     val membersRepository = MembersRepository(apiService, groupMemberDao, userDao)
+    val contactsRepository = ContactsRepository(contactsDao, userDao, apiService, tokenManager)
 
     val taskSyncManager = TaskSyncManager(myTasksDao, syncMetaDao, apiService,
         syncConfig = SyncConfig()

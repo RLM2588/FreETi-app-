@@ -9,12 +9,17 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon_svg"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/icon_svg"
         android:supportsRtl="true"
         android:theme="@style/Theme.FreETi"
         android:usesCleartextTraffic="true">
+
+        <activity android:name=".PollsListActivity" android:label="Голосования" />
+        <activity android:name=".CreatePollActivity" android:label="Новое голосование" />
+        <activity android:name=".PollDetailActivity" android:label="Детали голосования" />
+
         <activity
             android:name=".SettingsActivity"
             android:exported="false" />
@@ -31,6 +36,9 @@
             android:exported="false" />
         <activity
             android:name=".SearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ContactsActivity"
             android:exported="false" />
         <activity
             android:name=".GroupsActivity"
