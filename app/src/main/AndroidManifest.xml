@@ -16,10 +16,6 @@
         android:theme="@style/Theme.FreETi"
         android:usesCleartextTraffic="true">
 
-        <activity android:name=".PollsListActivity" android:label="Голосования" />
-        <activity android:name=".CreatePollActivity" android:label="Новое голосование" />
-        <activity android:name=".PollDetailActivity" android:label="Детали голосования" />
-
         <activity
             android:name=".SettingsActivity"
             android:exported="false" />
