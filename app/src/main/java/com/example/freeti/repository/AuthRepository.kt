@@ -87,6 +87,7 @@ class AuthRepository(
             } else {
                 // Неудачное обновление — разлогиниваем
                 tokenManager.clearTokens()
+                logout()
                 Result.failure(Exception("Refresh failed: ${response.code()}"))
             }
         } catch (e: Exception) {

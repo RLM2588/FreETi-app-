@@ -234,7 +234,7 @@ class NewTaskActivity : AppCompatActivity() {
         val finalStart = startTime.timeInMillis
         val finalEnd = if (isNoTime) 0L else maxOf(finalStart + 600_000L, endTime.timeInMillis)
 
-        //val isNew = taskId == null
+        val isNew = taskId == null
         val task = DTasks(
             id = taskId ?: UUID.randomUUID().toString(), //TODO уточнить
             title = title,
@@ -251,6 +251,8 @@ class NewTaskActivity : AppCompatActivity() {
         )
 
         lifecycleScope.launch {
+            //if (isNew)
+
             (application as MyApp).appContainer.myTasksDao.insertAll(listOf(task))
         }
 

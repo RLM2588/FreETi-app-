@@ -27,7 +27,6 @@ class TokenManager(context: Context) {
     private fun createSafeEncryptedPrefs(context: Context): SharedPreferences {
         val prefsFileName = "freeti_tokens_prefs"
         return try {
-            // Попытка открыть существующие зашифрованные настройки
             EncryptedSharedPreferences.create(
                 context,
                 prefsFileName,
@@ -37,7 +36,6 @@ class TokenManager(context: Context) {
             )
         } catch (e: AEADBadTagException) {
             Log.w("TokenManager", "EncryptedSharedPreferences corrupted, deleting and recreating", e)
-            // Удаляем повреждённый файл и его бэкап
             val prefsDir = File(context.applicationInfo.dataDir, "shared_prefs")
             val prefsFile = File(prefsDir, "$prefsFileName.xml")
             val prefsBakFile = File(prefsDir, "$prefsFileName.xml.bak")

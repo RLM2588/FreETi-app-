@@ -77,5 +77,19 @@ class MainActivity : AppCompatActivity() {
         main_screen.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
         }
+        autoMain()
+    }
+
+    override fun onResume(){
+        super.onResume()
+        autoMain()
+    }
+
+    fun autoMain() {
+        if(MyApp.container.tokenManager.hasSession()) {
+            startActivity(Intent(this, MainScreen::class.java))
+        } else {
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
     }
 }
