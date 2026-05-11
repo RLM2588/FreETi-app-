@@ -85,6 +85,7 @@ class GroupDetailsActivity : AppCompatActivity() {
 
         calendar = Calendar.getInstance()
         id = intent.getStringExtra("group_id")?: "0"
+        if(id == "0") finish()
 
         updateUi()
 
@@ -119,9 +120,7 @@ class GroupDetailsActivity : AppCompatActivity() {
         }
 
         group_members.setOnClickListener {
-            val intent = Intent(this@GroupDetailsActivity, NewTaskActivity::class.java)
-            intent.putExtra("group_id", group.id)
-            startActivity(intent)
+            goOnMember()
         }
 
         buttonrasp.setOnClickListener {
@@ -177,7 +176,7 @@ class GroupDetailsActivity : AppCompatActivity() {
     }
 
     fun goOnMember() {
-        val intent = Intent(this, MembersActivity::class.java)
+        val intent = Intent(this@GroupDetailsActivity, MembersActivity::class.java)
         intent.putExtra("group_id", group.id)
         startActivity(intent)
     }

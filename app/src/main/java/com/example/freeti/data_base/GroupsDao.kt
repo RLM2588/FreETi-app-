@@ -17,7 +17,7 @@ interface GroupsDao {
 
     // Наблюдаемый список всех групп
     @Query("SELECT * FROM tgroups WHERE is_deleted = 0 ORDER BY title")
-    suspend fun getAllGroupsFlow(): Flow<List<DGroups>>
+    fun getAllGroupsFlow(): Flow<List<DGroups>>
 
     @Query("SELECT * FROM tgroups WHERE id = :id ORDER BY title")
     suspend fun getGroup(id: String): DGroups

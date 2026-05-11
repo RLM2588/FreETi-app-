@@ -73,7 +73,7 @@ class ContactsActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val appContainer = (application as MyApp).appContainer
-                appContainer.apiService.switchMember(userId, groupId!!)
+                appContainer.apiService.addMember(userId, groupId!!)
                 Toast.makeText(this@ContactsActivity, "Добавлен в группу", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 Toast.makeText(this@ContactsActivity, "Ошибка", Toast.LENGTH_SHORT).show()

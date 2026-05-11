@@ -51,6 +51,9 @@ interface ApiService {
         @Body task: NTasks
     ): Response<NTasks> // TODO необходимо ли
 
+    @GET("tasks/unassigned")
+    suspend fun getUnassignedTasks(): List<NTasks>
+
     @GET("othertasks")
     suspend fun getOtherTasksForDay(
         @Query("yearMonth") yearMonth: String,
@@ -99,6 +102,12 @@ interface ApiService {
         @Path("user_id") memberId: Int,
         @Path("group_id") groupId: String
     ): Response<NGroupsUsers>
+
+    @PUT("member_add")
+    suspend fun addMember(
+        @Path("user_id") memberId: Int,
+        @Path("group_id") groupId: String
+    )//: Response<NGroupsUsers> TODO подправить добавление пользователей
 
     @PUT("member_delete")
     suspend fun deleteMember(

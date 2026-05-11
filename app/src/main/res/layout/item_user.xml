@@ -6,7 +6,7 @@
     android:orientation="horizontal"
     android:padding="12dp"
     android:id="@+id/back_user"
-    android:background="#FFFFFF">
+    android:background="@color/bg">
 
     <!-- Блок аватарки слева -->
     <FrameLayout

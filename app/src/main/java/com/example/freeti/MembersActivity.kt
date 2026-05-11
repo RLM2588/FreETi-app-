@@ -1,5 +1,6 @@
 package com.example.freeti
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -18,7 +19,7 @@ class MembersActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var memberAdapter: MemberAdapter
     private lateinit var groupId: String
-    private val currentUserId = (application as MyApp).appContainer.tokenManager.getUserId()
+    private var currentUserId: Int = 0
 
     private val membersRepository: MembersRepository by lazy {
         (application as MyApp).appContainer.membersRepository
@@ -38,6 +39,8 @@ class MembersActivity : AppCompatActivity() {
             finish()
             return
         }
+
+        currentUserId = (application as MyApp).appContainer.tokenManager.getUserId()
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar_members)
         setSupportActionBar(toolbar)
@@ -101,8 +104,16 @@ class MembersActivity : AppCompatActivity() {
         }
 
         buttonAddMember.setOnClickListener {
-            showToast("Функция добавления скоро будет")
+            val intent = Intent(this, ContactsActivity::class.java)
+            intent.putExtra("group_id", groupId)
+            startActivity(intent)
         }
+
+        loadMembers()
+    }
+
+    override fun onResume() {
+        super.onResume()
 
         loadMembers()
     }

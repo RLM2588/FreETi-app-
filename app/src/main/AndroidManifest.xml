@@ -15,7 +15,14 @@
         android:theme="@style/Theme.FreETi"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".UnassignedTasksActivity"
+            android:exported="false"
+            android:theme="@style/Theme.FreETi" />
+        <activity
             android:name=".NewEventGroupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MembersActivity"
             android:exported="false" />
         <activity
             android:name=".SettingsActivity"

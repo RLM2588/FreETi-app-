@@ -215,6 +215,11 @@ class MainScreen : AppCompatActivity() {
             }
             true
         }
+
+        val btnUnassigned: Button = findViewById(R.id.main_unassigned_button)
+        btnUnassigned.setOnClickListener {
+            startActivity(Intent(this, UnassignedTasksActivity::class.java))
+        }
     }
 
     override fun onResume() {

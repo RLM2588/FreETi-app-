@@ -75,6 +75,8 @@ dependencies {
     implementation("androidx.room:room-runtime:2.7.0")
     implementation("androidx.room:room-ktx:2.7.0")
     implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
     kapt("androidx.room:room-compiler:2.7.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
