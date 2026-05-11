@@ -8,6 +8,7 @@ import androidx.security.crypto.MasterKey
 import com.example.freeti.network_entity.AuthResponse
 import java.io.File
 import javax.crypto.AEADBadTagException
+import androidx.core.content.edit
 
 class TokenManager(context: Context) {
 
@@ -61,12 +62,12 @@ class TokenManager(context: Context) {
     }
 
     fun saveTokens(authResponse: AuthResponse) {
-        prefs.edit()
-            .putString(KEY_ACCESS_TOKEN, authResponse.accessToken)
-            .putString(KEY_REFRESH_TOKEN, authResponse.refreshToken)
-            .putInt(KEY_USER_ID, authResponse.userId)
-            .putString(KEY_LOGIN, authResponse.login)
-            .apply()
+        prefs.edit {
+            putString(KEY_ACCESS_TOKEN, authResponse.accessToken)
+                .putString(KEY_REFRESH_TOKEN, authResponse.refreshToken)
+                .putInt(KEY_USER_ID, authResponse.userId)
+                .putString(KEY_LOGIN, authResponse.login)
+        }
     }
 
     fun saveAccessToken(accessToken: String) {

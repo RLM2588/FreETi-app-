@@ -25,7 +25,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
-    @GET("auth/username_id")
+    @GET("tasks/username_id")
     suspend fun get_username_id(): Response<UserResponse>
 
     @POST("auth/register")

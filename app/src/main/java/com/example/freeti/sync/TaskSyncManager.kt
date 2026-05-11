@@ -21,13 +21,20 @@ class TaskSyncManager(
                 return
             }
 
+            if (metadata == null) Log.d("aa", "null")
             val tasksFromNetwork = if (metadata == null) {
                 apiService.getTasksForMonth(yearMonth)
             } else {
                 apiService.getTasksForMonthSince(yearMonth, metadata.last_updated_at)
             }
+            if (tasksFromNetwork.isSuccessful) {
+                Log.d("ym", tasksFromNetwork.body().toString())
+            }
+            else {
+                Log.d("yml", tasksFromNetwork.code().toString())
+            }
 
-            Log.d("nigga", tasksFromNetwork.body()!![0].start.toString())
+            //Log.d("nigga", tasksFromNetwork.body()!![0].start.toString())
 
             // Получаем список id локальных неотправленных задач
             val unsyncedIds = myTaskDao.getUnsyncedTaskIds().toSet()
