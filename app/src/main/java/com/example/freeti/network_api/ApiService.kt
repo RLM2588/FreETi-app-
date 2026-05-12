@@ -4,7 +4,11 @@ import com.example.freeti.data.local.entity.DTasks
 import com.example.freeti.network_entity.AuthResponse
 import com.example.freeti.network_entity.FinalRegisterRequest
 import com.example.freeti.network_entity.LoginRequest
+import com.example.freeti.network_entity.NContacts
+import com.example.freeti.network_entity.NGroupEventSearch
+import com.example.freeti.network_entity.NGroupEvents
 import com.example.freeti.network_entity.NGroups
+import com.example.freeti.network_entity.NGroupsUsers
 import com.example.freeti.network_entity.NOtherTasks
 import com.example.freeti.network_entity.NRepeatTasks
 import com.example.freeti.network_entity.NTasks
@@ -97,16 +101,13 @@ interface ApiService {
         @Query("login") login: String
    ): Response<List<NOtherTasks>>
 
-    @PUT("users/{id}")
+    @PUT("users/id")
     suspend fun updateUser(
-        @Path("id") userId: Int,
         @Body user: NUsers
     ): Response<NUsers>
 
-    @GET("users/id")
-    suspend fun getUser(
-        @Query("id") id: Int
-    ): Response<NUsers>
+    @GET("users/user")
+    suspend fun getUser(): Response<NUsers>
 
     @GET("users/username")
     suspend fun getUsersSearch(
@@ -127,4 +128,63 @@ interface ApiService {
     // если нужен метод обновления
     @PUT("groups/groups")
     suspend fun updateGroup(@Body group: NGroups): Response<NGroups>
+
+    @PUT("member_switch")
+    suspend fun switchMember(
+        @Path("user_id") memberId: Int,
+        @Path("group_id") groupId: String
+    ): Response<NGroupsUsers>
+
+    @PUT("member_add")
+    suspend fun addMember(
+        @Path("user_id") memberId: Int,
+        @Path("group_id") groupId: String
+    )//: Response<NGroupsUsers> TODO подправить добавление пользователей
+
+    @PUT("member_delete")
+    suspend fun deleteMember(
+        @Path("user_id") memberId: Int,
+        @Path("group_id") groupId: String
+    ): Response<Boolean>
+
+    @PUT("member_delete") // member_leave
+    suspend fun leaveGroup(
+        @Path("group_id") groupId: String
+    ): Response<Boolean>
+
+    @PUT("groups/{group_id}")
+    suspend fun deleteGroup(
+        @Path("group_id") groupId: String
+    ): Response<Boolean>
+
+    @POST("groups/newevent")
+    suspend fun addEvent(
+        @Path("group_id") groupId: String,
+        @Body event: NGroupEventSearch
+    ): Response<List<NGroupEvents>>
+
+    @GET("contacts")
+    suspend fun getContacts(): List<NContacts>   // или Response<List<NContacts>>
+
+    @GET("users")
+    suspend fun getUsersByIds(
+        @Query("ids") ids: String
+    ): List<NUsers>
+
+    @PUT("groups/delete_event")
+    suspend fun deleteGroupEvent(
+        @Path("event_id") event_id: String
+    ): Response<Boolean>
+
+    @PUT("contacts")
+    suspend fun upsertContact(@Body contact: NContacts): Response<NContacts>
+
+    @PUT("contacts/delete")
+    suspend fun deleteContact(@Body contact: NContacts): Response<Unit>
+
+    @GET("group_members")
+    suspend fun getGroupMembers(@Path("group_id") groupId: String): Response<List<NGroupsUsers>>
+
+    @GET("group_users")
+    suspend fun getGroupUsers(@Path("group_id") groupId: String): Response<List<NUsers>>
 }

@@ -84,7 +84,7 @@ class ProfileActivity : AppCompatActivity() {
                     userDao.insertAll(listOf(updatedUser))
                     currentUser = updatedUser
 
-                    val response = apiService.updateUser(userId, updatedUser.toNetworkEntity())
+                    val response = apiService.updateUser(updatedUser.toNetworkEntity())
                     if (response.isSuccessful) {
                         response.body()?.let { serverUser ->
                             val serverEntity = DUsers(
@@ -108,7 +108,7 @@ class ProfileActivity : AppCompatActivity() {
                 currentUser = defaultUser
 
                 try {
-                    val response = apiService.updateUser(userId, defaultUser.toNetworkEntity())
+                    val response = apiService.updateUser(defaultUser.toNetworkEntity())
                     if (response.isSuccessful) {
                         response.body()?.let { serverUser ->
                             val serverEntity = DUsers(
