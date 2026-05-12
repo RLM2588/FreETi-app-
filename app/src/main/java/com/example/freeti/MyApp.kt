@@ -6,6 +6,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.freeti.data_base.AppDataBase
+import com.example.freeti.network_api.ApiService
 import com.example.freeti.network_api.NetworkClient
 import com.example.freeti.repository.AuthRepository
 import com.example.freeti.repository.ContactsRepository
@@ -38,7 +39,9 @@ class AppContainer(private val context: Context) {
 
     val tokenManager = TokenManager(context)
 
-    val apiService = NetworkClient.provideApiService()
+    val apiService: ApiService = NetworkClient.provideApiService(tokenManager) {
+        authRepository
+    }
 
     val authRepository = AuthRepository(apiService, tokenManager)
     val testRepository = TestRepository(apiService)
