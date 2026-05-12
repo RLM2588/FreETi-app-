@@ -17,7 +17,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -25,7 +24,6 @@ import com.example.freeti.data.local.entity.DTasks
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 import java.util.Calendar
-import java.util.TimeZone
 import java.util.UUID
 
 class NewTaskActivity : AppCompatActivity() {
@@ -40,6 +38,7 @@ class NewTaskActivity : AppCompatActivity() {
     private lateinit var t_mode: TextView
     private lateinit var t_et_color: EditText
     private lateinit var t_no_time: CheckBox
+    private lateinit var task_without_time: CheckBox
     private lateinit var t_is_done: CheckBox
     private lateinit var t_date_start: Button
     private lateinit var t_time_start: Button
@@ -47,6 +46,7 @@ class NewTaskActivity : AppCompatActivity() {
     private lateinit var t_time_end: Button
     private lateinit var t_move: Button
     private lateinit var t_layout_end: LinearLayout
+    private lateinit var task_times: LinearLayout
     private lateinit var t_view_color_preview: View
     private lateinit var t_ok: Button
     private lateinit var t_save: Button
@@ -100,6 +100,15 @@ class NewTaskActivity : AppCompatActivity() {
         t_esc = findViewById(R.id.task_esc)
         t_is_done = findViewById(R.id.task_is_done)
         t_move = findViewById(R.id.task_move)
+        task_without_time = findViewById(R.id.task_without_time)
+        task_times = findViewById(R.id.task_times)
+
+        val white_color = findViewById<View>(R.id.white_color)
+        val red_color = findViewById<View>(R.id.red_color)
+        val green_color = findViewById<View>(R.id.green_color)
+        val blue_color = findViewById<View>(R.id.blue_color)
+        val grbl_color = findViewById<View>(R.id.grbl_color)
+        val gray_color = findViewById<View>(R.id.gray_color)
 
         taskId = intent.getStringExtra("task_id")
         day = intent.getLongExtra("daytime", System.currentTimeMillis())
@@ -144,6 +153,11 @@ class NewTaskActivity : AppCompatActivity() {
             t_layout_end.visibility = if (isChecked) View.GONE else View.VISIBLE
         }
 
+        task_without_time.setOnCheckedChangeListener { _, isChecked ->
+            t_no_time.visibility = if (isChecked) View.GONE else View.VISIBLE
+            task_times.visibility = if (isChecked) View.GONE else View.VISIBLE
+        }
+
         t_move.setOnClickListener {
             if (is_plus_day) {
                 startTime.apply { add(Calendar.DAY_OF_MONTH, 1)  }
@@ -180,6 +194,13 @@ class NewTaskActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
+
+        white_color.setOnClickListener { t_et_color.setText("FFFFFF") }
+        red_color.setOnClickListener { t_et_color.setText("BB3344") }
+        green_color.setOnClickListener { t_et_color.setText("22AA55") }
+        blue_color.setOnClickListener { t_et_color.setText("3355AB") }
+        grbl_color.setOnClickListener { t_et_color.setText("33AAAA") }
+        gray_color.setOnClickListener { t_et_color.setText("888888") }
 
         t_ok.setOnClickListener {
             val ttext = t_title.text
@@ -229,10 +250,11 @@ class NewTaskActivity : AppCompatActivity() {
         val body = t_body.text.toString().trim()
         val colorHex = t_et_color.text.toString().trim().ifBlank { "FFFFFF" }
         val isNoTime = t_no_time.isChecked
+        val isTime = task_without_time.isChecked
         val importance = t_importance.selectedItemPosition + 1
 
-        val finalStart = startTime.timeInMillis
-        val finalEnd = if (isNoTime) 0L else maxOf(finalStart + 600_000L, endTime.timeInMillis)
+        val finalStart = if (isTime) 0L else startTime.timeInMillis
+        val finalEnd = if (isNoTime || isTime) 0L else maxOf(finalStart + 600_000L, endTime.timeInMillis)
 
         val task = DTasks(
             id = taskId ?: UUID.randomUUID().toString(), //TODO уточнить
@@ -294,11 +316,17 @@ class NewTaskActivity : AppCompatActivity() {
                 }
                 t_is_done.isChecked = if (task.status == "ACTIVE") false else true
                 t_et_color.setText(task.colour)
-                startTime.timeInMillis = task.start
-                if (task.time_end == 0L) {
+                if(task.start == 0L) {
+                    task_without_time.isChecked = true
+                    t_no_time.visibility = View.GONE
+                    task_times.visibility = View.GONE
+                }
+                else if (task.time_end == 0L) {
+                    startTime.timeInMillis = task.start
                     endTime.timeInMillis = task.start + 3600_000L // fallback
                     t_no_time.isChecked = true
                 } else {
+                    startTime.timeInMillis = task.start
                     endTime.timeInMillis = task.time_end
                     t_no_time.isChecked = false
                 }

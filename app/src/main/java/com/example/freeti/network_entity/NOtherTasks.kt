@@ -1,7 +1,6 @@
 package com.example.freeti.network_entity
 
 import com.example.freeti.data.local.entity.DOtherTasks
-import com.example.freeti.data.local.entity.DTasks
 
 data class NOtherTasks (
     val id: String,

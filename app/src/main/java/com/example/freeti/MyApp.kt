@@ -6,10 +6,15 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.freeti.data_base.AppDataBase
+import com.example.freeti.network_api.ApiService
 import com.example.freeti.network_api.NetworkClient
 import com.example.freeti.repository.AuthRepository
+import com.example.freeti.repository.ContactsRepository
 import com.example.freeti.repository.GroupRepository
+import com.example.freeti.repository.GroupTaskRepository
+import com.example.freeti.repository.MembersRepository
 import com.example.freeti.repository.OtherTaskRepository
+import com.example.freeti.repository.SearchRepository
 import com.example.freeti.repository.TestRepository
 import com.example.freeti.sync.SyncConfig
 import com.example.freeti.sync.TaskSyncManager
@@ -24,20 +29,34 @@ class AppContainer(private val context: Context) {
     val myTasksDao = database.myTasksDao()
     val otherTaskDao = database.otherTaskDao()
     val groupsDao = database.groupsDao()
+    val groupTasksDao = database.groupTasksDao()
+    val groupMemberDao = database.groupMembersDao()
     private val syncMetaDao = database.syncMetadataDao()
 
     val userDao = database.usersDao()
 
+    val contactsDao = database.contactsDao()
+
     val tokenManager = TokenManager(context)
 
-    val apiService = NetworkClient.provideApiService()
+    val apiService: ApiService = NetworkClient.provideApiService(tokenManager) {
+        authRepository
+    }
 
     val authRepository = AuthRepository(apiService, tokenManager)
     val testRepository = TestRepository(apiService)
     val otherRepository = OtherTaskRepository(apiService, otherTaskDao)
 
     val groupRepository = GroupRepository(groupsDao, apiService)
+    val groupTaskRepository = GroupTaskRepository(apiService, groupTasksDao)
+    val membersRepository = MembersRepository(apiService, groupMemberDao, userDao)
+    val contactsRepository = ContactsRepository(contactsDao, userDao, apiService, tokenManager)
 
+    val searchRepository = SearchRepository(
+        userDao,
+        apiService,
+        tokenManager
+    )
 
     val taskSyncManager = TaskSyncManager(myTasksDao, syncMetaDao, apiService,
         syncConfig = SyncConfig()

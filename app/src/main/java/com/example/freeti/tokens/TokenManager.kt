@@ -1,74 +1,84 @@
 package com.example.freeti.tokens
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.example.freeti.network_entity.AuthResponse
-
+import java.io.File
+import javax.crypto.AEADBadTagException
 
 class TokenManager(context: Context) {
 
-    // 1. Создаем современный MasterKey
     private val masterKey = MasterKey.Builder(context)
         .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
         .build()
 
-    // 2. Создаем EncryptedSharedPreferences с помощью нового ключа
-    private val prefs = EncryptedSharedPreferences.create(
-        context,
-        "freeti_tokens_prefs",
-        masterKey,
-        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-    )
+    private val prefs = createSafeEncryptedPrefs(context)
+//    EncryptedSharedPreferences.create(
+//        context,
+//        "freeti_tokens_prefs",
+//        masterKey,
+//        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+//        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+//    )
+
+    private fun createSafeEncryptedPrefs(context: Context): SharedPreferences {
+        val prefsFileName = "freeti_tokens_prefs"
+        return try {
+            EncryptedSharedPreferences.create(
+                context,
+                prefsFileName,
+                masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+        } catch (e: AEADBadTagException) {
+            Log.w("TokenManager", "EncryptedSharedPreferences corrupted, deleting and recreating", e)
+            val prefsDir = File(context.applicationInfo.dataDir, "shared_prefs")
+            val prefsFile = File(prefsDir, "$prefsFileName.xml")
+            val prefsBakFile = File(prefsDir, "$prefsFileName.xml.bak")
+            prefsFile.delete()
+            prefsBakFile.delete()
+
+            EncryptedSharedPreferences.create(
+                context,
+                prefsFileName,
+                masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+        }
+    }
 
     companion object {
         private const val KEY_ACCESS_TOKEN = "access_token"
         private const val KEY_REFRESH_TOKEN = "refresh_token"
         private const val KEY_USER_ID = "user_id"
-        private const val KEY_LOGIN = "user_login"
-        private const val KEY_EXPIRES_IN = "expires_in"      // в секундах
-        private const val KEY_TOKEN_ISSUED_AT = "issued_at"  // момент получения токена (мс)
+        private const val KEY_LOGIN = "login"
+
     }
 
     fun saveTokens(authResponse: AuthResponse) {
-        val now = System.currentTimeMillis()
         prefs.edit()
             .putString(KEY_ACCESS_TOKEN, authResponse.accessToken)
             .putString(KEY_REFRESH_TOKEN, authResponse.refreshToken)
-            .putInt(KEY_USER_ID, authResponse.user_id?: 0)
-            .putString(KEY_LOGIN, authResponse.user_login)
-            .putLong(KEY_EXPIRES_IN, authResponse.expires_in ?: 0L)
-            .putLong(KEY_TOKEN_ISSUED_AT, now)
+            .putInt(KEY_USER_ID, authResponse.userId)
+            .putString(KEY_LOGIN, authResponse.login)
             .apply()
     }
 
     fun saveAccessToken(accessToken: String) {
-        prefs.edit()
-            .putString(KEY_ACCESS_TOKEN, accessToken)
-            .apply()
+        prefs.edit().putString(KEY_ACCESS_TOKEN, accessToken).apply()
     }
 
     fun getAccessToken(): String? = prefs.getString(KEY_ACCESS_TOKEN, null)
     fun getRefreshToken(): String? = prefs.getString(KEY_REFRESH_TOKEN, null)
-    fun getUserId(): Int = prefs.getInt(KEY_USER_ID, 0)
-    fun getLogin(): String = prefs.getString(KEY_LOGIN, "uniqlogin").toString()
-    fun getExpiresIn(): Long = prefs.getLong(KEY_EXPIRES_IN, 0L)
-    fun getTokenIssuedAt(): Long = prefs.getLong(KEY_TOKEN_ISSUED_AT, 0L)
 
-    fun getAuthResponse() : AuthResponse {
-        return AuthResponse(getAccessToken(),
-            getRefreshToken(), getLogin(), getExpiresIn(),getUserId())
-    }
+    fun getUserId(): Int = prefs.getInt(KEY_USER_ID, -1)
 
-    fun isAccessTokenExpired(): Boolean {
-        val issuedAt = getTokenIssuedAt()
-        val expiresIn = getExpiresIn()
-        if (issuedAt == 0L || expiresIn == 0L) return true // нет данных – считаем истёкшим
-        val now = System.currentTimeMillis()
-        val elapsedSeconds = (now - issuedAt) / 1000
-        return elapsedSeconds >= expiresIn
-    }
+    fun getLogin(): String = prefs.getString(KEY_LOGIN, "null")?: "null"
 
     fun clearTokens() {
         prefs.edit().clear().apply()

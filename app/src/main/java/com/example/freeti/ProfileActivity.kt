@@ -25,7 +25,6 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var userAvatar: EditText // Изменено на EditText для управления фокусом
     private var currentUser: DUsers? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
@@ -83,10 +82,10 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(Intent(this, SearchActivity::class.java))
         }
 
-        //// Кнопка Contacts → избранное/друзья
-        //btnContacts.setOnClickListener {
-        //    startActivity(Intent(this, ContactsActivity::class.java))
-        //}
+        // Кнопка Contacts → избранное/друзья
+        btnContacts.setOnClickListener {
+            startActivity(Intent(this, ContactsActivity::class.java))
+        }
 
         btnGroups.setOnClickListener {
             startActivity(Intent(this, GroupsActivity::class.java))
@@ -145,9 +144,8 @@ class ProfileActivity : AppCompatActivity() {
                 } catch (e: Exception) {}
             }
         }
-
         lifecycleScope.launch {
-            var user = userDao.getUserForId(userId)
+            val user = userDao.getUserForId(userId)
             if (user == null) {
                 val defaultUser = DUsers(id = userId, login = "uniqlogin", username = "User", avatar = ":)")
                 userDao.insertAll(listOf(defaultUser))

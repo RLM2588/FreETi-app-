@@ -41,5 +41,7 @@
     <string name="newtask_plusday">+ day</string>
     <string name="newtask_minusday">- day</string>
 
+    <string name="FriendsElect">Friends</string>
+    <string name="PeopleSearch">People Search</string>
 
 </resources>

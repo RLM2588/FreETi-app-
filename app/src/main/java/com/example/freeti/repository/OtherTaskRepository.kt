@@ -1,6 +1,5 @@
 package com.example.freeti.repository
 
-import com.example.freeti.data.local.entity.DOtherTasks
 import com.example.freeti.data_base.OtherTasksDao
 import com.example.freeti.network_api.ApiService
 

@@ -60,7 +60,6 @@ class TaskTimelineView @JvmOverloads constructor(
     interface OnTaskClickListener {
         fun onTaskClick(task: DTasks)
     }
-
     var onTaskClickListener: OnTaskClickListener? = null
 
     fun setTasks(newTasks: List<DTasks>) {

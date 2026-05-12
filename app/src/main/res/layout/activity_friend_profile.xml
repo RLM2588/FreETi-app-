@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:background="@color/bg">
 
     <!-- Верхняя панель с кнопкой назад и заголовком -->
@@ -22,19 +23,16 @@
             android:layout_height="48dp"
             android:src="?attr/homeAsUpIndicator"
             android:background="?attr/selectableItemBackgroundBorderless"
-
-            android:contentDescription="Назад"
-            />
+            android:contentDescription="Назад" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Профиль"
-            android:textSize="28sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/for_text"
-            android:fontFamily="@font/montserrat_extrabold"
             android:layout_marginStart="8dp" />
     </LinearLayout>
 
@@ -51,23 +49,20 @@
             android:orientation="vertical"
             android:gravity="center_horizontal">
 
+            <!-- Аватар (пустой круг с рожицей) -->
             <FrameLayout
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:layout_gravity="center_horizontal"
-                >
+                android:layout_gravity="center_horizontal">
 
-                <!-- ПУСТОЙ круг -->
                 <TextView
                     android:id="@+id/other_faceText"
-                    android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:gravity="center"
                     android:background="@drawable/circle_background"
-
                     android:text="" />
 
-                <!-- ПРОЗРАЧНАЯ строка с ВИДИМЫМ текстом -->
                 <TextView
                     android:id="@+id/iv_friend_avatar"
                     android:layout_width="match_parent"
@@ -79,8 +74,7 @@
                     android:rotation="90"
                     android:text=":0"
                     android:textColor="@color/bg"
-                    android:textSize="80sp"/>
-
+                    android:textSize="80sp" />
             </FrameLayout>
 
             <!-- Никнейм -->
@@ -90,83 +84,127 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:text="nickname"
+                android:text="ник"
                 android:layout_marginTop="20dp"
-                android:textColor="@color/for_text"/>
+                android:textColor="@color/for_text" />
 
+            <!-- Две кнопки по центру -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_gravity="center">
-                <!-- Кнопка «Добавить в контакты» -->
+                android:gravity="center"
+                android:layout_marginTop="12dp">
+
                 <Button
                     android:id="@+id/btn_add_contact"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="AddContact"
+                    android:text="Добавить контакт"
                     android:textColor="@color/for_text"
-                    android:gravity="start"
-                    android:layout_marginTop="12dp"/>
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp"
+                    android:layout_marginEnd="12dp" />
 
-                <!-- Кнопка «Сделать другом» -->
                 <Button
                     android:id="@+id/btn_make_friend"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="Friend"
+                    android:text="Друг"
                     android:textColor="@color/for_text"
-                    android:layout_marginTop="12dp"/>
-                <Button
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/other_privacy"
+                    style="@style/Widget.MaterialComponents.Button.Icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="privacy"
-                    android:textColor="@color/for_text"
-                    android:textSize="11sp"
-                    android:layout_marginTop="12dp"/>
+
+                    app:cornerRadius="8dp"/>
             </LinearLayout>
 
+            <!-- Дата регистрации (пример) -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-                <TextView
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="12dp">
 
-                    android:layout_width="28dp"
+                <TextView
+                    android:id="@+id/other_date"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="17"
-                    android:textSize="24sp"
-                    android:id="@+id/other_date"
-                    android:textColor="@color/for_text"/>
+                    android:textColor="@color/for_text"
+                    android:textSize="24sp" />
 
                 <TextView
-                    android:layout_width="36dp"
+                    android:id="@+id/other_day_week"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Пн"
+                    android:textColor="@color/for_text"
                     android:textSize="24sp"
-                    android:id="@+id/other_day_week"
-                    android:textColor="@color/for_text"/>
+                    android:layout_marginStart="4dp" />
 
                 <TextView
+                    android:id="@+id/other_month"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="март 2007"
+                    android:textColor="@color/for_text"
                     android:textSize="24sp"
-                    android:id="@+id/other_month"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:textColor="@color/for_text"/>
+                    android:layout_marginStart="4dp"
+                    android:layout_marginBottom="0dp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+                <ImageButton
+                    android:id="@+id/main_prev_day"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintBottom_toBottomOf="@id/main_next_day"
+                    app:layout_constraintEnd_toStartOf="@id/main_next_day"
+                    app:layout_constraintTop_toTopOf="@id/main_next_day"
+                    app:srcCompat="@drawable/ic_nextday"
+                    app:tint="@color/for_text" />
+                <ImageButton
+                    android:id="@+id/main_next_day"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:padding="4dp"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintBottom_toBottomOf="@id/main_month"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/main_month"
+                    app:srcCompat="@drawable/ic_pastday"
+                    app:tint="@color/for_text" />
+
+
+
+
 
 
             </LinearLayout>
 
+            <!-- Блок для горизонтального скролла (заглушка) -->
             <ScrollView
                 android:id="@+id/other_tasks2"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fillViewport="true"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp">
 
                 <HorizontalScrollView
@@ -181,7 +219,11 @@
                         android:layout_height="wrap_content" />
                 </HorizontalScrollView>
             </ScrollView>
+
+
         </LinearLayout>
+
     </ScrollView>
+
 
 </LinearLayout>
