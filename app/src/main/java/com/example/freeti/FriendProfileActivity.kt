@@ -62,6 +62,7 @@ class FriendProfileActivity : AppCompatActivity() {
                 app.appContainer.otherRepository
             )
         ).get(OtherTasksViewModel::class.java)
+        contactsRepo = app.appContainer.contactsRepository
 
         pref = getSharedPreferences("settings", MODE_PRIVATE)
 

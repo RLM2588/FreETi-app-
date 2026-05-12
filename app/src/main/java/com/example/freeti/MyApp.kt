@@ -13,6 +13,7 @@ import com.example.freeti.repository.GroupRepository
 import com.example.freeti.repository.GroupTaskRepository
 import com.example.freeti.repository.MembersRepository
 import com.example.freeti.repository.OtherTaskRepository
+import com.example.freeti.repository.SearchRepository
 import com.example.freeti.repository.TestRepository
 import com.example.freeti.sync.SyncConfig
 import com.example.freeti.sync.TaskSyncManager
@@ -47,6 +48,12 @@ class AppContainer(private val context: Context) {
     val groupTaskRepository = GroupTaskRepository(apiService, groupTasksDao)
     val membersRepository = MembersRepository(apiService, groupMemberDao, userDao)
     val contactsRepository = ContactsRepository(contactsDao, userDao, apiService, tokenManager)
+
+    val searchRepository = SearchRepository(
+        userDao,
+        apiService,
+        tokenManager
+    )
 
     val taskSyncManager = TaskSyncManager(myTasksDao, syncMetaDao, apiService,
         syncConfig = SyncConfig()
