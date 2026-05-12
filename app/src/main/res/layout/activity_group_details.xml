@@ -10,9 +10,9 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#2196F3"
+        android:background="@color/bg"
         app:title="О группе"
-        app:titleTextColor="@android:color/white"
+        app:titleTextColor="@color/for_text"
         app:navigationIcon="?attr/homeAsUpIndicator" />
 
     <ScrollView
