@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.appcompat.widget.Toolbar
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var s_check: CheckBox
@@ -26,17 +27,22 @@ class SettingsActivity : AppCompatActivity() {
         }
         s_check = findViewById(R.id.settings_test)
         s_auto = findViewById(R.id.settings_auto)
-        s_esc = findViewById(R.id.settings_esc)
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        toolbar.setNavigationOnClickListener {
+            finish()
+        }
 
         pref = getSharedPreferences("settings", MODE_PRIVATE)
 
         s_check.isChecked = pref.getBoolean("noTestAdd", false)
         s_auto.isChecked = pref.getBoolean("AutoToMain", false)
 
-
-        s_check.setOnCheckedChangeListener { _, _ -> pref.edit().putBoolean("noTestAdd", s_check.isChecked).apply() }
-        s_auto.setOnCheckedChangeListener { _, _ -> pref.edit().putBoolean("AutoToMain", s_auto.isChecked).apply() }
-
-        s_esc.setOnClickListener { finish() }
+        // Сохраняем изменения
+        s_check.setOnCheckedChangeListener { _, isChecked ->
+            pref.edit().putBoolean("noTestAdd", isChecked).apply()
+        }
+        s_auto.setOnCheckedChangeListener { _, isChecked ->
+            pref.edit().putBoolean("AutoToMain", isChecked).apply()
+        }
     }
 }
