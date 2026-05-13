@@ -2,7 +2,6 @@ package com.example.freeti
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
@@ -61,6 +60,8 @@ class FriendProfileActivity : AppCompatActivity() {
     private var otherId: Int = 0
     private var isContact = false
     private var isFriend = false
+    private lateinit var btnAddContact: Button
+    private lateinit var btnMakeFriend: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,8 +81,8 @@ class FriendProfileActivity : AppCompatActivity() {
 
         val btnBack = findViewById<ImageButton>(R.id.btn_back)
         val tvNickname = findViewById<TextView>(R.id.tv_friend_nickname)
-        val btnAddContact = findViewById<Button>(R.id.btn_add_contact)
-        val btnMakeFriend = findViewById<Button>(R.id.btn_make_friend)
+        btnAddContact = findViewById(R.id.btn_add_contact)
+        btnMakeFriend = findViewById(R.id.btn_make_friend)
         date_number = findViewById(R.id.other_date)
         day_week = findViewById(R.id.other_day_week)
         tasks_view = findViewById(R.id.other_tasks)
@@ -237,10 +238,8 @@ class FriendProfileActivity : AppCompatActivity() {
     }
 
     private fun updateButtons() {
-        val btnAddContact = findViewById<Button>(R.id.btn_add_contact)
-        val btnMakeFriend = findViewById<Button>(R.id.btn_make_friend)
         btnAddContact.text = if (isContact) "Удалить из контактов" else "Добавить в контакты"
-        btnMakeFriend.visibility = if (isContact) View.VISIBLE else View.GONE
+        // неудобно btnMakeFriend.visibility = if (isContact) View.VISIBLE else View.GONE
         btnMakeFriend.text = if (isFriend) "Удалить из друзей" else "Сделать другом"
     }
 

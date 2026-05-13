@@ -45,4 +45,10 @@
     <string name="FriendsElect">Друзья</string>
 
     <string name="PeopleSearch">Поиск людей</string>
+    <plurals name="members_plurals">
+        <item quantity="one">%d участник</item>
+        <item quantity="few">%d участника</item>
+        <item quantity="many">%d участников</item>
+        <item quantity="other">%d участников</item>
+    </plurals>
 </resources>

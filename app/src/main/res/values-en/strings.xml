@@ -44,4 +44,11 @@
     <string name="FriendsElect">Friends</string>
     <string name="PeopleSearch">People Search</string>
 
+    <plurals name="members_plurals">
+        <item quantity="one">%d member</item>
+        <item quantity="few">%d members</item>
+        <item quantity="many">%d members</item>
+        <item quantity="other">%d members</item>
+    </plurals>
+
 </resources>

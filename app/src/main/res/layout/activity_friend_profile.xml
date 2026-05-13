@@ -87,31 +87,41 @@
                 android:text="ник"
                 android:layout_marginTop="20dp"
                 android:textColor="@color/for_text" />
-
-            <!-- Две кнопки по центру -->
             <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="start">
+                <Button
+                    android:id="@+id/btn_add_contact"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="start"
+                    android:text="Добавить контакт"
+                    android:backgroundTint="@color/green_pale"
+                    android:textColor="@color/bg"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_marginTop="12dp">
-
-                <Button
-                    android:id="@+id/btn_add_contact"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Добавить контакт"
-                    android:textColor="@color/for_text"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="8dp"
-                    android:layout_marginEnd="12dp" />
+                android:layout_marginTop="10dp">
 
                 <Button
                     android:id="@+id/btn_make_friend"
-                    android:layout_width="wrap_content"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/green"
                     android:text="Друг"
-                    android:textColor="@color/for_text"
+                    android:textColor="@color/bg"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="8dp" />
                 <View
@@ -134,23 +144,27 @@
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:layout_marginTop="12dp">
-
                 <TextView
                     android:id="@+id/other_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="17"
                     android:textColor="@color/for_text"
-                    android:textSize="24sp" />
+
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/other_day_week"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Пн"
+                    android:layout_marginStart="4dp"
                     android:textColor="@color/for_text"
                     android:textSize="24sp"
-                    android:layout_marginStart="4dp" />
+                    android:layout_marginTop="0dp" />
+
+
 
                 <TextView
                     android:id="@+id/other_month"
@@ -159,7 +173,7 @@
                     android:text="март 2007"
                     android:textColor="@color/for_text"
                     android:textSize="24sp"
-                    android:layout_marginStart="4dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginBottom="0dp" />
 
                 <View
@@ -205,7 +219,8 @@
                 android:id="@+id/other_tasks2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
+                android:layout_marginStart="-10dp"
+                android:layout_marginTop="0dp">
 
                 <HorizontalScrollView
                     android:id="@+id/timeline_horizontal_scroll"

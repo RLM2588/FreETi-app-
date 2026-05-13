@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -20,6 +21,7 @@ import com.example.freeti.view_model.GroupTasksViewModel
 import com.example.freeti.view_model.GroupTasksViewModelFactory
 import com.example.freeti.views.GroupTaskTimelineView
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.TimeZone
@@ -44,13 +46,16 @@ class GroupDetailsActivity : AppCompatActivity() {
     private lateinit var textGroupName: TextView
     private lateinit var textDescription: TextView
     private lateinit var textMemberCount: TextView
-    private lateinit var buttonCreateEvent: Button
+    private lateinit var buttonCreateEvent: FloatingActionButton
     private lateinit var buttonrasp: Button
     private lateinit var group_members: Button
     private lateinit var tasks_lin: LinearLayout
     private lateinit var view_golosov: View // TODO потом заменим на нужное
     private lateinit var group: DGroups
     private lateinit var id: String
+    private lateinit var nextDayButton: ImageButton
+    private lateinit var prevDayButton: ImageButton
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -117,6 +122,16 @@ class GroupDetailsActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+        nextDayButton = findViewById(R.id.main_next_day)
+        prevDayButton = findViewById(R.id.main_prev_day)
+
+        nextDayButton.setOnClickListener {
+            addDays(1)
+        }
+
+        prevDayButton.setOnClickListener {
+            addDays(-1)
         }
 
         group_members.setOnClickListener {
@@ -193,7 +208,8 @@ class GroupDetailsActivity : AppCompatActivity() {
             group = app.appContainer.groupsDao.getGroup(id)
             textGroupName.text = group.title
             textDescription.text = group.body
-            textMemberCount.text = app.appContainer.groupMemberDao.getCountGroupMembers(id).toString()
+            val count = app.appContainer.groupMemberDao.getCountGroupMembers(id)
+            textMemberCount.text = resources.getQuantityString(R.plurals.members_plurals, count.toInt(), count)
 
             viewModel.setId(group.id)
 
