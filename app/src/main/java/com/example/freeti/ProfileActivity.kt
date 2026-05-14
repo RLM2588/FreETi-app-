@@ -2,6 +2,7 @@ package com.example.freeti
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -77,10 +78,26 @@ class ProfileActivity : AppCompatActivity() {
                 username = newUsername,
                 avatar = newAvatar,
                 login = tokenManager.getLogin()
-            ) ?: DUsers(id = userId, login = tokenManager.getLogin(), username = newUsername, avatar = newAvatar)
+            ) ?: DUsers(
+                id = userId,
+                login = tokenManager.getLogin(),
+                username = newUsername,
+                avatar = newAvatar
+            )
+            Log.d("updatedUser", "current: ${tokenManager.getLogin()}")
 
             lifecycleScope.launch {
                 try {
+                    val userResp = apiService.get_username_id()
+                    if (userResp.isSuccessful && userResp.body() != null && userResp.body()?.username != null) {
+                        Log.d(
+                            "login changed",
+                            "old: ${updatedUser.login}, new: ${userResp.body()?.username}"
+                        )
+                        tokenManager.saveUser(userResp.body()?.userId, userResp.body()?.username)
+                        updatedUser.login = userResp.body()?.username.toString();
+                    }
+                    Log.d("f", "b")
                     userDao.insertAll(listOf(updatedUser))
                     currentUser = updatedUser
 
@@ -90,32 +107,39 @@ class ProfileActivity : AppCompatActivity() {
                             val serverEntity = DUsers(
                                 id = serverUser.id,
                                 login = serverUser.login,
-                                username = serverUser.username,
-                                avatar = serverUser.avatar
+                                username = serverUser.username?: "no name",
+                                avatar = serverUser.avatar?: ":|"
                             )
                             userDao.insertAll(listOf(serverEntity))
                             currentUser = serverEntity
                         }
                     }
-                } catch (e: Exception) {}
+                } catch (e: Exception) {
+                }
             }
         }
         lifecycleScope.launch {
             var user = userDao.getUserForId(userId)
             if (user == null) {
-                val defaultUser = DUsers(id = userId, login = "uniqlogin", username = "User", avatar = ":)")
+                val defaultUser =
+                    DUsers(id = userId, login = "uniqlogin", username = "User", avatar = ":)")
                 userDao.insertAll(listOf(defaultUser))
                 currentUser = defaultUser
 
                 try {
-                    val response = apiService.updateUser(defaultUser.toNetworkEntity())
+                    var resp = apiService.getUser()
+                    var response = resp
+                    if (!response.isSuccessful) {
+                        response = apiService.updateUser(defaultUser.toNetworkEntity())
+                    }
+
                     if (response.isSuccessful) {
                         response.body()?.let { serverUser ->
                             val serverEntity = DUsers(
                                 id = serverUser.id,
                                 login = serverUser.login,
-                                username = serverUser.username,
-                                avatar = serverUser.avatar
+                                username = serverUser.username?: "no name",
+                                avatar = serverUser.avatar?: ":|"
                             )
                             userDao.insertAll(listOf(serverEntity))
                             currentUser = serverEntity

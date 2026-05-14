@@ -112,12 +112,12 @@ interface ApiService {
     @GET("users/username")
     suspend fun getUsersSearch(
         @Query("username") username: String
-    ): List<NUsers>
+    ): Response<List<NUsers>>
 
     @GET("users/login")
     suspend fun getUsersSearchByLogin(
         @Query("login") login: String
-    ): List<NUsers>
+    ): Response<List<NUsers>>
 
     @GET("groups/groups")
     suspend fun getGroups(): List<NGroups>
