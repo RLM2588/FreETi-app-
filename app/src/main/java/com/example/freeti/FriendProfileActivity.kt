@@ -25,18 +25,30 @@ class FriendProfileActivity : AppCompatActivity() {
     private lateinit var date_number: TextView
     private lateinit var day_week: TextView
     private lateinit var tasks_view: OtherTaskTimelineView
-    private lateinit var privacy_button: Button
+
+    private lateinit var privacy_button: com.google.android.material.button.MaterialButton
     private lateinit var month_and_year: TextView
     private lateinit var avatar: TextView
     private lateinit var calendar: Calendar
     private lateinit var viewModel: OtherTasksViewModel
+    private lateinit var nextDayButton: ImageButton
+    private lateinit var prevDayButton: ImageButton
 
-    private val privacy_text: List<String> = listOf("Публичное", "Для друзей")
-    private val privacy_text_ENUM: List<String> = listOf("PUBLIC", "FRIENDS")
-    private val week_text: List<String> = listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс")
-    private val monthes_text: List<String> = listOf("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль",
-        "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь")
-    private val privacy_color: List<Long> = listOf(0xFFAA5555, 0xFF5555AA)
+    private val privacy_text_ENUM = listOf("PUBLIC", "FRIENDS")
+    private val week_text = listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс")
+    private val monthes_text = listOf("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь")
+    private val privacy_color = listOf(0xFFa76a6b.toInt(), 0xFF617d9a.toInt())
+    private val privacy_icons = listOf(
+        R.drawable.outline_globe_24,   // для PUBLIC
+        R.drawable.baseline_groups_24  // для FRIENDS
+    )
+
+    private val privacy_labels: List<String> by lazy {
+        listOf(
+            getString(R.string.privacy_public),
+            getString(R.string.privacy_friends)
+        )
+    }
 
     // итераторы
     var iterator_privacy = 0
@@ -94,6 +106,16 @@ class FriendProfileActivity : AppCompatActivity() {
             }
 
             viewModel.setDate(calendar.timeInMillis)
+        }
+        nextDayButton = findViewById(R.id.main_next_day)
+        prevDayButton = findViewById(R.id.main_prev_day)
+
+        nextDayButton.setOnClickListener {
+            addDays(1)
+        }
+
+        prevDayButton.setOnClickListener {
+            addDays(-1)
         }
 
         lifecycleScope.launch {
@@ -154,9 +176,11 @@ class FriendProfileActivity : AppCompatActivity() {
         }
 
         // Кнопка приватности
-        setPrivacy(false)
+        updatePrivacyUI(false)
+
         privacy_button.setOnClickListener {
-            setPrivacy()
+            // При клике переключаем (k = true)
+            updatePrivacyUI(true)
         }
 
         // Кнопка дня недели
@@ -180,12 +204,22 @@ class FriendProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun setPrivacy(k: Boolean = true) {
+    private fun updatePrivacyUI(k: Boolean = true) {
         if (k) {
             iterator_privacy = (iterator_privacy + 1) % 2
-            Toast.makeText(this, privacy_text[iterator_privacy], Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, privacy_labels[iterator_privacy], Toast.LENGTH_SHORT).show()
         }
+
+        // Меняем текст кнопки
+        privacy_button.text = privacy_labels[iterator_privacy]
+
+
         privacy_button.setBackgroundColor(privacy_color[iterator_privacy].toInt())
+
+
+        privacy_button.setIconResource(privacy_icons[iterator_privacy])
+
+
         viewModel.setPrivacy(privacy_text_ENUM[iterator_privacy])
     }
 

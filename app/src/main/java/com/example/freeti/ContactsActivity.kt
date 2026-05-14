@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -23,11 +24,16 @@ class ContactsActivity : AppCompatActivity() {
     private lateinit var adapter: ContactsAdapter
     private var groupId: String? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_contacts)
 
         groupId = intent.getStringExtra("group_id")
+        val btnBack = findViewById<ImageButton>(R.id.btn_back_contacts)
+        btnBack.setOnClickListener {
+            finish()
+        }
 
         val appContainer = (application as MyApp).appContainer
         val repository = ContactsRepository(
