@@ -80,6 +80,12 @@ class MainScreen : AppCompatActivity() {
 
         // Инициализация
         app = application as MyApp
+
+        //if (!app.appContainer.tokenManager.hasSession()) {
+        //    Toast.makeText(this, "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show()
+        //    finish()
+        //}
+
         viewModel = ViewModelProvider(
             this,
             TasksViewModelFactory(app.appContainer.myTasksDao, app.appContainer.taskSyncManager)
@@ -220,6 +226,11 @@ class MainScreen : AppCompatActivity() {
                 addDays(-1)
             }
             true
+        }
+
+        val btnUnassigned: Button = findViewById(R.id.main_unassigned_button)
+        btnUnassigned.setOnClickListener {
+            startActivity(Intent(this, UnassignedTasksActivity::class.java))
         }
     }
 

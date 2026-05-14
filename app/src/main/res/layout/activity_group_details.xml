@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/bg"
+    android:fitsSystemWindows="true">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/bg"
+        app:title="О группе"
+        app:titleTextColor="@color/for_text"
+        app:navigationIcon="?attr/homeAsUpIndicator" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="@color/bg">
+
+
+                <TextView
+                    android:id="@+id/textGroupName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:text="name"
+                    android:textColor="@color/for_text"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/textDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="17sp"
+                    android:text="body"
+                    android:textColor="@color/for_text"/>
+
+
+                <TextView
+                    android:id="@+id/textMemberCount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:text="2"
+                    android:textColor="@color/for_text"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:text="расписание"
+                        android:layout_weight="1"
+                        android:id="@+id/group_tasks_view"
+                        android:backgroundTint="@color/black"
+                        android:textColor="@color/bg"/>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
+
+                    <Button
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:text="участники"
+                        android:layout_weight="1"
+                        android:layout_gravity="end"
+                        android:id="@+id/group_members"
+                        android:backgroundTint="@color/black"
+                        android:textColor="@color/bg"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/group_tasks_lin"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="18dp">
+
+                        <TextView
+                            android:id="@+id/group_date"
+                            android:layout_width="28dp"
+                            android:layout_height="wrap_content"
+                            android:text="17"
+                            android:textColor="@color/for_text"
+                            android:textSize="24sp" />
+
+                        <TextView
+                            android:id="@+id/group_day_week"
+                            android:layout_width="36dp"
+                            android:layout_height="wrap_content"
+                            android:text="Пн"
+                            android:textColor="@color/for_text"
+                            android:textSize="24sp"
+                            android:layout_marginStart="10dp"/>
+
+                        <TextView
+                            android:id="@+id/group_month"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginBottom="5dp"
+                            android:text="март 2007"
+                            android:textColor="@color/for_text"
+                            android:textSize="24sp" />
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"/>
+                        <ImageButton
+                            android:id="@+id/main_prev_day"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_marginEnd="15dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:padding="4dp"
+                            android:scaleType="fitCenter"
+                            app:layout_constraintBottom_toBottomOf="@id/main_next_day"
+                            app:layout_constraintEnd_toStartOf="@id/main_next_day"
+                            app:layout_constraintTop_toTopOf="@id/main_next_day"
+                            app:srcCompat="@drawable/ic_nextday"
+                            android:layout_marginTop="-14dp"
+                            app:tint="@color/for_text" />
+                        <ImageButton
+                            android:id="@+id/main_next_day"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_marginEnd="20dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:padding="4dp"
+                            android:scaleType="fitCenter"
+                            app:layout_constraintBottom_toBottomOf="@id/main_month"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/main_month"
+                            app:srcCompat="@drawable/ic_pastday"
+                            android:layout_marginTop="-14dp"
+                            app:tint="@color/for_text" />
+                    </LinearLayout>
+
+
+                    <ScrollView
+                        android:id="@+id/group_tasks2"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:fillViewport="true"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginStart="-10dp">
+
+
+                        <HorizontalScrollView
+                            android:id="@+id/group_timeline_horizontal_scroll"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fillViewport="true">
+
+                            <com.example.freeti.views.GroupTaskTimelineView
+                                android:id="@+id/group_tasks"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+
+                        </HorizontalScrollView>
+
+                    </ScrollView>
+                </LinearLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:id="@+id/group_golosov"
+                    android:background="@color/white"
+                    android:visibility="gone"/>
+
+
+            </LinearLayout>
+        </ScrollView>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/buttonCreateEvent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="30dp"
+            app:srcCompat="@drawable/ic_add_tru"
+            app:backgroundTint="@color/for_text"
+            app:tint="@color/bg" />
+    </RelativeLayout>
+
+
+</LinearLayout>

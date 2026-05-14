@@ -26,7 +26,21 @@
         android:textColorHint="@color/for_hint"
         android:inputType="text"
         android:padding="12dp"
-        /> <LinearLayout
+        />
+
+    <EditText
+        android:id="@+id/editTextGroupBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart ="0dp"
+        android:hint="Описание группы"
+        android:textColor="@color/for_text"
+        android:textColorHint="@color/for_hint"
+        android:inputType="text"
+        android:padding="12dp"
+        />
+
+    <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"

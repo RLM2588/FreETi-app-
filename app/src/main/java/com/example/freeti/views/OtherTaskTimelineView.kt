@@ -81,12 +81,18 @@ class OtherTaskTimelineView @JvmOverloads constructor(
             dayEndMillis = cal.timeInMillis
         }
         dayStartMillis -= 3600_000L
+        dayStartMillis = startToNear(dayStartMillis, cellDurationMinutes * 60 * 1000L)
+        // Для четкого разбиения промежутков
         dayEndMillis += 3600_000L
         columns = distributeTasks(tasks)
         val totalMinutes = TimeUnit.MILLISECONDS.toMinutes(dayEndMillis - dayStartMillis)
         totalRows = (totalMinutes / cellDurationMinutes).toInt()
         requestLayout()
         invalidate()
+    }
+
+    fun startToNear(timeMS: Long, razbMS: Long): Long {
+        return (timeMS + razbMS / 2) / razbMS * razbMS
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -177,8 +183,9 @@ class OtherTaskTimelineView @JvmOverloads constructor(
     }
 
     private fun getSlotIndexSt(timestamp: Long): Int {
-        val diffMinutes = TimeUnit.MILLISECONDS.toMinutes(timestamp - dayStartMillis)
-        return (diffMinutes / cellDurationMinutes).toInt()
+        val diffMinutes = TimeUnit.MILLISECONDS.toMinutes(timestamp - dayStartMillis) + 1
+        // Сюда или к миллисекундам?
+        return ((diffMinutes)/ cellDurationMinutes).toInt() // Теоретически защитит от бага
     }
 
     private fun getSlotIndexFn(timestamp: Long): Int {

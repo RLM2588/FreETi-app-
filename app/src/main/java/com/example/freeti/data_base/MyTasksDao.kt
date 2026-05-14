@@ -11,6 +11,11 @@ interface MyTasksDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(tasks: List<DTasks>)
 
+    @Query("SELECT * FROM tasks WHERE start = 0 AND time_end = 0 AND is_delete = 0")
+    fun observeUnassignedTasks(): Flow<List<DTasks>>
+
+    @Query("DELETE FROM tasks WHERE start = 0 AND time_end = 0 AND is_synced = 1")
+    suspend fun deleteAllUnassignedTasks()
     @Query("SELECT MAX(updated_at) FROM tasks WHERE strftime('%Y-%m', start/1000, 'unixepoch') = :yearMonth")
     suspend fun getMaxUpdatedAtForMonth(yearMonth: String): Long?  // yearMonth = "2025-03"
 
