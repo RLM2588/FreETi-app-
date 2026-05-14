@@ -15,7 +15,6 @@ import androidx.appcompat.widget.Toolbar
 class SettingsActivity : AppCompatActivity() {
     private lateinit var s_check: CheckBox
     private lateinit var s_auto: CheckBox
-    private lateinit var s_esc: Button
     private lateinit var s_logout: Button
     private lateinit var pref: SharedPreferences
     private val t_meneger: TokenManager by lazy {(application as MyApp).appContainer.tokenManager}
@@ -36,9 +35,9 @@ class SettingsActivity : AppCompatActivity() {
 
         s_check = findViewById(R.id.settings_test)
         s_auto = findViewById(R.id.settings_auto)
-        s_esc = findViewById(R.id.settings_esc)
-        s_logout = findViewById(R.id.settings_logoutval toolbar: Toolbar = findViewById(R.id.toolbar)
-                toolbar.setNavigationOnClickListener {
+        s_logout = findViewById(R.id.settings_logout)
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        toolbar.setNavigationOnClickListener {
             finish()
         }
 

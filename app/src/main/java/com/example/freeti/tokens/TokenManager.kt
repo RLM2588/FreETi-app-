@@ -8,6 +8,7 @@ import androidx.security.crypto.MasterKey
 import com.example.freeti.network_entity.AuthResponse
 import java.io.File
 import javax.crypto.AEADBadTagException
+import androidx.core.content.edit
 
 class TokenManager(context: Context) {
 
@@ -35,7 +36,11 @@ class TokenManager(context: Context) {
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             )
         } catch (e: AEADBadTagException) {
-            Log.w("TokenManager", "EncryptedSharedPreferences corrupted, deleting and recreating", e)
+            Log.w(
+                "TokenManager",
+                "EncryptedSharedPreferences corrupted, deleting and recreating",
+                e
+            )
             val prefsDir = File(context.applicationInfo.dataDir, "shared_prefs")
             val prefsFile = File(prefsDir, "$prefsFileName.xml")
             val prefsBakFile = File(prefsDir, "$prefsFileName.xml.bak")
@@ -61,12 +66,22 @@ class TokenManager(context: Context) {
     }
 
     fun saveTokens(authResponse: AuthResponse) {
-        prefs.edit()
-            .putString(KEY_ACCESS_TOKEN, authResponse.accessToken)
-            .putString(KEY_REFRESH_TOKEN, authResponse.refreshToken)
-            .putInt(KEY_USER_ID, authResponse.userId)
-            .putString(KEY_LOGIN, authResponse.login)
-            .apply()
+        prefs.edit {
+            putString(KEY_ACCESS_TOKEN, authResponse.accessToken)
+                .putString(KEY_REFRESH_TOKEN, authResponse.refreshToken)
+                .putInt(KEY_USER_ID, authResponse.userId)
+                .putString(KEY_LOGIN, authResponse.login)
+        }
+    }
+
+    fun saveUser(userId: Int?, login: String?) {
+        Log.w("tokenManager updated", "userId: $userId, login: $login")
+        if (userId != null && login != null) {
+            prefs.edit {
+                putInt(KEY_USER_ID, userId)
+                    .putString(KEY_LOGIN, login)
+            }
+        }
     }
 
     fun saveAccessToken(accessToken: String) {

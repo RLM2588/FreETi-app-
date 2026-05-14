@@ -60,7 +60,6 @@ class FriendProfileActivity : AppCompatActivity() {
     private var otherId: Int = 0
     private var isContact = false
     private var isFriend = false
-
     private lateinit var btnAddContact: Button
     private lateinit var btnMakeFriend: Button
 
@@ -206,6 +205,7 @@ class FriendProfileActivity : AppCompatActivity() {
 
     private fun updatePrivacyUI(k: Boolean = true) {
         if (k) {
+
             iterator_privacy = (iterator_privacy + 1) % 2
             Toast.makeText(this, privacy_labels[iterator_privacy], Toast.LENGTH_SHORT).show()
         }
