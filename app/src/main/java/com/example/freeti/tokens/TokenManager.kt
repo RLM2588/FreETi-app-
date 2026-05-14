@@ -36,7 +36,11 @@ class TokenManager(context: Context) {
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             )
         } catch (e: AEADBadTagException) {
-            Log.w("TokenManager", "EncryptedSharedPreferences corrupted, deleting and recreating", e)
+            Log.w(
+                "TokenManager",
+                "EncryptedSharedPreferences corrupted, deleting and recreating",
+                e
+            )
             val prefsDir = File(context.applicationInfo.dataDir, "shared_prefs")
             val prefsFile = File(prefsDir, "$prefsFileName.xml")
             val prefsBakFile = File(prefsDir, "$prefsFileName.xml.bak")
@@ -70,6 +74,16 @@ class TokenManager(context: Context) {
         }
     }
 
+    fun saveUser(userId: Int?, login: String?) {
+        Log.w("tokenManager updated", "userId: $userId, login: $login")
+        if (userId != null && login != null) {
+            prefs.edit {
+                putInt(KEY_USER_ID, userId)
+                    .putString(KEY_LOGIN, login)
+            }
+        }
+    }
+
     fun saveAccessToken(accessToken: String) {
         prefs.edit().putString(KEY_ACCESS_TOKEN, accessToken).apply()
     }
@@ -79,7 +93,7 @@ class TokenManager(context: Context) {
 
     fun getUserId(): Int = prefs.getInt(KEY_USER_ID, -1)
 
-    fun getLogin(): String = prefs.getString(KEY_LOGIN, "null")?: "null"
+    fun getLogin(): String = prefs.getString(KEY_LOGIN, "null") ?: "null"
 
     fun clearTokens() {
         prefs.edit().clear().apply()
