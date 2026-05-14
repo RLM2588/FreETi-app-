@@ -5,8 +5,36 @@
     android:orientation="vertical"
     android:padding="16dp"
     android:background="@color/bg"
-
     android:fitsSystemWindows="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@color/bg"
+        android:elevation="4dp"
+        android:padding="8dp">
+
+        <ImageButton
+            android:id="@+id/btn_back_search"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+
+            android:src="?attr/homeAsUpIndicator"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Назад" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/PeopleSearch"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/for_text"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
 
     <EditText
         android:id="@+id/editTextSearch"

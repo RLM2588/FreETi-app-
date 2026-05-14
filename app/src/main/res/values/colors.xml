@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF909faf</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="red">#FF9B5463</color>
     <color name="bg">#FF2f353b</color>
     <color name="for_text">#FF909faf</color>
     <color name="for_hint">#90909faf</color>
@@ -9,4 +10,7 @@
     <color name="for_privacy_friend">#FF617d9a</color>
     <color name="for_privacy_public">#FFa76a6b</color>
     <color name="for_privacy_private">#FF6aa776</color>
+
+    <color name="green">#88CC99</color>
+    <color name="green_pale">#88AA99</color>
 </resources>

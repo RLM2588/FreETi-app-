@@ -32,6 +32,9 @@ abstract class AppDataBase : RoomDatabase(){
     abstract fun usersDao(): UserDao
     abstract fun otherTaskDao(): OtherTasksDao
     abstract fun groupsDao(): GroupsDao
+    abstract fun groupTasksDao(): GroupTasksDao
+    abstract fun groupMembersDao(): GroupMembersDao
+    abstract fun contactsDao(): ContactsDao
     abstract fun syncMetadataDao(): SyncMetadataDao
 
     companion object {

@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.freeti.data.local.entity.DUsers
+import com.example.freeti.repository.ContactsRepository
 import com.example.freeti.view_model.OtherTasksViewModel
 import com.example.freeti.view_model.OtherTasksViewModelFactory
 import com.example.freeti.views.OtherTaskTimelineView
@@ -24,24 +25,43 @@ class FriendProfileActivity : AppCompatActivity() {
     private lateinit var date_number: TextView
     private lateinit var day_week: TextView
     private lateinit var tasks_view: OtherTaskTimelineView
-    private lateinit var privacy_button: Button
+
+    private lateinit var privacy_button: com.google.android.material.button.MaterialButton
     private lateinit var month_and_year: TextView
     private lateinit var avatar: TextView
     private lateinit var calendar: Calendar
     private lateinit var viewModel: OtherTasksViewModel
+    private lateinit var nextDayButton: ImageButton
+    private lateinit var prevDayButton: ImageButton
 
-    private val privacy_text: List<String> = listOf("Публичное", "Для друзей")
-    private val privacy_text_ENUM: List<String> = listOf("PUBLIC", "FRIENDS")
-    private val week_text: List<String> = listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс")
-    private val monthes_text: List<String> = listOf("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль",
-        "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь")
-    private val privacy_color: List<Long> = listOf(0xFFAA5555, 0xFF5555AA)
+    private val privacy_text_ENUM = listOf("PUBLIC", "FRIENDS")
+    private val week_text = listOf("Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс")
+    private val monthes_text = listOf("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь")
+    private val privacy_color = listOf(0xFFa76a6b.toInt(), 0xFF617d9a.toInt())
+    private val privacy_icons = listOf(
+        R.drawable.outline_globe_24,   // для PUBLIC
+        R.drawable.baseline_groups_24  // для FRIENDS
+    )
+
+    private val privacy_labels: List<String> by lazy {
+        listOf(
+            getString(R.string.privacy_public),
+            getString(R.string.privacy_friends)
+        )
+    }
 
     // итераторы
     var iterator_privacy = 0
     private lateinit var app: MyApp
     private lateinit var user: DUsers
     private lateinit var pref: SharedPreferences
+    private lateinit var contactsRepo: ContactsRepository
+    private var myId: Int = 0
+    private var otherId: Int = 0
+    private var isContact = false
+    private var isFriend = false
+    private lateinit var btnAddContact: Button
+    private lateinit var btnMakeFriend: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,14 +75,15 @@ class FriendProfileActivity : AppCompatActivity() {
                 app.appContainer.otherRepository
             )
         ).get(OtherTasksViewModel::class.java)
+        contactsRepo = app.appContainer.contactsRepository
 
         pref = getSharedPreferences("settings", MODE_PRIVATE)
 
         // Находим элементы
         val btnBack = findViewById<ImageButton>(R.id.btn_back)
         val tvNickname = findViewById<TextView>(R.id.tv_friend_nickname)
-        val btnAddContact = findViewById<Button>(R.id.btn_add_contact)
-        val btnMakeFriend = findViewById<Button>(R.id.btn_make_friend)
+        btnAddContact = findViewById(R.id.btn_add_contact)
+        btnMakeFriend = findViewById(R.id.btn_make_friend)
         date_number = findViewById(R.id.other_date)
         day_week = findViewById(R.id.other_day_week)
         tasks_view = findViewById(R.id.other_tasks)
@@ -86,6 +107,16 @@ class FriendProfileActivity : AppCompatActivity() {
 
             viewModel.setDate(calendar.timeInMillis)
         }
+        nextDayButton = findViewById(R.id.main_next_day)
+        prevDayButton = findViewById(R.id.main_prev_day)
+
+        nextDayButton.setOnClickListener {
+            addDays(1)
+        }
+
+        prevDayButton.setOnClickListener {
+            addDays(-1)
+        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -101,16 +132,34 @@ class FriendProfileActivity : AppCompatActivity() {
             finish()
         }
 
-        // Кнопка «Добавить в контакты» — пока заглушка
         btnAddContact.setOnClickListener {
-            Toast.makeText(this, "Контакт добавлен", Toast.LENGTH_SHORT).show()
-            // Здесь будет реальная логика (сохранение в БД)
+            lifecycleScope.launch {
+                try {
+                    if (isContact) {
+                        contactsRepo.removeContact(myId, otherId)
+                    } else {
+                        contactsRepo.addContact(myId, otherId)
+                    }
+                    refreshContactStatus()
+                } catch (e: Exception) {
+                    Toast.makeText(this@FriendProfileActivity, "Ошибка сети", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
-        // Кнопка «Сделать другом» — заглушка
         btnMakeFriend.setOnClickListener {
-            Toast.makeText(this, "Запрос в друзья отправлен", Toast.LENGTH_SHORT).show()
-            // Здесь будет логика добавления в друзья
+            lifecycleScope.launch {
+                try {
+                    if (isFriend) {
+                        contactsRepo.removeFriend(myId, otherId)
+                    } else {
+                        contactsRepo.addFriend(myId, otherId)
+                    }
+                    refreshContactStatus()
+                } catch (e: Exception) {
+                    Toast.makeText(this@FriendProfileActivity, "Ошибка сети", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
         date_number.setOnClickListener {
@@ -127,9 +176,11 @@ class FriendProfileActivity : AppCompatActivity() {
         }
 
         // Кнопка приватности
-        setPrivacy(false)
+        updatePrivacyUI(false)
+
         privacy_button.setOnClickListener {
-            setPrivacy()
+            // При клике переключаем (k = true)
+            updatePrivacyUI(true)
         }
 
         // Кнопка дня недели
@@ -153,13 +204,44 @@ class FriendProfileActivity : AppCompatActivity() {
         }
     }
 
-    private fun setPrivacy(k: Boolean = true) {
+    private fun updatePrivacyUI(k: Boolean = true) {
         if (k) {
+
             iterator_privacy = (iterator_privacy + 1) % 2
-            Toast.makeText(this, privacy_text[iterator_privacy], Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, privacy_labels[iterator_privacy], Toast.LENGTH_SHORT).show()
         }
+
+        // Меняем текст кнопки
+        privacy_button.text = privacy_labels[iterator_privacy]
+
+
         privacy_button.setBackgroundColor(privacy_color[iterator_privacy].toInt())
+
+
+        privacy_button.setIconResource(privacy_icons[iterator_privacy])
+
+
         viewModel.setPrivacy(privacy_text_ENUM[iterator_privacy])
+    }
+
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            refreshContactStatus()
+        }
+    }
+
+    private suspend fun refreshContactStatus() {
+        val contact = contactsRepo.getContactStatus(myId, otherId)
+        isContact = contact != null
+        isFriend = contact?.isFriend == true
+        updateButtons()
+    }
+
+    private fun updateButtons() {
+        btnAddContact.text = if (isContact) "Удалить из контактов" else "Добавить в контакты"
+        // неудобно btnMakeFriend.visibility = if (isContact) View.VISIBLE else View.GONE
+        btnMakeFriend.text = if (isFriend) "Удалить из друзей" else "Сделать другом"
     }
 
     private fun setDate() {

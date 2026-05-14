@@ -46,11 +46,11 @@ class GroupRepository(
         }
     }
 
-    suspend fun addGroup(title: String): DGroups {
+    suspend fun addGroup(title: String, body: String): DGroups {
         val localGroup = DGroups(
             id = UUID.randomUUID().toString(),
             title = title,
-            body = "",
+            body = body,
             isSynced = false
         )
         groupsDao.insertGroup(localGroup)

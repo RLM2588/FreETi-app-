@@ -2,7 +2,6 @@ package com.example.freeti.repository
 
 import com.example.freeti.network_api.ApiService
 import com.example.freeti.network_entity.TestRequest
-import com.example.freeti.network_entity.TestResponse
 
 class TestRepository(
     private val api: ApiService

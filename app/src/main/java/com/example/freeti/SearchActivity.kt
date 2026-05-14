@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -30,17 +31,17 @@ class SearchActivity : AppCompatActivity() {
         setContentView(R.layout.activity_search)
 
         val appContainer = (application as MyApp).appContainer
-        val repository = SearchRepository(
-            appContainer.userDao,
-            appContainer.apiService,
-            appContainer.tokenManager
-        )
+        val repository = appContainer.searchRepository
         val factory = SearchViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory)[SearchViewModel::class.java]
 
         val editTextSearch = findViewById<EditText>(R.id.editTextSearch)
         val hintTextView = findViewById<TextView>(R.id.textViewHint)
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewResults)
+        val btnBack = findViewById<ImageButton>(R.id.btn_back_search)
+        btnBack.setOnClickListener {
+            finish()
+        }
 
         recyclerView.layoutManager = LinearLayoutManager(this)
 

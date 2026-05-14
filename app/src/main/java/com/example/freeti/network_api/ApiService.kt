@@ -95,11 +95,20 @@ interface ApiService {
         @Body task: NTasks
     ): Response<NTasks>
 
+    @GET("tasks/unassigned")
+    suspend fun getUnassignedTasks(): List<NTasks>
+
     @GET("tasks/othertasks")
     suspend fun getOtherTasksForDay(
         @Query("yearMonth") yearMonth: String,
         @Query("login") login: String
    ): Response<List<NOtherTasks>>
+
+    @GET("grouptasks")
+    suspend fun getGroupTasksForDay(
+        @Query("yearMonth") yearMonth: String,
+        @Query("id") since: String
+    ): Response<List<NGroupEvents>>
 
     @PUT("users/id")
     suspend fun updateUser(

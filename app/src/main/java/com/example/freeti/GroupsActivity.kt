@@ -1,5 +1,6 @@
 package com.example.freeti
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.widget.Button
 import android.view.WindowManager
+import android.widget.ImageButton
 import androidx.lifecycle.lifecycleScope
 import com.example.freeti.adapters_pack.GroupAdapter
 import com.example.freeti.repository.GroupRepository
@@ -30,6 +32,10 @@ class GroupsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_groups)
+        val btnBack = findViewById<ImageButton>(R.id.btn_back_groups)
+        btnBack.setOnClickListener {
+            finish()
+        }
 
         recyclerView = findViewById(R.id.recyclerViewGroups)
         searchEditText = findViewById(R.id.editTextSearch)
@@ -54,7 +60,9 @@ class GroupsActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         groupAdapter = GroupAdapter(emptyList()) { group ->
-            Toast.makeText(this, "Открыта группа: ${group.title}", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, GroupDetailsActivity::class.java)
+            intent.putExtra("group_id", group.id)
+            startActivity(intent)
         }
         recyclerView.adapter = groupAdapter
     }
@@ -84,6 +92,7 @@ class GroupsActivity : AppCompatActivity() {
     private fun showAddGroupDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_add_group, null)
         val editTextName = dialogView.findViewById<EditText>(R.id.editTextGroupName)
+        val editTextBody = dialogView.findViewById<EditText>(R.id.editTextGroupBody)
         val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
         val btnConfirm = dialogView.findViewById<Button>(R.id.btnConfirm)
 
@@ -95,8 +104,9 @@ class GroupsActivity : AppCompatActivity() {
 
         btnConfirm.setOnClickListener {
             val name = editTextName.text.toString().trim()
+            val body = editTextBody.text.toString().trim()
             if (name.isNotEmpty()) {
-                addGroup(name)
+                addGroup(name, body)
                 dialog.dismiss()
             } else {
                 editTextName.error = "Введите название"
@@ -112,10 +122,10 @@ class GroupsActivity : AppCompatActivity() {
         }
     }
 
-    private fun addGroup(name: String) {
+    private fun addGroup(name: String, body: String) {
         lifecycleScope.launch {
             try {
-                groupRepository.addGroup(name)
+                groupRepository.addGroup(name, body)
                 Toast.makeText(this@GroupsActivity, "Группа \"$name\" добавлена", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 Toast.makeText(this@GroupsActivity, "Ошибка при добавлении", Toast.LENGTH_SHORT).show()
