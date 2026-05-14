@@ -48,4 +48,14 @@
         android:layout_marginTop="10dp"
         android:layout_marginStart="30dp"
         android:backgroundTint="@color/for_text"/>
+
+    <Button
+        android:id="@+id/logOutButton"
+        android:layout_width="157dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="20dp"
+        android:text="log out"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settings_auto" />
 </androidx.constraintlayout.widget.ConstraintLayout>

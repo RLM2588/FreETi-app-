@@ -47,6 +47,10 @@ class MainActivity : AppCompatActivity() {
 
         test_out_button.setOnClickListener {
             GlobalScope.launch(Dispatchers.Main) {
+                val response = MyApp.container.apiService.get_username_id()
+                if (response.isSuccessful && response.body() != null) {
+                    MyApp.container.tokenManager.saveUser(response.body()?.userId, response.body()?.username)
+                }
                 if (test_out.text.toString() == "") {
                     val result = MyApp.container.testRepository.send("NIGGA")
                     result.onSuccess {

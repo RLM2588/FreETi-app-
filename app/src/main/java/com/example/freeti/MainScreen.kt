@@ -25,6 +25,8 @@ import com.example.freeti.view_model.TasksViewModelFactory
 import com.example.freeti.views.TaskTimelineView
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.TimeZone
@@ -128,6 +130,12 @@ class MainScreen : AppCompatActivity() {
         )
         tasks_without_time.adapter = noTimeAdapter
 
+        lifecycleScope.launch(Dispatchers.Main) {
+            val response = MyApp.container.apiService.get_username_id()
+            if (response.isSuccessful && response.body() != null) {
+                MyApp.container.tokenManager.saveUser(response.body()?.userId, response.body()?.username)
+            }
+        }
         // Observe
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
