@@ -78,6 +78,12 @@ class MainScreen : AppCompatActivity() {
 
         // Инициализация
         app = application as MyApp
+
+        //if (!app.appContainer.tokenManager.hasSession()) {
+        //    Toast.makeText(this, "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show()
+        //    finish()
+        //}
+
         viewModel = ViewModelProvider(
             this,
             TasksViewModelFactory(app.appContainer.myTasksDao, app.appContainer.taskSyncManager)

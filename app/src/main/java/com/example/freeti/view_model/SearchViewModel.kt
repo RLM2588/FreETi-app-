@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.freeti.data.local.entity.DUsers
 import com.example.freeti.repository.SearchRepository
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,6 +19,8 @@ class SearchViewModel(
     private val _users = MutableStateFlow<List<DUsers>>(emptyList())
     val users: StateFlow<List<DUsers>> = _users.asStateFlow()
 
+    private var searchJob: Job? = null
+
     init {
         viewModelScope.launch {
             repository.prepareLocalData()
@@ -25,7 +29,9 @@ class SearchViewModel(
     }
 
     fun search(query: String) {
-        viewModelScope.launch {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(300L)
             _users.value = repository.search(query)
         }
     }

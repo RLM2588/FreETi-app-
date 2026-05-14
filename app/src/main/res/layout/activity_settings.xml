@@ -39,6 +39,18 @@
         android:buttonTint="@color/white"/>
 
     <Button
+        android:id="@+id/settings_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Выйти из аккаунта"
+        android:textColor="@color/bg"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/settings_auto"
+        app:layout_constraintStart_toStartOf="@+id/settings_auto"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/red"/>
+
+    <Button
         android:id="@+id/settings_esc"
         android:layout_width="40dp"
         android:layout_height="wrap_content"

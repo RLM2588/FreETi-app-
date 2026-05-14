@@ -49,6 +49,7 @@ class SearchRepository(
             } else {
                 apiService.getUsersSearch(searchQuery)
             }
+
             val dUsers = networkUsers.map { it.toEntity() }
             userDao.insertAll(dUsers)
         } catch (e: Exception) {

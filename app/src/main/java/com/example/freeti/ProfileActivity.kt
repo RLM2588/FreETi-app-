@@ -44,6 +44,10 @@ class ProfileActivity : AppCompatActivity() {
         val userDao = app.appContainer.userDao
         val apiService = app.appContainer.apiService
         val tokenManager = app.appContainer.tokenManager
+        //if (!tokenManager.hasSession()) {
+        //    Toast.makeText(this, "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show()
+        //    finish()
+        //}
 
         val userId = tokenManager.getUserId()
 
