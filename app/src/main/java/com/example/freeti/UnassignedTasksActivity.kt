@@ -54,6 +54,11 @@ class UnassignedTasksActivity : AppCompatActivity() {
                 }
             }
         }
+        // Кнопка назад
+        val btnBack: ImageButton = findViewById(R.id.btn_back_unassigned)
+        btnBack.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
 
         // Кнопка синхронизации
         val btnSync: ImageButton = findViewById(R.id.btn_sync_unassigned)
