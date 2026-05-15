@@ -79,10 +79,23 @@ class ContactsActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val appContainer = (application as MyApp).appContainer
-                appContainer.apiService.addMember(userId, groupId!!)
-                Toast.makeText(this@ContactsActivity, "Добавлен в группу", Toast.LENGTH_SHORT).show()
+                val response = appContainer.apiService.addMember(userId, groupId!!)
+                if (response.isSuccessful && response.body() != null) {
+                    if (response.body() == true) {
+                        Toast.makeText(
+                            this@ContactsActivity,
+                            "Добавлен в группу",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    } else {
+                        Toast.makeText(this@ContactsActivity, "Пользователь уже добавлен", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this@ContactsActivity, "Ошибка доступа", Toast.LENGTH_SHORT).show()
+                }
             } catch (e: Exception) {
-                Toast.makeText(this@ContactsActivity, "Ошибка", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ContactsActivity, "Ошибка подключения", Toast.LENGTH_SHORT).show()
             }
         }
     }
