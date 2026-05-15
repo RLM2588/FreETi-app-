@@ -21,6 +21,7 @@ import com.example.freeti.network_entity.UserResponse
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -62,17 +63,6 @@ interface ApiService {
     @POST("test")
     suspend fun send(@Body message : TestRequest): Response<TestResponse>
 
-    @GET("hello")
-    suspend fun test2(): Response<TestResponse>
-
-
-//    @POST("hello")
-//    suspend fun test2(@Body message : TestRequest): Response<TestResponse>
-
-
-    @POST("test/out_inp")
-    suspend fun test(@Body request: TestRequest): Response<TestResponse>
-
     @GET("tasks/tasks")
     suspend fun getTasksForMonth(
         @Query("yearMonth") yearMonth: String
@@ -104,10 +94,10 @@ interface ApiService {
         @Query("login") login: String
    ): Response<List<NOtherTasks>>
 
-    @GET("grouptasks")
+    @GET("group/group_tasks")
     suspend fun getGroupTasksForDay(
-        @Query("yearMonth") yearMonth: String,
-        @Query("id") since: String
+        @Query("yearMonth") yearMonth: String, //ymd
+        @Query("id") groupId: String
     ): Response<List<NGroupEvents>>
 
     @PUT("users/id")
@@ -138,47 +128,47 @@ interface ApiService {
     @PUT("groups/groups")
     suspend fun updateGroup(@Body group: NGroups): Response<NGroups>
 
-    @PUT("member_switch")
+    @PUT("groups/member_switch")
     suspend fun switchMember(
-        @Path("user_id") memberId: Int,
-        @Path("group_id") groupId: String
+        @Query("user_id") memberId: Int,
+        @Query("group_id") groupId: String
     ): Response<NGroupsUsers>
 
-    @PUT("member_add")
+    @PUT("groups/member_add")
     suspend fun addMember(
-        @Path("user_id") memberId: Int,
-        @Path("group_id") groupId: String
-    )//: Response<NGroupsUsers> TODO подправить добавление пользователей
-
-    @PUT("member_delete")
-    suspend fun deleteMember(
-        @Path("user_id") memberId: Int,
-        @Path("group_id") groupId: String
+        @Query("user_id") memberId: Int,
+        @Query("group_id") groupId: String
     ): Response<Boolean>
 
-    @PUT("member_delete") // member_leave
+    @PUT("groups/member_delete")
+    suspend fun deleteMember(
+        @Query("user_id") memberId: Int,
+        @Query("group_id") groupId: String
+    ): Response<Boolean>
+
+    @PUT("groups/leave") // member_leave
     suspend fun leaveGroup(
         @Path("group_id") groupId: String
     ): Response<Boolean>
 
-    @PUT("groups/{group_id}")
+    @DELETE("groups/delete_group")
     suspend fun deleteGroup(
-        @Path("group_id") groupId: String
+        @Query("group_id") groupId: String
     ): Response<Boolean>
 
-    @POST("groups/newevent")
+    @POST("groups/new_event")
     suspend fun addEvent(
         @Path("group_id") groupId: String,
         @Body event: NGroupEventSearch
     ): Response<List<NGroupEvents>>
 
-    @GET("contacts")
-    suspend fun getContacts(): List<NContacts>   // или Response<List<NContacts>>
+    @GET("users/contacts")
+    suspend fun getContacts(): Response<List<NContacts>>   // или Response<List<NContacts>>
 
-    @GET("users")
+    @GET("users/byIds")
     suspend fun getUsersByIds(
         @Query("ids") ids: String
-    ): List<NUsers>
+    ): Response<List<NUsers>>
 
     @PUT("groups/delete_event")
     suspend fun deleteGroupEvent(
