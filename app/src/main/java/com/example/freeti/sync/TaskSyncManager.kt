@@ -29,8 +29,7 @@ class TaskSyncManager(
             }
             if (tasksFromNetwork.isSuccessful) {
                 Log.d("ym", tasksFromNetwork.body().toString())
-            }
-            else {
+            } else {
                 Log.d("yml", tasksFromNetwork.code().toString())
             }
 
@@ -39,25 +38,26 @@ class TaskSyncManager(
             // Получаем список id локальных неотправленных задач
             val unsyncedIds = myTaskDao.getUnsyncedTaskIds().toSet()
             // Фильтруем сетевые задачи, оставляя только те, которые не конфликтуют
-            if (tasksFromNetwork.body() != null) {
-
-                val safeTasks = tasksFromNetwork.body()!!.filter { it.id !in unsyncedIds }
+            val body = tasksFromNetwork.body()
+            if (body != null) {
+                val safeTasks = body.filter { it.id !in unsyncedIds }
                 //val safeTasks = tasksFromNetwork.body();
+                if (safeTasks.size != 0) {
+                    val entities = safeTasks.map { it.toEntity() }
 
-                val entities = safeTasks.map { it.toEntity() }
-                Log.d("niggaentity", entities[0].start.toString())
-                myTaskDao.insertAll(entities)
+                    myTaskDao.insertAll(entities)
 
-                val time_updated = myTaskDao.getMaxUpdatedAtForMonth(yearMonth)
-                if (time_updated != null) {
-                    metadataDao.upsert(
-                        SyncMetadata(
-                            yearMonth = yearMonth,
-                            lastSyncAt = now,
-                            lastAccessAt = now,
-                            last_updated_at = time_updated
+                    val time_updated = myTaskDao.getMaxUpdatedAtForMonth(yearMonth)
+                    if (time_updated != null) {
+                        metadataDao.upsert(
+                            SyncMetadata(
+                                yearMonth = yearMonth,
+                                lastSyncAt = now,
+                                lastAccessAt = now,
+                                last_updated_at = time_updated
+                            )
                         )
-                    )
+                    }
                 }
             }
         } catch (e: Exception) {

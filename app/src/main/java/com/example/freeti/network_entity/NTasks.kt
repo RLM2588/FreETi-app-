@@ -24,7 +24,23 @@ data class NTasks (
             privacy = this.privacy,
             start = this.start,
             colour = this.colour,
-            time_end = this.time_end,
+            time_end = if(this.time_end < 11000000) 0L else this.time_end,
+            push_template_id = this.push_template_id,
+            importance = this.importance,
+            updated_at = this.updated_at
+        )
+    }
+
+    fun toUnassignedTask() : DTasks {
+        return DTasks(
+            id = this.id,
+            title = this.title,
+            body = this.body,
+            status = this.status, // преобразуем строку в enum
+            privacy = this.privacy,
+            start = 0,
+            colour = this.colour,
+            time_end = 0,
             push_template_id = this.push_template_id,
             importance = this.importance,
             updated_at = this.updated_at

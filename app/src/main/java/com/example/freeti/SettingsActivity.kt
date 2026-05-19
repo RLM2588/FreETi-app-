@@ -12,6 +12,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.freeti.tokens.TokenManager
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var s_check: CheckBox
@@ -29,10 +31,6 @@ class SettingsActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        //if (!t_meneger.hasSession()) {
-        //    Toast.makeText(this, "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show()
-        //    finish()
-        //}
 
         s_check = findViewById(R.id.settings_test)
         s_auto = findViewById(R.id.settings_auto)
@@ -56,6 +54,13 @@ class SettingsActivity : AppCompatActivity() {
         }
         s_logout.setOnClickListener{
             t_meneger.clearTokens()
+            lifecycleScope.launch {
+                (application as MyApp).appContainer.database.clearAll_Tables()
+            }
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
         }
     }
 

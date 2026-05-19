@@ -81,7 +81,7 @@ class RegisterActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 val answer = authRepository.finalRegister(login, email, code, pass)
                 when (answer) {
-                    "Succes" -> {
+                    "Success" -> {
                         Toast.makeText(this@RegisterActivity, "Вы зарегистрировались", Toast.LENGTH_SHORT).show()
                         userLogin.text.clear()
                         userEmail.text.clear()

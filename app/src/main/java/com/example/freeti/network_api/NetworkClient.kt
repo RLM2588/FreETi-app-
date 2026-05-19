@@ -20,7 +20,7 @@ import okhttp3.*
 
 object NetworkClient {
     // Базовый URL сервера
-    private const val BASE_URL = "http://192.168.1.36:8091/api/" // TODO вставить в будщем свой сервер
+    private const val BASE_URL = "http://192.168.1.37:8091/api/" // TODO вставить в будщем свой сервер
 
 
     fun provideApiService(tokenManager: TokenManager, authProvider: () -> AuthRepository): ApiService {
@@ -110,6 +110,12 @@ object NetworkClient {
             .authenticator(tokenAuthenticator)
             .addInterceptor(loggingInterceptor)
             .connectTimeout(15, TimeUnit.SECONDS)
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)    // важно для медленных ответов
+            .writeTimeout(30, TimeUnit.SECONDS)   // важно для больших запросов
+            .retryOnConnectionFailure(true)
+
+            .cache(Cache(MyApp.instance.cacheDir, 10 * 1024 * 1024)) // 10 MB
             .build()
     }
 

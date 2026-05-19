@@ -2,6 +2,7 @@ package com.example.freeti
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
@@ -130,6 +131,7 @@ class MembersActivity : AppCompatActivity() {
                 val freshMembers = groupMemberDao.getGroupMembersMemb(groupId)
                 memberAdapter.updateData(freshMembers)
                 updateUIAfterDataLoad(freshMembers)
+                Log.d("NET UPDATE", "SUCCESS")
             } else {
                 showToast("Не удалось обновить список с сервера")
             }

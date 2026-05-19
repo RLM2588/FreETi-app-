@@ -35,7 +35,7 @@ class UnassignedTasksViewModel(
                 syncManager.syncPendingTasks()
                 val remoteTasks = apiService.getUnassignedTasks()
                 taskDao.deleteAllUnassignedTasks()
-                taskDao.insertAll(remoteTasks.map { it.toEntity() })
+                taskDao.insertAll(remoteTasks.map { it.toUnassignedTask() })
             } catch (e: Exception) {
             }
         }

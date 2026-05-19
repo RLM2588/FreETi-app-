@@ -47,25 +47,26 @@
             android:id="@+id/textUserName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#333333"
+            android:textColor="@color/for_text"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/textUserRole"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:textColor="#666666" />
+            android:textColor="@color/for_text"
+            android:maxLines="1"/>
 
     </LinearLayout>
     <Button
         android:id="@+id/buttonPromote"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:text="повысить"
+        android:text="up"
         android:textSize="14sp"
-        android:backgroundTint="#4CAF50"
+        android:backgroundTint="@color/for_privacy_private"
         android:textColor="@android:color/white"
         android:layout_marginEnd="8dp" />
 
@@ -74,9 +75,9 @@
         android:id="@+id/buttonKick"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:text="выгнать"
+        android:text="out"
         android:textSize="14sp"
-        android:backgroundTint="#F44336"
+        android:backgroundTint="@color/for_privacy_public"
         android:textColor="@android:color/white" />
 
 </LinearLayout>

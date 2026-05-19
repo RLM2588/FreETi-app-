@@ -352,6 +352,9 @@ class NewTaskActivity : AppCompatActivity() {
     private fun updateEndDisplay() {
         t_date_end.text = formatDate(endTime)
         t_time_end.text = formatTime(endTime)
+        if (endTime.get(Calendar.HOUR_OF_DAY) == 0 && endTime.get(Calendar.MINUTE) == 0) {
+            endTime.set(Calendar.HOUR_OF_DAY, 24)
+        }
     }
 
     private fun pickDate(calendar: Calendar, onSet: () -> Unit) {
