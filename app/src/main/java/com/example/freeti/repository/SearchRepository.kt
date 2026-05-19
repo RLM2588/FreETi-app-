@@ -16,17 +16,7 @@ class SearchRepository(
 
         userDao.deleteOtherUsers(myId)
 
-        val existing = userDao.getAllExcept(myId)
-        if (existing.isEmpty()) {
-            val testUsers = listOf(
-                DUsers(id = 101, login = "john_doe", username = "John Doe", avatar = ":3"),
-                DUsers(id = 102, login = "jane_smith", username = "Jane Smith", avatar = ">:)"),
-                DUsers(id = 104, login = "etiwh", username = "Alexey", avatar = "[:>"),
-                DUsers(id = 105, login = "citlr", username = "Adlof", avatar = "T0"),
-                DUsers(id = 103, login = "happy_cat", username = "Happy Cat", avatar = ":0")
-            )
-            userDao.insertAll(testUsers)
-        } // TODO для тестов
+        userDao.getAllExcept(myId)
     }
 
     suspend fun getAllUsers(): List<DUsers> {

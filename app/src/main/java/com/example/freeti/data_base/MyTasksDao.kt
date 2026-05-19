@@ -11,7 +11,7 @@ interface MyTasksDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(tasks: List<DTasks>)
 
-    @Query("SELECT * FROM tasks WHERE start = 0 AND time_end = 0 AND is_delete = 0")
+    @Query("SELECT * FROM tasks WHERE start = 0 AND time_end = 0 AND status != 'DELETED'")
     fun observeUnassignedTasks(): Flow<List<DTasks>>
 
     @Query("DELETE FROM tasks WHERE start = 0 AND time_end = 0 AND is_synced = 1")
@@ -24,11 +24,11 @@ interface MyTasksDao {
     suspend fun getTasksForMonth(yearMonth: String): List<DTasks>
 
     // Удалить все задачи за месяц (при очистке)
-    @Query("DELETE FROM tasks WHERE strftime('%Y-%m', start/1000, 'unixepoch') = :yearMonth")
+    @Query("DELETE FROM tasks WHERE strftime('%Y-%m', start/1000, 'unixepoch') = :yearMonth AND is_synced = 1")
     suspend fun deleteTasksForMonth(yearMonth: String)
 
     // Удалить задачи на определенный месяц
-    @Query("DELETE FROM tasks WHERE strftime('%Y-%m', start/1000, 'unixepoch') = :yearMonth")
+    @Query("DELETE FROM tasks WHERE strftime('%Y-%m', start/1000, 'unixepoch') = :yearMonth AND is_synced = 1")
     suspend fun deleteTasksOlderThan(yearMonth: String)
 
     // Получить все уникальные месяцы, для которых есть задачи (нужно для очистки)

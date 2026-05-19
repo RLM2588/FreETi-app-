@@ -1,5 +1,6 @@
 package com.example.freeti.network_api
 
+import android.R
 import com.example.freeti.data.local.entity.DTasks
 import com.example.freeti.network_entity.AuthResponse
 import com.example.freeti.network_entity.FinalRegisterRequest
@@ -68,6 +69,9 @@ interface ApiService {
         @Query("yearMonth") yearMonth: String
     ): Response<List<NTasks>>
 
+    @GET("groups/members_count")
+    suspend fun getCountUsersInGroup(@Query("group_id") groupId: String): Response<Int>;
+
     // Получить задачи за месяц, изменённые после указанного времени
     @GET("tasks/tasks/update")
     suspend fun getTasksForMonthSince(
@@ -94,7 +98,7 @@ interface ApiService {
         @Query("login") login: String
    ): Response<List<NOtherTasks>>
 
-    @GET("group/group_tasks")
+    @GET("groups/group_tasks")
     suspend fun getGroupTasksForDay(
         @Query("yearMonth") yearMonth: String, //ymd
         @Query("id") groupId: String
@@ -158,7 +162,7 @@ interface ApiService {
 
     @POST("groups/new_event")
     suspend fun addEvent(
-        @Path("group_id") groupId: String,
+        @Query("group_id") groupId: String,
         @Body event: NGroupEventSearch
     ): Response<List<NGroupEvents>>
 
@@ -170,20 +174,20 @@ interface ApiService {
         @Query("ids") ids: String
     ): Response<List<NUsers>>
 
-    @PUT("groups/delete_event")
+    @DELETE("groups/delete_event")
     suspend fun deleteGroupEvent(
-        @Path("event_id") event_id: String
+        @Query("event_id") eventId: String
     ): Response<Boolean>
 
-    @PUT("contacts")
+    @PUT("users/add_contact")
     suspend fun upsertContact(@Body contact: NContacts): Response<NContacts>
 
-    @PUT("contacts/delete")
-    suspend fun deleteContact(@Body contact: NContacts): Response<Unit>
+    @DELETE("users/delete_contact")
+    suspend fun deleteContact(@Body contact: NContacts): Response<Boolean>
 
-    @GET("group_members")
-    suspend fun getGroupMembers(@Path("group_id") groupId: String): Response<List<NGroupsUsers>>
+    @GET("groups/group_members")
+    suspend fun getGroupMembers(@Query("group_id") groupId: String): Response<List<NGroupsUsers>>
 
-    @GET("group_users")
-    suspend fun getGroupUsers(@Path("group_id") groupId: String): Response<List<NUsers>>
+    @GET("groups/group_users")
+    suspend fun getGroupUsers(@Query("group_id") groupId: String): Response<List<NUsers>>
 }

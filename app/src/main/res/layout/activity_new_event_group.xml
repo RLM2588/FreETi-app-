@@ -222,6 +222,35 @@ tools:context=".NewEventGroupActivity">
                             android:textColor="@color/for_text"
                             android:text="Время" />
                     </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#33888888"
+                        android:layout_marginVertical="4dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Длительность:"
+                            android:textSize="18sp"
+                            android:textColor="@color/for_text"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/group_task_time_pick"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/for_text"
+                            android:text="Время" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -253,6 +282,55 @@ tools:context=".NewEventGroupActivity">
                 android:background="@android:color/darker_gray"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="8dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp">
+
+            <View
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="#FFFFFF"
+                android:layout_marginStart="12dp"
+                android:id="@+id/group_white_color"/>
+
+            <View
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="#BB3344"
+                android:layout_marginStart="12dp"
+                android:id="@+id/group_red_color"/>
+
+            <View
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="#22AA55"
+                android:layout_marginStart="12dp"
+                android:id="@+id/group_green_color"/>
+
+            <View
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="#3355AB"
+                android:layout_marginStart="12dp"
+                android:id="@+id/group_blue_color"/>
+
+            <View
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="#33AAAA"
+                android:layout_marginStart="12dp"
+                android:id="@+id/group_grbl_color"/>
+
+            <View
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="#888888"
+                android:layout_marginStart="12dp"
+                android:id="@+id/group_gray_color"/>
+
         </LinearLayout>
 
         <LinearLayout

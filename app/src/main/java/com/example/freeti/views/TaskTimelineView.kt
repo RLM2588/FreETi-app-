@@ -136,7 +136,7 @@ class TaskTimelineView @JvmOverloads constructor(
                     taskBottom -= 3 * rowHeight / 8
                 }
 
-                val padding2 = 6f
+                var padding2 = 6f
                 val rect2 = RectF(
                     xStart + padding2, taskTop + padding2,
                     xStart + columnWidth - padding2, taskBottom - padding2
@@ -161,10 +161,33 @@ class TaskTimelineView @JvmOverloads constructor(
                 titlePaint.textSize = minOf(titlePaint.textSize, maxTextWidth / titleText.length.coerceAtLeast(1) * 2.0f)
                 canvas.drawText(titleText, rect.left + 4f, rect.top + titlePaint.textSize + 4f, titlePaint)
 
-                // Время задачи – теперь чуть выше, чтобы не слипалось с соседней
-                val timeText = "${formatTime(task.start)}–${formatTime(task.time_end)}"
-                timePaintSm.textSize = minOf(28f, maxTextWidth / timeText.length.coerceAtLeast(1) * 1.8f)
-                canvas.drawText(timeText, rect.left + 4f, rect.bottom - 8f, timePaintSm)
+                if(startSlot != endSlot) {
+                    // Время задачи – теперь чуть выше, чтобы не слипалось с соседней
+                    val timeText = "${formatTime(task.start)}–${formatTime(task.time_end)} |${task.importance}"
+                    timePaintSm.textSize =
+                        minOf(28f, maxTextWidth / timeText.length.coerceAtLeast(1) * 1.8f)
+                    canvas.drawText(timeText, rect.left + 4f, rect.bottom - 8f, timePaintSm)
+
+                    padding2 = 40f
+                    val rect3 = RectF(
+                        xStart + columnWidth - padding2, taskBottom - padding2,
+                        xStart + columnWidth - padding2/2, taskBottom - padding2/2
+                    )
+
+                    taskRectPaint.color = if(task.status == "DONE") Color.GREEN else Color.RED
+                    canvas.drawRoundRect(rect3, 12f, 12f, taskRectPaint)
+
+                    if(task.is_synced == false) {
+                        padding2 = 40f
+                        val rect4 = RectF(
+                            xStart + columnWidth - padding2 - 30f, taskBottom - padding2,
+                            xStart + columnWidth - padding2/2 - 30f, taskBottom - padding2/2
+                        )
+
+                        taskRectPaint.color = Color.BLUE
+                        canvas.drawRoundRect(rect4, 12f, 12f, taskRectPaint)
+                    }
+                }
             }
         }
     }

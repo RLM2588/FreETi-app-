@@ -92,10 +92,6 @@ class MainScreen : AppCompatActivity() {
         ).get(TasksViewModel::class.java)
         pref = getSharedPreferences("settings", MODE_PRIVATE)
 
-        if(!pref.getBoolean("noTestAdd", false)) {
-            viewModel.addTestTasks()
-        }
-
         privacy_color = listOf(getColor(R.color.for_privacy_public)
             .toLong(), getColor(R.color.for_privacy_friend)
             .toLong(), getColor(R.color.for_privacy_private)
@@ -137,9 +133,14 @@ class MainScreen : AppCompatActivity() {
         tasks_without_time.adapter = noTimeAdapter
 
         lifecycleScope.launch(Dispatchers.Main) {
-            val response = MyApp.container.apiService.get_username_id()
-            if (response.isSuccessful && response.body() != null) {
-                MyApp.container.tokenManager.saveUser(response.body()?.userId, response.body()?.username)
+            try {
+                val response = MyApp.container.apiService.get_username_id()
+                if (response.isSuccessful && response.body() != null) {
+                    MyApp.container.tokenManager.saveUser(response.body()?.userId, response.body()?.username)
+                }
+            }
+            catch (e: Exception) {
+
             }
         }
         // Observe

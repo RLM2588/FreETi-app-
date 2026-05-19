@@ -23,11 +23,13 @@ import com.example.freeti.network_entity.NGroupEventSearch
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import kotlin.math.max
 
 class NewEventGroupActivity : AppCompatActivity() {
     private var day: Long? = null
     private var startTime = Calendar.getInstance() // TimeZone.getTimeZone("UTC")
     private var endTime = Calendar.getInstance()
+    private var pickTime = 1800_000L
     private lateinit var t_title: EditText
     private lateinit var t_body: EditText
     private lateinit var t_importance: Spinner
@@ -37,6 +39,7 @@ class NewEventGroupActivity : AppCompatActivity() {
     private lateinit var t_time_start: Button
     private lateinit var t_date_end: Button
     private lateinit var t_time_end: Button
+    private lateinit var t_time_pick: Button
     private lateinit var t_layout_end: LinearLayout
     private lateinit var t_view_color_preview: View
     private lateinit var t_save: Button
@@ -61,10 +64,18 @@ class NewEventGroupActivity : AppCompatActivity() {
         t_time_start = findViewById(R.id.group_task_time_start)
         t_date_end = findViewById(R.id.group_task_date_end)
         t_time_end = findViewById(R.id.group_task_time_end)
+        t_time_pick = findViewById(R.id.group_task_time_pick)
         t_layout_end = findViewById(R.id.group_task_layout_end)
         t_view_color_preview = findViewById(R.id.group_task_view_color_preview)
         t_save = findViewById(R.id.group_task_save)
         t_esc = findViewById(R.id.group_task_esc)
+
+        val white_color = findViewById<View>(R.id.group_white_color)
+        val red_color = findViewById<View>(R.id.group_red_color)
+        val green_color = findViewById<View>(R.id.group_green_color)
+        val blue_color = findViewById<View>(R.id.group_blue_color)
+        val grbl_color = findViewById<View>(R.id.group_grbl_color)
+        val gray_color = findViewById<View>(R.id.group_gray_color)
 
         groupId = intent.getStringExtra("groupId")?: "0"
         if (groupId == "0") finish()
@@ -95,6 +106,7 @@ class NewEventGroupActivity : AppCompatActivity() {
         t_time_start.setOnClickListener { pickTime(startTime) { updateStartDisplay() } }
         t_date_end.setOnClickListener { pickDate(endTime) { updateEndDisplay() } }
         t_time_end.setOnClickListener { pickTime(endTime) { updateEndDisplay() } }
+        t_time_pick.setOnClickListener { pickDuration(pickTime) { updatePickDisplay() } }
 
         ArrayAdapter(this, android.R.layout.simple_spinner_item, arrayOf("Простая", "Важная", "Крайне важная")).also {
                 adapter -> adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -129,6 +141,13 @@ class NewEventGroupActivity : AppCompatActivity() {
 
             finish()
         }
+
+        white_color.setOnClickListener { t_et_color.setText("FFFFFF") }
+        red_color.setOnClickListener { t_et_color.setText("BB3344") }
+        green_color.setOnClickListener { t_et_color.setText("22AA55") }
+        blue_color.setOnClickListener { t_et_color.setText("3355AB") }
+        grbl_color.setOnClickListener { t_et_color.setText("33AAAA") }
+        gray_color.setOnClickListener { t_et_color.setText("888888") }
     }
 
     private fun sendTask() {
@@ -144,6 +163,7 @@ class NewEventGroupActivity : AppCompatActivity() {
             day_end = formatDate(endTime),
             time_start = formatTime(startTime),
             time_end = formatTime(endTime),
+            time_pick = pickTime,
             importance = importance,
             colour = colorHex
         )
@@ -165,6 +185,10 @@ class NewEventGroupActivity : AppCompatActivity() {
     private fun updateEndDisplay() {
         t_date_end.text = formatDate(endTime)
         t_time_end.text = formatTime(endTime)
+    }
+
+    private fun updatePickDisplay() {
+        t_time_pick.text = formatDuration(pickTime)
     }
 
     private fun pickDate(calendar: Calendar, onSet: () -> Unit) {
@@ -190,6 +214,29 @@ class NewEventGroupActivity : AppCompatActivity() {
         }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show()
     }
 
-    private fun formatDate(cal: Calendar) = String.format("%02d.%02d.%04d", cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR))
+    private fun pickDuration(currentMillis: Long, onDurationPicked: (Long) -> Unit) {
+        val hours = (currentMillis / 3600000).toInt()
+        val minutes = ((currentMillis % 3600000) / 60000).toInt()
+
+        TimePickerDialog(
+            this,  // если вы во Fragment, используйте requireActivity()
+            { _, hourOfDay, minute ->
+                val duration = max(hourOfDay * 3600000L + minute * 60000L, 1800_000L)
+                pickTime = duration
+                onDurationPicked(duration)
+            },
+            hours,
+            minutes,
+            true  // 24-часовой формат
+        ).show()
+    }
+
+    private fun formatDuration(millis: Long): String {
+        val hours = millis / 3600000
+        val minutes = (millis % 3600000) / 60000
+        return String.format("%02d:%02d", hours, minutes)
+    }
+
+    private fun formatDate(cal: Calendar) = String.format("%04d-%02d-%02d", cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH))
     private fun formatTime(cal: Calendar) = String.format("%02d:%02d", cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE))
 }

@@ -78,6 +78,7 @@ class FriendProfileActivity : AppCompatActivity() {
         contactsRepo = app.appContainer.contactsRepository
 
         pref = getSharedPreferences("settings", MODE_PRIVATE)
+        myId = (application as MyApp).appContainer.tokenManager.getUserId()
 
         // Находим элементы
         val btnBack = findViewById<ImageButton>(R.id.btn_back)
@@ -93,6 +94,7 @@ class FriendProfileActivity : AppCompatActivity() {
 
         calendar = Calendar.getInstance()
         val id = intent.getIntExtra("other_id", 0)
+        otherId = id
 
         lifecycleScope.launch {
             user = app.appContainer.userDao.getUserForId(id)
@@ -100,10 +102,6 @@ class FriendProfileActivity : AppCompatActivity() {
             avatar.text = user.avatar
 
             viewModel.setId(user.id)
-
-            if(!pref.getBoolean("noTestAdd", false)) {
-                viewModel.addTestTasks()
-            }
 
             viewModel.setDate(calendar.timeInMillis)
         }

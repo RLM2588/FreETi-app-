@@ -168,10 +168,13 @@ class GroupTaskTimelineView @JvmOverloads constructor(
                 titlePaint.textSize = minOf(titlePaint.textSize, maxTextWidth / titleText.length.coerceAtLeast(1) * 2.0f)
                 canvas.drawText(titleText, rect.left + 4f, rect.top + titlePaint.textSize + 4f, titlePaint)
 
-                // Время задачи – теперь чуть выше, чтобы не слипалось с соседней
-                val timeText = "${formatTime(task.start)}–${formatTime(task.time_end)}"
-                timePaintSm.textSize = minOf(28f, maxTextWidth / timeText.length.coerceAtLeast(1) * 1.8f)
-                canvas.drawText(timeText, rect.left + 4f, rect.bottom - 8f, timePaintSm)
+                if(startSlot != endSlot) {
+                    // Время задачи – теперь чуть выше, чтобы не слипалось с соседней
+                    val timeText = "${formatTime(task.start)}–${formatTime(task.time_end)}"
+                    timePaintSm.textSize =
+                        minOf(28f, maxTextWidth / timeText.length.coerceAtLeast(1) * 1.8f)
+                    canvas.drawText(timeText, rect.left + 4f, rect.bottom - 8f, timePaintSm)
+                }
             }
         }
     }
