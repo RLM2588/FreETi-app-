@@ -62,6 +62,11 @@ object NetworkClient {
         val tokenAuthenticator = Authenticator { _, response ->
             // Если мы уже 2 раза получили 401 для этого запроса - всё, стоп.
             if (response.responseCount >= 2) {
+                if (response.code == 401) {
+                    //tokenManager.clearTokens()
+                    //вот тут скорее всего нужно добавить выход из аккаунта
+                }
+
                 return@Authenticator null
             }
 

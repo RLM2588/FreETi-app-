@@ -37,9 +37,10 @@ class AuthRepository(
         var answ: String
         try {
             val response = api.register(RegisterRequest(login, email))
-            if (response.isSuccessful) answ = response.body().toString()
+            if (response.isSuccessful) answ = "OK"
             else answ = "Not Success"
         } catch (e: Exception) {
+            Log.d("error", e.message + " ")
             answ = "Can not connect"
         }
         return answ
