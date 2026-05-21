@@ -4,7 +4,6 @@ import android.util.Log
 import com.example.freeti.data_base.MyTasksDao
 import com.example.freeti.data_base.SyncMetadataDao
 import com.example.freeti.network_api.ApiService
-import com.example.freeti.network_entity.NTasks
 
 class TaskSyncManager(
     private val myTaskDao: MyTasksDao,

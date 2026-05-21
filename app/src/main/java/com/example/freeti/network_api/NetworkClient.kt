@@ -1,8 +1,5 @@
 package com.example.freeti.network_api
-// Файл: NetworkModule.kt?или так оставить
 
-import android.content.Context.MODE_PRIVATE
-import android.util.Base64
 import android.util.Log
 import com.example.freeti.MyApp
 import com.example.freeti.repository.AuthRepository

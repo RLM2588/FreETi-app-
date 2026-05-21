@@ -1,6 +1,5 @@
 package com.example.freeti.network_api
 
-import android.R
 import com.example.freeti.data.local.entity.DTasks
 import com.example.freeti.network_entity.AuthResponse
 import com.example.freeti.network_entity.FinalRegisterRequest

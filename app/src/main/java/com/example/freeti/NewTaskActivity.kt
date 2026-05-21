@@ -17,7 +17,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -25,7 +24,6 @@ import com.example.freeti.data.local.entity.DTasks
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.launch
 import java.util.Calendar
-import java.util.TimeZone
 import java.util.UUID
 
 class NewTaskActivity : AppCompatActivity() {
@@ -258,7 +256,6 @@ class NewTaskActivity : AppCompatActivity() {
         val finalStart = if (isTime) 0L else startTime.timeInMillis
         val finalEnd = if (isNoTime || isTime) 0L else maxOf(finalStart + 600_000L, endTime.timeInMillis)
 
-        val isNew = taskId == null
         val task = DTasks(
             id = taskId ?: UUID.randomUUID().toString(),
             title = title,
