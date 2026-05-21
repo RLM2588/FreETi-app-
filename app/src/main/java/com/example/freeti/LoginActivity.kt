@@ -82,14 +82,4 @@ class LoginActivity : AppCompatActivity() {
             finish()
         }
     }
-
-    suspend fun is_login_succes(login: String, password: String): Boolean {
-        val answer =
-
-
-
-
-
-        return true
-    }
 }

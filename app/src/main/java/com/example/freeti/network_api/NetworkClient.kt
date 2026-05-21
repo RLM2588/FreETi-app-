@@ -1,6 +1,7 @@
 package com.example.freeti.network_api
 // Файл: NetworkModule.kt?или так оставить
 
+import android.content.Context.MODE_PRIVATE
 import android.util.Base64
 import android.util.Log
 import com.example.freeti.MyApp
@@ -16,11 +17,8 @@ import kotlinx.coroutines.runBlocking
 import okhttp3.*
 
 
-// TODO доделать, доразобраться, не хватает настройки https и обработки токенов
-
 object NetworkClient {
-    // Базовый URL сервера
-    private const val BASE_URL = "http://192.168.1.37:8091/api/" // TODO вставить в будщем свой сервер
+    private const val BASE_URL = "http://freeti.ru:8091/api/"
 
 
     fun provideApiService(tokenManager: TokenManager, authProvider: () -> AuthRepository): ApiService {
