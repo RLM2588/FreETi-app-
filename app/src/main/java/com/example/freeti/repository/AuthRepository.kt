@@ -37,7 +37,7 @@ class AuthRepository(
         var answ: String
         try {
             val response = api.register(RegisterRequest(login, email))
-            if (response.isSuccessful) answ = "OK"
+            if (response.isSuccessful) answ = "OK " + response.body().toString()
             else answ = "Not Success"
         } catch (e: Exception) {
             Log.d("error", e.message + " ")

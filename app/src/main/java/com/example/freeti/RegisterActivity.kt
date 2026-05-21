@@ -74,7 +74,7 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (login == "" || email == "" || code == ""){
+            if (login == "" || email == "" || code == "") {
                 Toast.makeText(this, "Не все поля заполнены", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -82,16 +82,26 @@ class RegisterActivity : AppCompatActivity() {
                 val answer = authRepository.finalRegister(login, email, code, pass)
                 when (answer) {
                     "Success" -> {
-                        Toast.makeText(this@RegisterActivity, "Вы зарегистрировались", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@RegisterActivity,
+                            "Вы зарегистрировались",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         userLogin.text.clear()
                         userEmail.text.clear()
                         userPass.text.clear()
                         startActivity(Intent(this@RegisterActivity, MainScreen::class.java))
                         finish()
                     }
+
                     "Can not connect" -> {
-                        Toast.makeText(this@RegisterActivity, "Ошибка соединения", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@RegisterActivity,
+                            "Ошибка соединения",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
+
                     else -> {
                         Toast.makeText(this@RegisterActivity, "$answer", Toast.LENGTH_SHORT).show()
                         // Тут можно добавить обработку ошибок
@@ -112,17 +122,39 @@ class RegisterActivity : AppCompatActivity() {
             lifecycleScope.launch {
 
                 val answer = authRepository.testRegister(login, email)
+                if (answer.startsWith("OK")) {
+                    Toast.makeText(
+                        this@RegisterActivity,
+                        "Код отправлен на $email",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    buttonsendcode.text = "Отправить еще раз"
+                } else {
+                    when (answer) {
+                        "OK" -> {
+                            Toast.makeText(
+                                this@RegisterActivity,
+                                "Код отправлен на $email",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            buttonsendcode.text = "Отправить еще раз"
+                        }
 
-                when (answer) {
-                    "OK" -> {
-                        Toast.makeText(this@RegisterActivity, "Код отправлен на $email", Toast.LENGTH_SHORT).show()
-                        buttonsendcode.text = "Отправить еще раз"
-                    }
-                    "Can not connect" -> {
-                        Toast.makeText(this@RegisterActivity, "Ошибка соединения", Toast.LENGTH_SHORT).show()
-                    }
-                    else -> {
-                        Toast.makeText(this@RegisterActivity, "$answer занято", Toast.LENGTH_SHORT).show()
+                        "Can not connect" -> {
+                            Toast.makeText(
+                                this@RegisterActivity,
+                                "Ошибка соединения",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        else -> {
+                            Toast.makeText(
+                                this@RegisterActivity,
+                                "$answer занято",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             }
