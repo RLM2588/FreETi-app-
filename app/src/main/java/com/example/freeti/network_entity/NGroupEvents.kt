@@ -12,7 +12,7 @@ data class NGroupEvents (
     var group_id: String,
     var start: Long,
     var time_end: Long,
-    var status: String, // TODO status enum, хз, то ли
+    var status: String,
     var importance: Int,
     var colour: String = "FFFFFF",
     var vote_id: String,

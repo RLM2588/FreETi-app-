@@ -21,7 +21,6 @@ class MembersRepository (
                     if (dmembers.isNotEmpty()) {
                         dao.deleteGroupMembersId(group_id)
                         dao.insertAll(dmembers)
-                        Log.d("take_members", dmembers.size.toString())
                     }
                 }
             } else {

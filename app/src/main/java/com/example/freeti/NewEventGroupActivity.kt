@@ -219,7 +219,7 @@ class NewEventGroupActivity : AppCompatActivity() {
         val minutes = ((currentMillis % 3600000) / 60000).toInt()
 
         TimePickerDialog(
-            this,  // если вы во Fragment, используйте requireActivity()
+            this,
             { _, hourOfDay, minute ->
                 val duration = max(hourOfDay * 3600000L + minute * 60000L, 1800_000L)
                 pickTime = duration

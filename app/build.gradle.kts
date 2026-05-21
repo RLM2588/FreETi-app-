@@ -53,21 +53,19 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0") // для календаря
     // --- Retrofit ---
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    // Конвертер JSON (Gson) - чтобы Retrofit сам превращал JSON в объекты
+    // Конвертер JSON (Gson)
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    // OkHttp (Retrofit использует его внутри) - нам нужен для настройки HTTPS и логирования
+    // OkHttp
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 
     // --- Room ---
-
-    // --- Другие полезности ---
     // Lifecycle (ViewModel, LiveData)
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     // Coroutines (для фоновых задач)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
-    // Для работы с датами (более современный API)
+    // Для работы с датами
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.1")
 
     // Для токенов:

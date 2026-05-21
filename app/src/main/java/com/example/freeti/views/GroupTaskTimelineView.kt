@@ -110,7 +110,6 @@ class GroupTaskTimelineView @JvmOverloads constructor(
 
         val width = width.toFloat()
         val height = height.toFloat()
-        //val colCount = maxOf(1, columns.size)
 
         // Горизонтальные линии сетки + время слева
         for (row in 0..totalRows) {
@@ -187,7 +186,6 @@ class GroupTaskTimelineView @JvmOverloads constructor(
 
     private fun getSlotIndexSt(timestamp: Long): Int {
         val diffMinutes = TimeUnit.MILLISECONDS.toMinutes(timestamp - dayStartMillis) + 1
-        // Сюда или к миллисекундам?
         return ((diffMinutes)/ cellDurationMinutes).toInt() // Теоретически защитит от бага
     }
 
@@ -252,7 +250,7 @@ class GroupTaskTimelineView @JvmOverloads constructor(
                     if (elapsed >= longPressThreshold) {
                         val x = downX
                         val y = downY
-                        //val colCount = maxOf(1, columns.size)
+
                         for (colIndex in columns.indices) {
                             val xStart = timeColumnWidth + colIndex * columnWidth
                             if (x < xStart || x > xStart + columnWidth) continue

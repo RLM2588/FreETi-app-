@@ -200,7 +200,6 @@ class TaskTimelineView @JvmOverloads constructor(
 
     private fun getSlotIndexSt(timestamp: Long): Int {
         val diffMinutes = TimeUnit.MILLISECONDS.toMinutes(timestamp - dayStartMillis) + 1
-        // Сюда или к миллисекундам?
         return ((diffMinutes)/ cellDurationMinutes).toInt() // Теоретически защитит от бага
     }
 
@@ -269,7 +268,7 @@ class TaskTimelineView @JvmOverloads constructor(
                     if (elapsed >= longPressThreshold) {
                         val x = downX
                         val y = downY
-                        //val colCount = maxOf(1, columns.size)
+
                         for (colIndex in columns.indices) {
                             val xStart = timeColumnWidth + colIndex * columnWidth
                             if (x < xStart || x > xStart + columnWidth) continue

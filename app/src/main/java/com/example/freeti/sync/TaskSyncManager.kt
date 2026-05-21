@@ -33,8 +33,6 @@ class TaskSyncManager(
                 Log.d("yml", tasksFromNetwork.code().toString())
             }
 
-            //Log.d("nigga", tasksFromNetwork.body()!![0].start.toString())
-
             // Получаем список id локальных неотправленных задач
             val unsyncedIds = myTaskDao.getUnsyncedTaskIds().toSet()
             // Фильтруем сетевые задачи, оставляя только те, которые не конфликтуют

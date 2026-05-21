@@ -56,8 +56,6 @@ class GroupTasksViewModel(
             rep.getTasks(yearMonth, user_id.value)
 
             _selectedDateMillis.value = millis
-            Log.d("nigga", tasksForDay.value.size.toString() + " " + user_id.value)
-            Log.d("niggachu", taskDao.count(user_id.value).toString())
         }
     }
 

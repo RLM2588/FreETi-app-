@@ -52,14 +52,14 @@ interface ApiService {
     @GET("tasks/{id}")
     suspend fun getTasks(@Path("id") user_id: Int): List<NTasks>
 
-    @GET("tasks/{id}/repeat") //TODO как лучше?
+    @GET("tasks/{id}/repeat")
     suspend fun getRepeatTasks(@Path("id") user_id: Int): List<NRepeatTasks>
 
     @POST("tasks")
-    suspend fun postTasks(@Body tasks: List<DTasks>) // TODO :List<DTasks>??
+    suspend fun postTasks(@Body tasks: List<DTasks>)
 
     @POST("tasks")
-    suspend fun postTask(@Body tasks: DTasks) // TODO : DTasks??
+    suspend fun postTask(@Body tasks: DTasks)
 
     @POST("test")
     suspend fun send(@Body message : TestRequest): Response<TestResponse>

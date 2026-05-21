@@ -50,7 +50,7 @@ class GroupDetailsActivity : AppCompatActivity() {
     private lateinit var buttonrasp: Button
     private lateinit var group_members: Button
     private lateinit var tasks_lin: LinearLayout
-    private lateinit var view_golosov: View // TODO потом заменим на нужное
+    private lateinit var view_golosov: View
     private lateinit var group: DGroups
     private lateinit var id: String
     private lateinit var nextDayButton: ImageButton

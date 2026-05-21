@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/bg"
+    android:fitsSystemWindows="true"
     android:padding="16dp">
 
     <LinearLayout
@@ -13,6 +14,16 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/btn_back_unassigned"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="?attr/homeAsUpIndicator"
+            app:tint="@color/for_text"
+            android:contentDescription="Назад" />
 
         <TextView
             android:layout_width="0dp"
@@ -27,6 +38,7 @@
             android:id="@+id/btn_sync_unassigned"
             android:layout_width="36dp"
             android:layout_height="36dp"
+            android:layout_marginEnd="4dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_refresh1"
             android:contentDescription="Обновить"
@@ -37,5 +49,5 @@
         android:id="@+id/recycler_unassigned"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="12dp"/>
 </LinearLayout>

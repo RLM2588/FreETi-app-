@@ -260,7 +260,7 @@ class NewTaskActivity : AppCompatActivity() {
 
         val isNew = taskId == null
         val task = DTasks(
-            id = taskId ?: UUID.randomUUID().toString(), //TODO уточнить
+            id = taskId ?: UUID.randomUUID().toString(),
             title = title,
             body = body,
             start = finalStart,
