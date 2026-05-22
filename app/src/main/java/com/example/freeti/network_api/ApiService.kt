@@ -2,6 +2,7 @@ package com.example.freeti.network_api
 
 import com.example.freeti.data.local.entity.DTasks
 import com.example.freeti.network_entity.AuthResponse
+import com.example.freeti.network_entity.DeleteContactAnswer
 import com.example.freeti.network_entity.FinalRegisterRequest
 import com.example.freeti.network_entity.LoginRequest
 import com.example.freeti.network_entity.NContacts
@@ -188,7 +189,7 @@ interface ApiService {
     suspend fun upsertContact(@Body contact: NContacts): Response<NContacts>
 
     @DELETE("users/delete_contact")
-    suspend fun deleteContact(@Body contact: NContacts): Response<Boolean>
+    suspend fun deleteContact(@Query("user1") user1: Int, @Query("user2") user2: Int): Response<DeleteContactAnswer>
 
     @GET("groups/group_members")
     suspend fun getGroupMembers(@Query("group_id") groupId: String): Response<List<NGroupsUsers>>

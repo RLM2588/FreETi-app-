@@ -2,6 +2,7 @@ package com.example.freeti
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
@@ -140,6 +141,7 @@ class FriendProfileActivity : AppCompatActivity() {
                     }
                     refreshContactStatus()
                 } catch (e: Exception) {
+                    Log.d("error", e.message + "")
                     Toast.makeText(this@FriendProfileActivity, "Ошибка сети", Toast.LENGTH_SHORT).show()
                 }
             }

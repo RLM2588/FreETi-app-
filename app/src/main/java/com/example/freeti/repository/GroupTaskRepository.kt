@@ -54,6 +54,7 @@ class GroupTaskRepository(
                 val body = response.body()
                 if (body != null) {
                     val dTasks = body.map { it.toEntity() }
+                    Log.d("log", "dtasks is not empty?: " + dTasks.isNotEmpty())
                     if (dTasks.isNotEmpty()) {
                         dao.insertAll(dTasks)
                         true
@@ -64,6 +65,7 @@ class GroupTaskRepository(
                 false
             }
         } catch (e: Exception) {
+            Log.d("error", e.message + "")
             false
         }
     }

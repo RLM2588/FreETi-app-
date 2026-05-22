@@ -67,7 +67,7 @@ class ContactsRepository(
     suspend fun removeContact(myId: Int, otherId: Int) {
         val contact =
             NContacts(user1 = myId, user2 = otherId, isFriend = false) // серверу всё равно
-        val response = apiService.deleteContact(contact)
+        val response = apiService.deleteContact(myId, otherId)
         if (response.isSuccessful) {
             // Удаляем локально, если запись существует
             val dContact = DContacts(myId, otherId, isFriend = false)
