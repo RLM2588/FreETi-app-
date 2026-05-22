@@ -15,6 +15,7 @@ import com.example.freeti.network_entity.NTasks
 import com.example.freeti.network_entity.NUsers
 import com.example.freeti.network_entity.RefreshTokenRequest
 import com.example.freeti.network_entity.RegisterRequest
+import com.example.freeti.network_entity.RegisterResponseCode
 import com.example.freeti.network_entity.TestRequest
 import com.example.freeti.network_entity.TestResponse
 import com.example.freeti.network_entity.UserResponse
@@ -23,6 +24,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -33,8 +35,12 @@ interface ApiService {
     @GET("tasks/username_id")
     suspend fun get_username_id(): Response<UserResponse>
 
+    // TODO потом удалить
     @POST("auth/register")
     suspend fun register(@Body request: RegisterRequest): Response<String>
+
+    @POST("auth/register_resp")
+    suspend fun register_resp(@Body request: RegisterRequest): Response<RegisterResponseCode>
 
     @POST("auth/final_register")
     suspend fun finalRegister(@Body request: FinalRegisterRequest): Response<AuthResponse>

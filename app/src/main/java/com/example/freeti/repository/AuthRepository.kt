@@ -36,9 +36,15 @@ class AuthRepository(
     suspend fun testRegister(login: String, email: String): String {
         var answ: String
         try {
-            val response = api.register(RegisterRequest(login, email))
-            if (response.isSuccessful) answ = "OK " + response.body().toString()
-            else answ = "Not Success"
+            val response = api.register_resp(RegisterRequest(login, email))
+            if (!response.isSuccessful)
+                answ = "Not Success"
+            else {
+                val body = response.body()
+                if (body != null)
+                    answ = "OK " + body.message
+                else answ = "Not Success"
+            }
         } catch (e: Exception) {
             Log.d("error", e.message + " ")
             answ = "Can not connect"
