@@ -22,15 +22,19 @@ class OtherTasksViewModel(
     private val rep: OtherTaskRepository
 ) : ViewModel() {
     private val _selectedDateMillis = MutableStateFlow<Long?>(null)
+    private val _refreshTrigger = MutableStateFlow(0)
     private var user_id: Int = 0
+
+    // private var user_login : String = " " // наработки
 
     private val _privacy = MutableStateFlow("PUBLIC")
     val privacy: StateFlow<String> = _privacy.asStateFlow()
 
     val tasksForDay: StateFlow<List<DOtherTasks>> = combine(
         _selectedDateMillis,
-        _privacy
-    ) { dateMillis, privacy ->
+        _privacy,
+        _refreshTrigger
+    ) { dateMillis, privacy, _ ->
         dateMillis to privacy
     }.flatMapLatest { (dateMillis, privacy) ->
         if (dateMillis == null) {
@@ -54,6 +58,7 @@ class OtherTasksViewModel(
             if (user_id <= 0) return@launch
             val yearMonth = convertMillisToYearMonth(millis)
             rep.getTasks(yearMonth, user_id)
+            _refreshTrigger.value++
         }
     }
 
@@ -96,106 +101,5 @@ class OtherTasksViewModel(
         cal.set(Calendar.MILLISECOND, 0)
         cal.add(Calendar.DAY_OF_MONTH, 1)
         return cal.timeInMillis
-    }
-
-    fun addTestTasks() {
-        viewModelScope.launch {
-            // Убедимся, что у нас есть начало сегодняшнего дня (UTC)
-            val todayStart = getStartOfLocalDayUtc(System.currentTimeMillis())
-            val testTasks = listOf(
-                DOtherTasks(
-                    id = "test_1",
-                    title = "Утренняя пробежка",
-                    body = "Бег в парке",
-                    user_id = user_id,
-                    start = todayStart + 7 * 3600_000L,          // 07:00
-                    time_end = todayStart + 8 * 3600_000L,        // 08:00
-                    status = "ACTIVE",
-                    privacy = "PUBLIC",
-                    importance = 2,
-                    push_template_id = 0,
-                    colour = "FF5733"
-                ),
-                DOtherTasks(
-                    id = "test_2",
-                    title = "Встреча с командой",
-                    body = "Обсуждение спринта",
-                    user_id = user_id,
-                    start = todayStart + 7 * 3600_000L + 30 * 60_000L, // 07:30
-                    time_end = todayStart + 9 * 3600_000L,              // 09:00
-                    status = "ACTIVE",
-                    privacy = "PUBLIC",
-                    importance = 3,
-                    push_template_id = 0,
-                    colour = "33FF57"
-                ),
-                DOtherTasks(
-                    id = "test_9",
-                    title = "Встреча с командой2",
-                    body = "Обсуждение спринта",
-                    user_id = user_id,
-                    start = todayStart + 7 * 3600_000L + 30 * 60_000L, // 07:30
-                    time_end = todayStart + 9 * 3600_000L,              // 09:00
-                    status = "ACTIVE",
-                    privacy = "PUBLIC",
-                    importance = 3,
-                    push_template_id = 0,
-                    colour = "33F457"
-                ),
-                DOtherTasks(
-                    id = "test_91",
-                    title = "Встреча с командой23",
-                    body = "Обсуждение спринта",
-                    user_id = user_id,
-                    start = todayStart + 7 * 3600_000L + 30 * 60_000L, // 07:30
-                    time_end = todayStart + 9 * 3600_000L,              // 09:00
-                    status = "ACTIVE",
-                    privacy = "PUBLIC",
-                    importance = 3,
-                    push_template_id = 0,
-                    colour = "53F457"
-                ),
-                DOtherTasks(
-                    id = "test_3",
-                    title = "Завтрак",
-                    body = "Сходить в кафе",
-                    user_id = user_id,
-                    start = todayStart + 8 * 3600_000L + 15 * 60_000L, // 08:15
-                    time_end = todayStart + 9 * 3600_000L,              // 09:00
-                    status = "ACTIVE",
-                    privacy = "PUBLIC",
-                    importance = 1,
-                    push_template_id = 0,
-                    colour = "3357FF"
-                ),
-                DOtherTasks(
-                    id = "test_4",
-                    title = "Поздний дедлайн",
-                    body = "Сдать отчёт",
-                    user_id = user_id,
-                    start = todayStart + 16 * 3600_000L,                // 16:00
-                    time_end = todayStart + 18 * 3600_000L,              // 18:00
-                    status = "ACTIVE",
-                    privacy = "PUBLIC",
-                    importance = 3,
-                    push_template_id = 0,
-                    colour = "FF33A1"
-                ),
-                DOtherTasks(
-                    id = "test_8",
-                    title = "Поздний дедлайн2",
-                    body = "Сдать отчёт",
-                    user_id = user_id,
-                    start = todayStart + 28 * 3600_000L,                // 16:00
-                    time_end = todayStart + 31 * 3600_000L,              // 18:00
-                    status = "ACTIVE",
-                    privacy = "PUBLIC",
-                    importance = 3,
-                    push_template_id = 0,
-                    colour = "FFF3A1"
-                )
-            )
-            taskDao.insertAll(testTasks)
-        }
     }
 }

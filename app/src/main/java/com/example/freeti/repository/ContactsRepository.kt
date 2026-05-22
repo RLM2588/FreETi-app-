@@ -18,16 +18,24 @@ class ContactsRepository(
         val myId = tokenManager.getUserId()
         try {
             val networkContacts = apiService.getContacts()
-            val dContacts = networkContacts.map { it.toEntity() }
-            contactsDao.deleteAllContacts(myId)
-            contactsDao.insertAll(dContacts)
+            if (networkContacts.isSuccessful && networkContacts.body() != null) {
+                val dContacts = networkContacts.body()?.map { it.toEntity() }
+                if (dContacts == null) throw NoSuchMethodException()
 
-            val allIds = dContacts.flatMap { listOf(it.user1, it.user2) }.distinct()
-            val existingIds = userDao.getAllExcept(myId).map { it.id }.toSet() // 0 шутка, лучше getAll
-            val missingIds = allIds.filter { it !in existingIds && it != myId }
-            if (missingIds.isNotEmpty()) {
-                val users = apiService.getUsersByIds(missingIds.joinToString(","))
-                userDao.insertAll(users.map { it.toEntity() })
+                contactsDao.deleteAllContacts(myId)
+                contactsDao.insertAll(dContacts)
+
+                val allIds = dContacts.flatMap { listOf(it.user1, it.user2) }.distinct()
+                val existingIds =
+                    userDao.getAllExcept(myId).map { it.id }.toSet() // 0 шутка, лучше getAll
+                val missingIds = allIds.filter { it !in existingIds && it != myId }
+                if (missingIds.isNotEmpty()) {
+                    val users = apiService.getUsersByIds(missingIds.joinToString(","))
+                    val body = users.body();
+                    if (users.isSuccessful && body != null) {
+                        userDao.insertAll(body.map { it.toEntity() })
+                    }
+                }
             }
         } catch (e: Exception) {
         }
@@ -59,7 +67,7 @@ class ContactsRepository(
     suspend fun removeContact(myId: Int, otherId: Int) {
         val contact =
             NContacts(user1 = myId, user2 = otherId, isFriend = false) // серверу всё равно
-        val response = apiService.deleteContact(contact)
+        val response = apiService.deleteContact(myId, otherId)
         if (response.isSuccessful) {
             // Удаляем локально, если запись существует
             val dContact = DContacts(myId, otherId, isFriend = false)

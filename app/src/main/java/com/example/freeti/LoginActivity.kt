@@ -9,8 +9,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import com.example.freeti.repository.AuthRepository
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
 
@@ -18,6 +21,10 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var etPassword: TextInputEditText
     private lateinit var btnLogin: MaterialButton
     private lateinit var tvRegister: TextView
+
+    private val authRepository: AuthRepository by lazy {
+        (application as MyApp).appContainer.authRepository
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,27 +52,28 @@ class LoginActivity : AppCompatActivity() {
             val username = etUsername.text.toString().trim()
             val password = etPassword.text.toString().trim()
 
-            if (username.isEmpty()) {
-                etUsername.error = "Введите имя пользователя"
-                etUsername.requestFocus()
+            // Валидация полей
+            if (username.isEmpty() || password.isEmpty()) {
+                if (username.isEmpty()) etUsername.error = "Введите имя пользователя"
+                if (password.isEmpty()) etPassword.error = "Введите пароль"
                 return@setOnClickListener
             }
 
-            if (password.isEmpty()) {
-                etPassword.error = "Введите пароль"
-                etPassword.requestFocus()
-                return@setOnClickListener
-            }
+            lifecycleScope.launch {
+                // Вызываем метод репозитория
+                val result = authRepository.login(username, password)
 
-            if (is_login_succes()) {
-                Toast.makeText(this, "Вход выполнен успешно!", Toast.LENGTH_SHORT).show()
-                // Скрываем клавиатуру после входа
-                imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
-                //startActivity(Intent(this, MainScreen::class.java))
+                result.onSuccess {
+                    Toast.makeText(this@LoginActivity, "Вход выполнен успешно!", Toast.LENGTH_SHORT).show()
 
-                finish()
-            } else {
-                Toast.makeText(this, "Неверное имя пользователя или пароль", Toast.LENGTH_SHORT).show()
+                    imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+
+                    // Переход на главный экран
+                    startActivity(Intent(this@LoginActivity, MainScreen::class.java))
+                    finish()
+                }.onFailure { exception ->
+                    Toast.makeText(this@LoginActivity, exception.message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
@@ -73,10 +81,5 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this, RegisterActivity::class.java))
             finish()
         }
-    }
-
-    fun is_login_succes(): Boolean {
-        //TODO добавить проверку с сервера
-        return true
     }
 }

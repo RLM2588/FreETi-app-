@@ -34,6 +34,8 @@
     <string name="groups">Groups</string>
     <string name="back">⬅ Go back</string>
 
+    <string name="plug">Plug</string>
+
     <string name="privacy_public">Public</string>
     <string name="privacy_friends">For friends</string>
     <string name="privacy_private">Private</string>

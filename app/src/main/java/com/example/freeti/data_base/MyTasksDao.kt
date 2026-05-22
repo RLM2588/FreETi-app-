@@ -11,7 +11,7 @@ interface MyTasksDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(tasks: List<DTasks>)
 
-    @Query("SELECT * FROM tasks WHERE start = 0 AND time_end = 0 AND is_delete = 0")
+    @Query("SELECT * FROM tasks WHERE start = 0 AND time_end = 0 AND status != 'DELETED'")
     fun observeUnassignedTasks(): Flow<List<DTasks>>
 
     @Query("DELETE FROM tasks WHERE start = 0 AND time_end = 0 AND is_synced = 1")
@@ -24,11 +24,11 @@ interface MyTasksDao {
     suspend fun getTasksForMonth(yearMonth: String): List<DTasks>
 
     // Удалить все задачи за месяц (при очистке)
-    @Query("DELETE FROM tasks WHERE strftime('%Y-%m', start/1000, 'unixepoch') = :yearMonth")
+    @Query("DELETE FROM tasks WHERE strftime('%Y-%m', start/1000, 'unixepoch') = :yearMonth AND is_synced = 1")
     suspend fun deleteTasksForMonth(yearMonth: String)
 
     // Удалить задачи на определенный месяц
-    @Query("DELETE FROM tasks WHERE strftime('%Y-%m', start/1000, 'unixepoch') = :yearMonth")
+    @Query("DELETE FROM tasks WHERE strftime('%Y-%m', start/1000, 'unixepoch') = :yearMonth AND is_synced = 1")
     suspend fun deleteTasksOlderThan(yearMonth: String)
 
     // Получить все уникальные месяцы, для которых есть задачи (нужно для очистки)
@@ -36,18 +36,18 @@ interface MyTasksDao {
     suspend fun getExistingMonths(): List<String>
 
     // Flow всех задач (для UI)
-    @Query("SELECT * FROM tasks WHERE is_delete = 0 ORDER BY start ASC")
+    @Query("SELECT * FROM tasks WHERE status != 'DELETED' ORDER BY start ASC")
     fun observeAllTasks(): Flow<List<DTasks>>
 
-    @Query("SELECT * FROM tasks WHERE start >= :start AND start < :end AND privacy = :privacy AND is_delete = 0 AND time_end <> 0  ORDER BY start ASC, id ASC")
+    @Query("SELECT * FROM tasks WHERE start >= :start AND start < :end AND privacy = :privacy AND status != 'DELETED' AND time_end != 0  ORDER BY start ASC, id ASC")
     fun getTasksForDateRange(start: Long, end: Long, privacy : String): Flow<List<DTasks>>
 
 
-    @Query("SELECT * FROM tasks WHERE start >= :start AND start < :end AND is_delete = 0 AND time_end = 0 ORDER BY start ASC, id ASC")
+    @Query("SELECT * FROM tasks WHERE start >= :start AND start < :end AND status != 'DELETED' AND time_end = 0 ORDER BY start ASC, id ASC")
     fun observeTasksWithoutTime(start: Long, end: Long): Flow<List<DTasks>>
 
     // Flow всех задач (для UI)
-    @Query("SELECT * FROM tasks WHERE is_delete = 0 AND privacy = :privacy ORDER BY start ASC, id ASC")
+    @Query("SELECT * FROM tasks WHERE status != 'DELETED' AND privacy = :privacy ORDER BY start ASC, id ASC")
     fun observeAllTasksPrivacy(privacy: String): Flow<List<DTasks>>
 
     // Все задачи с is_synced = false (неотправленные)

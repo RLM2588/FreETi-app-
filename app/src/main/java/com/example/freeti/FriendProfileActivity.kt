@@ -2,6 +2,7 @@ package com.example.freeti
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
@@ -78,7 +79,9 @@ class FriendProfileActivity : AppCompatActivity() {
         contactsRepo = app.appContainer.contactsRepository
 
         pref = getSharedPreferences("settings", MODE_PRIVATE)
+        myId = (application as MyApp).appContainer.tokenManager.getUserId()
 
+        // Находим элементы
         val btnBack = findViewById<ImageButton>(R.id.btn_back)
         val tvNickname = findViewById<TextView>(R.id.tv_friend_nickname)
         btnAddContact = findViewById(R.id.btn_add_contact)
@@ -92,6 +95,7 @@ class FriendProfileActivity : AppCompatActivity() {
 
         calendar = Calendar.getInstance()
         val id = intent.getIntExtra("other_id", 0)
+        otherId = id
 
         lifecycleScope.launch {
             user = app.appContainer.userDao.getUserForId(id)
@@ -99,10 +103,6 @@ class FriendProfileActivity : AppCompatActivity() {
             avatar.text = user.avatar
 
             viewModel.setId(user.id)
-
-            if(!pref.getBoolean("noTestAdd", false)) {
-                viewModel.addTestTasks()
-            }
 
             viewModel.setDate(calendar.timeInMillis)
         }
@@ -141,6 +141,7 @@ class FriendProfileActivity : AppCompatActivity() {
                     }
                     refreshContactStatus()
                 } catch (e: Exception) {
+                    Log.d("error", e.message + "")
                     Toast.makeText(this@FriendProfileActivity, "Ошибка сети", Toast.LENGTH_SHORT).show()
                 }
             }

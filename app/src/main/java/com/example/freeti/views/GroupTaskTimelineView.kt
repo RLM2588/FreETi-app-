@@ -110,7 +110,6 @@ class GroupTaskTimelineView @JvmOverloads constructor(
 
         val width = width.toFloat()
         val height = height.toFloat()
-        //val colCount = maxOf(1, columns.size)
 
         // Горизонтальные линии сетки + время слева
         for (row in 0..totalRows) {
@@ -168,10 +167,13 @@ class GroupTaskTimelineView @JvmOverloads constructor(
                 titlePaint.textSize = minOf(titlePaint.textSize, maxTextWidth / titleText.length.coerceAtLeast(1) * 2.0f)
                 canvas.drawText(titleText, rect.left + 4f, rect.top + titlePaint.textSize + 4f, titlePaint)
 
-                // Время задачи – теперь чуть выше, чтобы не слипалось с соседней
-                val timeText = "${formatTime(task.start)}–${formatTime(task.time_end)}"
-                timePaintSm.textSize = minOf(28f, maxTextWidth / timeText.length.coerceAtLeast(1) * 1.8f)
-                canvas.drawText(timeText, rect.left + 4f, rect.bottom - 8f, timePaintSm)
+                if(startSlot != endSlot) {
+                    // Время задачи – теперь чуть выше, чтобы не слипалось с соседней
+                    val timeText = "${formatTime(task.start)}–${formatTime(task.time_end)}"
+                    timePaintSm.textSize =
+                        minOf(28f, maxTextWidth / timeText.length.coerceAtLeast(1) * 1.8f)
+                    canvas.drawText(timeText, rect.left + 4f, rect.bottom - 8f, timePaintSm)
+                }
             }
         }
     }
@@ -184,7 +186,6 @@ class GroupTaskTimelineView @JvmOverloads constructor(
 
     private fun getSlotIndexSt(timestamp: Long): Int {
         val diffMinutes = TimeUnit.MILLISECONDS.toMinutes(timestamp - dayStartMillis) + 1
-        // Сюда или к миллисекундам?
         return ((diffMinutes)/ cellDurationMinutes).toInt() // Теоретически защитит от бага
     }
 
@@ -249,7 +250,7 @@ class GroupTaskTimelineView @JvmOverloads constructor(
                     if (elapsed >= longPressThreshold) {
                         val x = downX
                         val y = downY
-                        //val colCount = maxOf(1, columns.size)
+
                         for (colIndex in columns.indices) {
                             val xStart = timeColumnWidth + colIndex * columnWidth
                             if (x < xStart || x > xStart + columnWidth) continue

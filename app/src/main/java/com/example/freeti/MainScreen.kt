@@ -7,9 +7,9 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
@@ -25,6 +25,7 @@ import com.example.freeti.view_model.TasksViewModelFactory
 import com.example.freeti.views.TaskTimelineView
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.TimeZone
@@ -58,6 +59,7 @@ class MainScreen : AppCompatActivity() {
         R.drawable.baseline_groups_24,    // FRIENDS
         R.drawable.baseline_person_24      // PRIVATE
     )
+    private var currentToast: Toast? = null
 
 
     // итераторы
@@ -75,12 +77,16 @@ class MainScreen : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+            }
+        })
 
         // Инициализация
         app = application as MyApp
 
         //if (!app.appContainer.tokenManager.hasSession()) {
-        //    Toast.makeText(this, "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show()
+        //    showToast("Вы вышли из аккаунта")
         //    finish()
         //}
 
@@ -89,10 +95,6 @@ class MainScreen : AppCompatActivity() {
             TasksViewModelFactory(app.appContainer.myTasksDao, app.appContainer.taskSyncManager)
         ).get(TasksViewModel::class.java)
         pref = getSharedPreferences("settings", MODE_PRIVATE)
-
-        if(!pref.getBoolean("noTestAdd", false)) {
-            viewModel.addTestTasks()
-        }
 
         privacy_color = listOf(getColor(R.color.for_privacy_public)
             .toLong(), getColor(R.color.for_privacy_friend)
@@ -124,8 +126,6 @@ class MainScreen : AppCompatActivity() {
         tasks_without_time.layoutManager = GridLayoutManager(this, 2)
 
         val noTimeAdapter = TasksNoTimeAdapter(
-
-
             onDoneClick = { task -> viewModel.markTaskDone(task) },
             onLongClick = { task -> viewModel.moveTaskToNextDay(task) },
             onEditClick = { task ->
@@ -136,6 +136,17 @@ class MainScreen : AppCompatActivity() {
         )
         tasks_without_time.adapter = noTimeAdapter
 
+        lifecycleScope.launch(Dispatchers.Main) {
+            try {
+                val response = MyApp.container.apiService.get_username_id()
+                if (response.isSuccessful && response.body() != null) {
+                    MyApp.container.tokenManager.saveUser(response.body()?.userId, response.body()?.username)
+                }
+            }
+            catch (e: Exception) {
+
+            }
+        }
         // Observe
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -199,6 +210,7 @@ class MainScreen : AppCompatActivity() {
         new_task.setOnClickListener {
             val intent = Intent(this@MainScreen, NewTaskActivity::class.java)
             intent.putExtra("daytime", calendar.timeInMillis)
+            intent.putExtra("privacy", iterator_privacy)
             startActivity(intent)
         }
 
@@ -244,7 +256,7 @@ class MainScreen : AppCompatActivity() {
     private fun setPrivacy(k: Boolean = true) {
         if (k) {
             iterator_privacy = (iterator_privacy + 1) % 3
-            Toast.makeText(this, privacy_text[iterator_privacy], Toast.LENGTH_SHORT).show()
+            showToast(privacy_text[iterator_privacy])
             pref.edit().putInt("privacy_iter", iterator_privacy).apply()
         } else {
             iterator_privacy = pref.getInt("privacy_iter", 2)
@@ -291,10 +303,16 @@ class MainScreen : AppCompatActivity() {
             // Обновляем текст на экране
             setDate()
             // Опционально: показываем Toast с выбранной датой
-            Toast.makeText(this, "Выбрано: ${date_number.text}.${month_and_year.text}", Toast.LENGTH_SHORT).show()
+            showToast("Выбрано: ${date_number.text}.${month_and_year.text}")
         }
 
         // Показываем диалог
         datePicker.show(supportFragmentManager, "MATERIAL_DATE_PICKER_TAG")
+    }
+
+    private fun showToast(message: String, type: Int = Toast.LENGTH_SHORT) {
+        currentToast?.cancel()
+        currentToast = Toast.makeText(this, message, type)
+        currentToast?.show()
     }
 }

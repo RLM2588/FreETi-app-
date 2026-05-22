@@ -19,6 +19,9 @@ interface GroupTasksDao {
     @Query("DELETE FROM group_events WHERE id = :id")
     suspend fun deleteTask(id: String)
 
+    @Query("SELECT COUNT(*) FROM group_events WHERE group_id = :id")
+    suspend fun count(id: String): Int
+
     // Удалить все задачи за день (при очистке)
     @Query("DELETE FROM group_events WHERE strftime('%Y-%m-%d', start/1000, 'unixepoch') = :yearMonth AND group_id = :id")
     suspend fun deleteTasksForMonth(yearMonth: String, id: String)
@@ -27,7 +30,7 @@ interface GroupTasksDao {
     @Query("SELECT * FROM group_events ORDER BY start ASC")
     fun observeAllUsersTasks(): Flow<List<DGroupEvents>>
 
-    @Query("SELECT * FROM group_events WHERE group_id = :id AND start >= :start AND start < :end AND time_end <> 0  ORDER BY start ASC, id ASC")
+    @Query("SELECT * FROM group_events WHERE group_id = :id AND start >= :start AND start < :end ORDER BY start ASC")
     fun getTasksForDateRange(start: Long, end: Long, id: String): Flow<List<DGroupEvents>>
 
     @Query("SELECT * FROM group_events WHERE group_id = :id ORDER BY start ASC, id ASC")

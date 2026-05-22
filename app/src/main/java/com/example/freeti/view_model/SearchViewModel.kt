@@ -19,7 +19,7 @@ class SearchViewModel(
     private val _users = MutableStateFlow<List<DUsers>>(emptyList())
     val users: StateFlow<List<DUsers>> = _users.asStateFlow()
 
-    private var searchJob: Job? = null
+    var job: Job? = null
 
     init {
         viewModelScope.launch {
@@ -29,9 +29,9 @@ class SearchViewModel(
     }
 
     fun search(query: String) {
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch {
-            delay(300L)
+        job?.cancel()
+        job = viewModelScope.launch {
+            delay(600)
             _users.value = repository.search(query)
         }
     }

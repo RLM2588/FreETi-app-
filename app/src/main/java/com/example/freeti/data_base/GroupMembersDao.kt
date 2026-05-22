@@ -32,4 +32,7 @@ interface GroupMembersDao {
 
     @Query("DELETE FROM groups_users WHERE tgroup = :groupId")
     suspend fun deleteGroupMembersId(groupId: String)
+
+    @Query("SELECT role FROM groups_users WHERE tgroup = :groupId AND user1 = :userId")
+    suspend fun getRoleById(groupId: String, userId: Int): String
 }

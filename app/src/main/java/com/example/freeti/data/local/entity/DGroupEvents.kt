@@ -15,7 +15,7 @@ data class DGroupEvents (
     var group_id: String,
     var start: Long,
     var time_end: Long,
-    var status: String, // TODO status enum, хз, то ли
+    var status: String,
     var importance: Int,
     @ColumnInfo(defaultValue = "FFFFFF")
     var colour: String,

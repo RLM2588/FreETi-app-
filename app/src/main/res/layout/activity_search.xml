@@ -6,6 +6,7 @@
     android:padding="16dp"
     android:background="@color/bg"
     android:fitsSystemWindows="true">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

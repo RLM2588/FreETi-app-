@@ -93,7 +93,7 @@ class TokenManager(context: Context) {
 
     fun getUserId(): Int = prefs.getInt(KEY_USER_ID, -1)
 
-    fun getLogin(): String = prefs.getString(KEY_LOGIN, "null")?: "null"
+    fun getLogin(): String = prefs.getString(KEY_LOGIN, "null") ?: "null"
 
     fun clearTokens() {
         prefs.edit().clear().apply()

@@ -10,6 +10,7 @@ import com.example.freeti.Member
 import com.example.freeti.R
 
 class MemberAdapter(
+    private val myRole: String,
     private var members: List<Member>,
     private val onRoleClick: (Member) -> Unit,
     private val onDeleteClick: (Member) -> Unit
@@ -50,6 +51,11 @@ class MemberAdapter(
 
             buttonKick.setOnClickListener {
                 onDeleteClick(member)
+            }
+
+            if (member.role == "OWNER" || myRole == "MEMBER") {
+                buttonKick.visibility = View.GONE
+                buttonPromote.visibility = View.GONE
             }
         }
     }

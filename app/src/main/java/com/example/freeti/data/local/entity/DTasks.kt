@@ -19,7 +19,6 @@ data class DTasks (
     @ColumnInfo(defaultValue = "FFFFFF")
     var colour: String,
     var updated_at: Long,
-    var is_delete: Boolean,
     @ColumnInfo(defaultValue = "1")   // новое поле
     var is_synced: Boolean = true
 ) {
@@ -35,8 +34,7 @@ data class DTasks (
             importance = this.importance,
             push_template_id = this.push_template_id,
             colour = this.colour,
-            updated_at = this.updated_at,
-            is_delete = this.is_delete
+            updated_at = this.updated_at
         )
     }
 }

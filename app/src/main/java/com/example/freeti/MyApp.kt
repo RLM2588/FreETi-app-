@@ -23,7 +23,7 @@ import com.example.freeti.worker.CleanupWorker
 import java.util.concurrent.TimeUnit
 
 class AppContainer(private val context: Context) {
-    private val database = AppDataBase.getInstance(context)
+    val database = AppDataBase.getInstance(context)
 
     private val tasksDao = database.tasksDao()
     val myTasksDao = database.myTasksDao()
@@ -44,8 +44,9 @@ class AppContainer(private val context: Context) {
     }
 
     val authRepository = AuthRepository(apiService, tokenManager)
+
     val testRepository = TestRepository(apiService)
-    val otherRepository = OtherTaskRepository(apiService, otherTaskDao)
+    val otherRepository = OtherTaskRepository(apiService, otherTaskDao, userDao)
 
     val groupRepository = GroupRepository(groupsDao, apiService)
     val groupTaskRepository = GroupTaskRepository(apiService, groupTasksDao)

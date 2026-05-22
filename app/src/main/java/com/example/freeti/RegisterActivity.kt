@@ -2,14 +2,17 @@ package com.example.freeti
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import com.example.freeti.repository.AuthRepository
+import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var userLogin: EditText
@@ -20,6 +23,12 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var buttonsendcode: Button
     private lateinit var userCode: EditText
     private lateinit var userPass2: EditText
+
+    private var countDownTimer: CountDownTimer? = null
+
+    private val authRepository: AuthRepository by lazy {
+        (application as MyApp).appContainer.authRepository
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,12 +67,6 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (is_code_correct(email, code)) {
-                userCode.error = "Неверный код"
-                Toast.makeText(this, "Неверный код подтверждения", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
             if (pass.length < 8) {
                 userPass.error = "Пароль должен быть не менее 8 символов"
                 Toast.makeText(
@@ -74,69 +77,117 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (login == "" || email == ""){
+            if (login == "" || email == "" || code == "") {
                 Toast.makeText(this, "Не все поля заполнены", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            val answer = is_register_succes();
-            if(answer == ""){
-                Toast.makeText(this, "Пользователь $login зарегистрирован", Toast.LENGTH_SHORT).show()
-                //startActivity(Intent(this, MainScreen::class.java))
+            lifecycleScope.launch {
+                val answer = authRepository.finalRegister(login, email, code, pass)
+                when (answer) {
+                    "Success" -> {
+                        Toast.makeText(
+                            this@RegisterActivity,
+                            "Вы зарегистрировались",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        userLogin.text.clear()
+                        userEmail.text.clear()
+                        userPass.text.clear()
+                        startActivity(Intent(this@RegisterActivity, MainScreen::class.java))
+                        finish()
+                    }
 
-                userLogin.text.clear()
-                userEmail.text.clear()
-                userPass.text.clear()
-                finish()
-            }
-            else {
-                if (answer == "login_booked") {
-                    Toast.makeText(this, "Логин занят", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
-                }
-                else if (answer == "email_booked") {
-                    Toast.makeText(this, "Почта занята", Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
+                    "Can not connect" -> {
+                        Toast.makeText(
+                            this@RegisterActivity,
+                            "Ошибка соединения",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    else -> {
+                        Toast.makeText(this@RegisterActivity, "$answer", Toast.LENGTH_SHORT).show()
+                        // Тут можно добавить обработку ошибок
+                    }
                 }
             }
         }
 
         buttonsendcode.setOnClickListener {
-            if (sendCode()) {
-                Toast.makeText(this, "Код отправлен на почту", Toast.LENGTH_SHORT).show()
+            val email = userEmail.text.toString().trim()
+            val login = userLogin.text.toString().trim()
+
+            if (email.isBlank() || login.isBlank()) {
+                Toast.makeText(this, "Не все поля заполнены", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            else {
-                Toast.makeText(this, "Почта занята", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+
+            lifecycleScope.launch {
+
+                val answer = authRepository.testRegister(login, email)
+                if (answer.startsWith("OK")) {
+                    Toast.makeText(
+                        this@RegisterActivity,
+                        "Код отправлен на $email",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    buttonsendcode.text = "Отправить еще раз"
+                    startTimer(60, buttonsendcode.text.toString())
+                } else {
+                    when (answer) {
+                        "OK" -> {
+                            Toast.makeText(
+                                this@RegisterActivity,
+                                "Код отправлен на $email",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            buttonsendcode.text = "Отправить еще раз"
+                            startTimer(60, buttonsendcode.text.toString())
+                        }
+
+                        "Can not connect" -> {
+                            Toast.makeText(
+                                this@RegisterActivity,
+                                "Ошибка соединения",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        else -> {
+                            Toast.makeText(
+                                this@RegisterActivity,
+                                "$answer занято",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
             }
         }
     }
 
-    fun sendCode(): Boolean {
-        val email = userEmail.text.toString().trim()
-        val code = buttonsendcode.text.toString().trim()
+    private fun startTimer(seconds: Long, textDef: String) {
+        buttonsendcode.isEnabled = false
+        buttonsendcode.text = "$seconds сек"
 
-        if (email == "") {
-            Toast.makeText(this, "Не все поля заполнены", Toast.LENGTH_SHORT).show()
-        } else {
-            // TODO сделать запрос на отправку кода
-            Toast.makeText(this, "Код отправлен на $email", Toast.LENGTH_SHORT).show()
-            buttonsendcode.text = "Отправить еще раз" // TODO убрать хардкод
-            //buttonsendcode.isEnabled = true
-            //buttonsendcode.requestFocus()
-            return true
-        }
+        countDownTimer?.cancel()
 
-        return false
+        countDownTimer = object : CountDownTimer(seconds * 1000, 1000) {
+            override fun onTick(p0: Long) {
+                val remSec = p0 / 1000
+                buttonsendcode.text = "$remSec сек"
+            }
+
+            override fun onFinish() {
+                buttonsendcode.isEnabled = true
+                buttonsendcode.text = textDef
+            }
+        }.start()
     }
 
-    fun is_code_correct(email: String,code: String): Boolean{
-        // TODO тут будет проверка на верность кода
-        return true
-    }
+    override fun onDestroy() {
+        super.onDestroy()
 
-    fun is_register_succes(): String{
-        // TODO тут будет отправка всех данных на сервер
-        return ""
+        countDownTimer?.cancel()
     }
 }

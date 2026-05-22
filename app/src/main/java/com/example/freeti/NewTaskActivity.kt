@@ -2,6 +2,7 @@ package com.example.freeti
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
@@ -62,6 +63,7 @@ class NewTaskActivity : AppCompatActivity() {
     }
     private val privacy_text_ENUM: List<String> = listOf("PUBLIC", "FRIENDS", "PRIVATE")
     private val privacy_color: List<Long> = listOf(0xFFa76a6b, 0xFF617d9a, 0xFF6aa776)
+    private var currentToast: Toast? = null
 
     private val privacy_icons: List<Int> = listOf(
         R.drawable.outline_globe_24,   // для PUBLIC
@@ -71,6 +73,8 @@ class NewTaskActivity : AppCompatActivity() {
 
     var iterator_privacy = 2
     var is_plus_day = true
+
+    private lateinit var pref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,8 +114,11 @@ class NewTaskActivity : AppCompatActivity() {
         val grbl_color = findViewById<View>(R.id.grbl_color)
         val gray_color = findViewById<View>(R.id.gray_color)
 
+        pref = getSharedPreferences("settings", MODE_PRIVATE)
+
         taskId = intent.getStringExtra("task_id")
         day = intent.getLongExtra("daytime", System.currentTimeMillis())
+        iterator_privacy = intent.getIntExtra("privacy", 2)
 
         if (taskId != null) {
             t_mode.text = "Редактирование"
@@ -205,25 +212,30 @@ class NewTaskActivity : AppCompatActivity() {
         t_ok.setOnClickListener {
             val ttext = t_title.text
             if (ttext.isEmpty()) {
-                Toast.makeText(this, "Введите название", Toast.LENGTH_SHORT).show()
+                showToast("Введите название")
                 return@setOnClickListener
             }
             if (ttext.length > 20) {
-                Toast.makeText(this, "Название должно быть меньше 20 символов", Toast.LENGTH_SHORT).show()
+                showToast("Название должно быть меньше 20 символов")
                 return@setOnClickListener
             }
 
             saveTask()
         }
 
+        t_ok.setOnLongClickListener { // Временно на эту кнопку - сохраняем с заглушкой в имени
+            saveTask(pref.getString("default_plug", "---")?: "---")
+            true
+        }
+
         t_save.setOnClickListener {
             val ttext = t_title.text
             if (ttext.isEmpty()) {
-                Toast.makeText(this, "Введите название", Toast.LENGTH_SHORT).show()
+                showToast("Введите название")
                 return@setOnClickListener
             }
             if (ttext.length > 20) {
-                Toast.makeText(this, "Название должно быть меньше 20 символов", Toast.LENGTH_SHORT).show()
+                showToast("Название должно быть меньше 20 символов")
                 return@setOnClickListener
             }
             saveTask()
@@ -236,7 +248,7 @@ class NewTaskActivity : AppCompatActivity() {
                 lifecycleScope.launch {
                     val task = (application as MyApp).appContainer.myTasksDao.getTaskById(id)
                     task?.let {
-                        val deleted = it.copy(is_delete = true, updated_at = System.currentTimeMillis(), is_synced = false)
+                        val deleted = it.copy(status = "DELETED", updated_at = System.currentTimeMillis(), is_synced = false)
                         (application as MyApp).appContainer.myTasksDao.insertAll(listOf(deleted))
                         finish()
                     }
@@ -245,8 +257,8 @@ class NewTaskActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveTask() {
-        val title = t_title.text.toString().trim()
+    private fun saveTask(someTitle: String = "") {
+        val title = if(someTitle == "") t_title.text.toString().trim() else someTitle
         val body = t_body.text.toString().trim()
         val colorHex = t_et_color.text.toString().trim().ifBlank { "FFFFFF" }
         val isNoTime = t_no_time.isChecked
@@ -257,7 +269,7 @@ class NewTaskActivity : AppCompatActivity() {
         val finalEnd = if (isNoTime || isTime) 0L else maxOf(finalStart + 600_000L, endTime.timeInMillis)
 
         val task = DTasks(
-            id = taskId ?: UUID.randomUUID().toString(), //TODO уточнить
+            id = taskId ?: UUID.randomUUID().toString(),
             title = title,
             body = body,
             start = finalStart,
@@ -265,18 +277,19 @@ class NewTaskActivity : AppCompatActivity() {
             status = if(t_is_done.isChecked) "DONE" else "ACTIVE",
             privacy = privacy_text_ENUM[iterator_privacy],
             importance = importance,
-            push_template_id = 0, //TODO потом добавить уведомления
+            push_template_id = 1, //TODO потом добавить уведомления
             colour = colorHex,
             updated_at = System.currentTimeMillis(),
-            is_delete = false,
             is_synced = false
         )
 
         lifecycleScope.launch {
+            //if (isNew)
+
             (application as MyApp).appContainer.myTasksDao.insertAll(listOf(task))
         }
 
-        Toast.makeText(this, "Задача сохранена", Toast.LENGTH_SHORT).show()
+        showToast("Задача сохранена")
     }
 
     private fun setPrivacy(k: Boolean = true) {
@@ -294,7 +307,7 @@ class NewTaskActivity : AppCompatActivity() {
         t_privacy.setIconResource(privacy_icons[iterator_privacy])
 
         if (k) {
-            Toast.makeText(this, privacy_text[iterator_privacy], Toast.LENGTH_SHORT).show()
+            showToast(privacy_text[iterator_privacy])
         }
     }
 
@@ -334,7 +347,7 @@ class NewTaskActivity : AppCompatActivity() {
                 updateStartDisplay()
                 updateEndDisplay()
             } else {
-                Toast.makeText(this@NewTaskActivity, "Задача не найдена", Toast.LENGTH_SHORT).show()
+                showToast("Задача не найдена")
                 finish()
             }
         }
@@ -348,6 +361,10 @@ class NewTaskActivity : AppCompatActivity() {
     private fun updateEndDisplay() {
         t_date_end.text = formatDate(endTime)
         t_time_end.text = formatTime(endTime)
+        if (endTime.get(Calendar.HOUR_OF_DAY) == 0 && endTime.get(Calendar.MINUTE) == 0 &&
+            endTime.get(Calendar.DAY_OF_MONTH) == startTime.get(Calendar.DAY_OF_MONTH)) {
+            endTime.set(Calendar.HOUR_OF_DAY, 24)
+        }
     }
 
     private fun pickDate(calendar: Calendar, onSet: () -> Unit) {
@@ -375,4 +392,10 @@ class NewTaskActivity : AppCompatActivity() {
 
     private fun formatDate(cal: Calendar) = String.format("%02d.%02d.%04d", cal.get(Calendar.DAY_OF_MONTH), cal.get(Calendar.MONTH)+1, cal.get(Calendar.YEAR))
     private fun formatTime(cal: Calendar) = String.format("%02d:%02d", cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE))
+
+    private fun showToast(message: String, type: Int = Toast.LENGTH_SHORT) {
+        currentToast?.cancel()
+        currentToast = Toast.makeText(this, message, type)
+        currentToast?.show()
+    }
 }

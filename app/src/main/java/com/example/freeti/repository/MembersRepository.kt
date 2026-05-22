@@ -1,8 +1,10 @@
 package com.example.freeti.repository
 
+import android.util.Log
 import com.example.freeti.data_base.GroupMembersDao
 import com.example.freeti.data_base.UserDao
 import com.example.freeti.network_api.ApiService
+import org.jetbrains.annotations.Async
 import kotlin.collections.map
 
 class MembersRepository (
@@ -33,6 +35,7 @@ class MembersRepository (
                     val dusers = body.map { it.toEntity() }
                     if (dusers.isNotEmpty()) {
                         usersDao.insertAll(dusers)
+                        Log.d("take_users", dusers.size.toString())
                     }
                 }
                 true
@@ -41,6 +44,31 @@ class MembersRepository (
             }
         } catch (e: Exception) {
             false
+        }
+    }
+
+    suspend fun getCountMembers(group_id: String): Int {
+        return try {
+            val response = api.getCountUsersInGroup(group_id)
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    body
+                } else { 0 }
+            } else {
+                0
+            }
+        } catch (e: Exception) {
+            0
+        }
+    }
+
+    suspend fun getRoleById(groupId: String, userId: Int): String {
+        return try {
+            dao.getRoleById(groupId, userId)
+        } catch (e: Exception) {
+            Log.d("members", e.toString())
+            "OWNER"
         }
     }
 

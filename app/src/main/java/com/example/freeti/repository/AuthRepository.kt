@@ -1,5 +1,6 @@
 package com.example.freeti.repository
 
+import android.util.Log
 import com.example.freeti.network_api.ApiService
 import com.example.freeti.tokens.TokenManager
 import com.example.freeti.network_entity.*
@@ -21,7 +22,7 @@ class AuthRepository(
                     Result.failure(Exception("Error: empty answer"))
                 }
             } else {
-                val errorMsg = when(response.code()) {
+                val errorMsg = when (response.code()) {
                     401 -> "Wrong login or password"
                     else -> "Server error: ${response.code()}"
                 }
@@ -35,22 +36,34 @@ class AuthRepository(
     suspend fun testRegister(login: String, email: String): String {
         var answ: String
         try {
-            val response = api.register(RegisterRequest(login, email))
-            if (response.isSuccessful) answ = response.body().toString()
-            else answ = "Not Success"
+            val response = api.register_resp(RegisterRequest(login, email))
+            if (!response.isSuccessful)
+                answ = "Not Success"
+            else {
+                val body = response.body()
+                if (body != null)
+                    answ = "OK " + body.message
+                else answ = "Not Success"
+            }
         } catch (e: Exception) {
+            Log.d("error", e.message + " ")
             answ = "Can not connect"
         }
         return answ
     } //FinalRegisterRequest
 
-    suspend fun finalRegister(login: String, email: String, code: String, password: String): String {
+    suspend fun finalRegister(
+        login: String,
+        email: String,
+        code: String,
+        password: String
+    ): String {
         var answ: String
         try {
             val response = api.finalRegister(FinalRegisterRequest(login, email, code, password))
             if (response.isSuccessful) {
                 if (response.body() != null) {
-                    val authres = response.body()?: AuthResponse("null", "null", -1, "null")
+                    val authres = response.body() ?: AuthResponse("null", "null", -1, "null")
                     tokenManager.saveTokens(authres)
                     answ = "Success"
                 } else {
@@ -59,7 +72,7 @@ class AuthRepository(
             } else {
                 answ = "Not Success"
             }
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             answ = "Can not connect"
         }
         return answ
@@ -81,17 +94,20 @@ class AuthRepository(
         return try {
             val response = api.refreshToken(RefreshTokenRequest(refreshToken))
             if (response.isSuccessful) {
+                Log.w("ok", "ok")
                 response.body()?.let { tokenManager.saveTokens(it) }
                     ?: return Result.failure(Exception("Empty response"))
                 Result.success(Unit)
             } else {
-                // Неудачное обновление — разлогиниваем
-                tokenManager.clearTokens()
-                logout()
+                if (response.code() in 400..403) {
+                    // Неудачное обновление — разлогиниваем
+                    tokenManager.clearTokens()
+                    logout()
+                }
                 Result.failure(Exception("Refresh failed: ${response.code()}"))
             }
         } catch (e: Exception) {
-            tokenManager.clearTokens()
+            //tokenManager.clearTokens()
             Result.failure(e)
         }
     }
@@ -101,7 +117,8 @@ class AuthRepository(
         if (refreshToken != null) {
             try {
                 api.logout(RefreshTokenRequest(refreshToken))
-            } catch (_: Exception) { }
+            } catch (_: Exception) {
+            }
         }
         tokenManager.clearTokens()
     }

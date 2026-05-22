@@ -8,6 +8,7 @@
     android:layout_height="match_parent"
     android:background="@color/bg"
     android:orientation="horizontal"
+    android:fitsSystemWindows="true"
     tools:context=".RegisterActivity">
 
     <ScrollView

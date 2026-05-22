@@ -5,7 +5,7 @@ import com.example.freeti.data.local.entity.DGroupsUsers
 data class NGroupsUsers (
     val group: String,
     val user1: Int,
-    val role: String //TODO String enum??
+    val role: String
 ) {
     fun toEntity() : DGroupsUsers = DGroupsUsers(
         tgroup = this.group,

@@ -2,6 +2,7 @@ package com.example.freeti.network_api
 
 import com.example.freeti.data.local.entity.DTasks
 import com.example.freeti.network_entity.AuthResponse
+import com.example.freeti.network_entity.DeleteContactAnswer
 import com.example.freeti.network_entity.FinalRegisterRequest
 import com.example.freeti.network_entity.LoginRequest
 import com.example.freeti.network_entity.NContacts
@@ -10,17 +11,21 @@ import com.example.freeti.network_entity.NGroupEvents
 import com.example.freeti.network_entity.NGroups
 import com.example.freeti.network_entity.NGroupsUsers
 import com.example.freeti.network_entity.NOtherTasks
+import com.example.freeti.network_entity.NRepeatTasks
 import com.example.freeti.network_entity.NTasks
 import com.example.freeti.network_entity.NUsers
 import com.example.freeti.network_entity.RefreshTokenRequest
 import com.example.freeti.network_entity.RegisterRequest
+import com.example.freeti.network_entity.RegisterResponseCode
 import com.example.freeti.network_entity.TestRequest
 import com.example.freeti.network_entity.TestResponse
 import com.example.freeti.network_entity.UserResponse
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -28,11 +33,15 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
-    @GET("auth/username_id")
+    @GET("tasks/username_id")
     suspend fun get_username_id(): Response<UserResponse>
 
+    // TODO потом удалить
     @POST("auth/register")
     suspend fun register(@Body request: RegisterRequest): Response<String>
+
+    @POST("auth/register_resp")
+    suspend fun register_resp(@Body request: RegisterRequest): Response<RegisterResponseCode>
 
     @POST("auth/final_register")
     suspend fun finalRegister(@Body request: FinalRegisterRequest): Response<AuthResponse>
@@ -49,85 +58,75 @@ interface ApiService {
     @GET("tasks/{id}")
     suspend fun getTasks(@Path("id") user_id: Int): List<NTasks>
 
-    @POST("tasks")
-    suspend fun postTasks(@Body tasks: List<DTasks>) // TODO :List<DTasks>??
+    @GET("tasks/{id}/repeat")
+    suspend fun getRepeatTasks(@Path("id") user_id: Int): List<NRepeatTasks>
 
     @POST("tasks")
-    suspend fun postTask(@Body tasks: DTasks) // TODO : DTasks??
+    suspend fun postTasks(@Body tasks: List<DTasks>)
+
+    @POST("tasks")
+    suspend fun postTask(@Body tasks: DTasks)
 
     @POST("test")
     suspend fun send(@Body message : TestRequest): Response<TestResponse>
 
-    @GET("hello")
-    suspend fun test2(): Response<TestResponse>
-
-
-//    @POST("hello")
-//    suspend fun test2(@Body message : TestRequest): Response<TestResponse>
-
-
-    @POST("test/out_inp")
-    suspend fun test(@Body request: TestRequest): Response<TestResponse>
-
-    @GET("tasks")
+    @GET("tasks/tasks")
     suspend fun getTasksForMonth(
         @Query("yearMonth") yearMonth: String
-    ): List<NTasks>
+    ): Response<List<NTasks>>
+
+    @GET("groups/members_count")
+    suspend fun getCountUsersInGroup(@Query("group_id") groupId: String): Response<Int>;
 
     // Получить задачи за месяц, изменённые после указанного времени
-    @GET("tasks")
+    @GET("tasks/tasks/update")
     suspend fun getTasksForMonthSince(
         @Query("yearMonth") yearMonth: String,
         @Query("since") since: Long   // updated_at > since
-    ): List<NTasks>
+    ): Response<List<NTasks>>
 
-    @PUT("tasks/{id}")
+    @PATCH("tasks/tasks")
     suspend fun updateTask(
-        @Path("id") taskId: String,
         @Body task: NTasks
     ): Response<NTasks>
 
-    @POST("tasks/{id}")
+    @POST("tasks/tasks")
     suspend fun addTask(
-        @Path("id") taskId: String,
         @Body task: NTasks
-    ): Response<NTasks> // TODO необходимо ли
+    ): Response<NTasks>
 
     @GET("tasks/unassigned")
     suspend fun getUnassignedTasks(): List<NTasks>
 
-    @GET("othertasks")
+    @GET("tasks/othertasks")
     suspend fun getOtherTasksForDay(
         @Query("yearMonth") yearMonth: String,
-        @Query("id") since: Int
-    ): Response<List<NOtherTasks>>
+        @Query("login") login: String
+   ): Response<List<NOtherTasks>>
 
-    @GET("grouptasks")
+    @GET("groups/group_tasks")
     suspend fun getGroupTasksForDay(
-        @Query("yearMonth") yearMonth: String,
-        @Query("id") since: String
+        @Query("yearMonth") yearMonth: String, //ymd
+        @Query("id") groupId: String
     ): Response<List<NGroupEvents>>
 
-    @PUT("users/{id}")
+    @PUT("users/id")
     suspend fun updateUser(
-        @Path("id") userId: Int,
         @Body user: NUsers
     ): Response<NUsers>
 
-    @GET("users/id")
-    suspend fun getUser(
-        @Query("id") id: Int
-    ): Response<NUsers>
+    @GET("users/user")
+    suspend fun getUser(): Response<NUsers>
 
     @GET("users/username")
     suspend fun getUsersSearch(
         @Query("username") username: String
-    ): List<NUsers>
+    ): Response<List<NUsers>>
 
     @GET("users/login")
     suspend fun getUsersSearchByLogin(
         @Query("login") login: String
-    ): List<NUsers>
+    ): Response<List<NUsers>>
 
     @GET("groups/groups")
     suspend fun getGroups(): List<NGroups>
@@ -139,62 +138,62 @@ interface ApiService {
     @PUT("groups/groups")
     suspend fun updateGroup(@Body group: NGroups): Response<NGroups>
 
-    @PUT("member_switch")
+    @PUT("groups/member_switch")
     suspend fun switchMember(
-        @Path("user_id") memberId: Int,
-        @Path("group_id") groupId: String
+        @Query("user_id") memberId: Int,
+        @Query("group_id") groupId: String
     ): Response<NGroupsUsers>
 
-    @PUT("member_add")
+    @PUT("groups/member_add")
     suspend fun addMember(
-        @Path("user_id") memberId: Int,
-        @Path("group_id") groupId: String
-    )//: Response<NGroupsUsers> TODO подправить добавление пользователей
-
-    @PUT("member_delete")
-    suspend fun deleteMember(
-        @Path("user_id") memberId: Int,
-        @Path("group_id") groupId: String
+        @Query("user_id") memberId: Int,
+        @Query("group_id") groupId: String
     ): Response<Boolean>
 
-    @PUT("member_delete") // member_leave
+    @PUT("groups/member_delete")
+    suspend fun deleteMember(
+        @Query("user_id") memberId: Int,
+        @Query("group_id") groupId: String
+    ): Response<Boolean>
+
+    @PUT("groups/leave") // member_leave
     suspend fun leaveGroup(
         @Path("group_id") groupId: String
     ): Response<Boolean>
 
-    @PUT("groups/{group_id}")
+    @DELETE("groups/delete_group")
     suspend fun deleteGroup(
-        @Path("group_id") groupId: String
+        @Query("group_id") groupId: String
     ): Response<Boolean>
 
-    @POST("groups/newevent")
+    @POST("groups/new_event")
     suspend fun addEvent(
-        @Path("group_id") groupId: String,
+        @Query("group_id") groupId: String,
         @Body event: NGroupEventSearch
     ): Response<List<NGroupEvents>>
 
-    @GET("contacts")
-    suspend fun getContacts(): List<NContacts>   // или Response<List<NContacts>>
+    @GET("users/contacts")
+    suspend fun getContacts(): Response<List<NContacts>>   // или Response<List<NContacts>>
 
-    @GET("users")
+    @GET("users/byIds")
     suspend fun getUsersByIds(
         @Query("ids") ids: String
-    ): List<NUsers>
+    ): Response<List<NUsers>>
 
-    @PUT("groups/delete_event")
+    @DELETE("groups/delete_event")
     suspend fun deleteGroupEvent(
-        @Path("event_id") event_id: String
+        @Query("event_id") eventId: String
     ): Response<Boolean>
 
-    @PUT("contacts")
+    @PUT("users/add_contact")
     suspend fun upsertContact(@Body contact: NContacts): Response<NContacts>
 
-    @PUT("contacts/delete")
-    suspend fun deleteContact(@Body contact: NContacts): Response<Unit>
+    @DELETE("users/delete_contact")
+    suspend fun deleteContact(@Query("user1") user1: Int, @Query("user2") user2: Int): Response<DeleteContactAnswer>
 
-    @GET("group_members")
-    suspend fun getGroupMembers(@Path("group_id") groupId: String): Response<List<NGroupsUsers>>
+    @GET("groups/group_members")
+    suspend fun getGroupMembers(@Query("group_id") groupId: String): Response<List<NGroupsUsers>>
 
-    @GET("group_users")
-    suspend fun getGroupUsers(@Path("group_id") groupId: String): Response<List<NUsers>>
+    @GET("groups/group_users")
+    suspend fun getGroupUsers(@Query("group_id") groupId: String): Response<List<NUsers>>
 }

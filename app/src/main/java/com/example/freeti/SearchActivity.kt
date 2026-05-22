@@ -15,11 +15,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.freeti.adapters_pack.UserAdapter
+import com.example.freeti.data.local.entity.DUsers
+import com.example.freeti.repository.SearchRepository
 import com.example.freeti.view_model.SearchViewModel
 import com.example.freeti.view_model.SearchViewModelFactory
 import kotlinx.coroutines.launch
 
 class SearchActivity : AppCompatActivity() {
+
     private lateinit var viewModel: SearchViewModel
     private lateinit var adapter: UserAdapter
 

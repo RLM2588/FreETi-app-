@@ -1,14 +1,17 @@
 package com.example.freeti.adapters_pack
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.freeti.R
 import com.example.freeti.data_base.UserWithContactStatus
 
 class ContactsAdapter(
+    private val context: Context,
     private var items: List<UserWithContactStatus>,
     private val onItemClick: (UserWithContactStatus) -> Unit,
     private val onItemLongClick: ((UserWithContactStatus) -> Unit)? = null
@@ -34,9 +37,9 @@ class ContactsAdapter(
         holder.avatar.text = item.avatar
 
         if (item.isFriend) {
-            holder.rootLayout.setBackgroundColor(0xFFC8E6C9.toInt())
+            holder.rootLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.for_privacy_private))
         } else {
-            holder.rootLayout.setBackgroundColor(0xFFFFFFFF.toInt())
+            holder.rootLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.bg))
         }
         holder.itemView.setOnClickListener { onItemClick(item) }
         holder.itemView.setOnLongClickListener {

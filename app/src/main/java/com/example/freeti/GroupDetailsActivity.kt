@@ -50,7 +50,7 @@ class GroupDetailsActivity : AppCompatActivity() {
     private lateinit var buttonrasp: Button
     private lateinit var group_members: Button
     private lateinit var tasks_lin: LinearLayout
-    private lateinit var view_golosov: View // TODO потом заменим на нужное
+    private lateinit var view_golosov: View
     private lateinit var group: DGroups
     private lateinit var id: String
     private lateinit var nextDayButton: ImageButton
@@ -208,14 +208,11 @@ class GroupDetailsActivity : AppCompatActivity() {
             group = app.appContainer.groupsDao.getGroup(id)
             textGroupName.text = group.title
             textDescription.text = group.body
-            val count = app.appContainer.groupMemberDao.getCountGroupMembers(id)
-            textMemberCount.text = resources.getQuantityString(R.plurals.members_plurals, count.toInt(), count)
+            val net_count = app.appContainer.membersRepository.getCountMembers(id)
+            val count = if(net_count != 0) net_count else app.appContainer.groupMemberDao.getCountGroupMembers(id)
+            textMemberCount.text = resources.getQuantityString(R.plurals.members_plurals, count, count)
 
             viewModel.setId(group.id)
-
-            if(!pref.getBoolean("noTestAdd", false)) {
-                viewModel.addTestTasks()
-            }
 
             viewModel.setDate(calendar.timeInMillis)
         }

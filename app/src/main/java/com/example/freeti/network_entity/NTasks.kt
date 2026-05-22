@@ -13,23 +13,37 @@ data class NTasks (
     val importance: Int,
     val push_template_id: Int,
     val colour: String,
-    val updated_at: Long, //timestamp !!! надо ли возможность null? нужно ли вообще это поле локально?
-    val is_delete: Boolean
+    val updated_at: Long
 ) {
     fun toEntity() : DTasks {
         return DTasks(
             id = this.id,
             title = this.title,
             body = this.body,
-            start = this.start,
-            time_end = this.time_end,
             status = this.status, // преобразуем строку в enum
             privacy = this.privacy,
-            importance = this.importance,
-            push_template_id = this.push_template_id,
+            start = this.start,
             colour = this.colour,
-            updated_at = this.updated_at,
-            is_delete = this.is_delete
+            time_end = if(this.time_end < 11000000) 0L else this.time_end,
+            push_template_id = this.push_template_id,
+            importance = this.importance,
+            updated_at = this.updated_at
+        )
+    }
+
+    fun toUnassignedTask() : DTasks {
+        return DTasks(
+            id = this.id,
+            title = this.title,
+            body = this.body,
+            status = this.status, // преобразуем строку в enum
+            privacy = this.privacy,
+            start = 0,
+            colour = this.colour,
+            time_end = 0,
+            push_template_id = this.push_template_id,
+            importance = this.importance,
+            updated_at = this.updated_at
         )
     }
 }

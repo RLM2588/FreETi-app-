@@ -16,6 +16,8 @@ import com.example.freeti.data.local.entity.DUsers
 import com.example.freeti.data.local.entity.DVote
 import com.example.freeti.data.local.entity.DVoting
 import com.example.freeti.sync.SyncMetadata
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Database(
     entities = [DAvatar::class, DContacts::class, DOtherTasks::class, DGroupEvents::class,
@@ -53,6 +55,12 @@ abstract class AppDataBase : RoomDatabase(){
                 INSTANCE = instance
                 instance
             }
+        }
+    }
+
+    suspend fun clearAll_Tables() {
+        withContext(Dispatchers.IO) {
+            clearAllTables() // это метод RoomDatabase
         }
     }
 }

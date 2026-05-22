@@ -1,5 +1,6 @@
 package com.example.freeti.sync
 
+import android.util.Log
 import com.example.freeti.data_base.MyTasksDao
 import com.example.freeti.data_base.SyncMetadataDao
 import com.example.freeti.network_api.ApiService
@@ -19,30 +20,42 @@ class TaskSyncManager(
                 return
             }
 
+            if (metadata == null) Log.d("aa", "null")
             val tasksFromNetwork = if (metadata == null) {
                 apiService.getTasksForMonth(yearMonth)
             } else {
                 apiService.getTasksForMonthSince(yearMonth, metadata.last_updated_at)
             }
+            if (tasksFromNetwork.isSuccessful) {
+                Log.d("ym", tasksFromNetwork.body().toString())
+            } else {
+                Log.d("yml", tasksFromNetwork.code().toString())
+            }
 
             // Получаем список id локальных неотправленных задач
             val unsyncedIds = myTaskDao.getUnsyncedTaskIds().toSet()
             // Фильтруем сетевые задачи, оставляя только те, которые не конфликтуют
-            val safeTasks = tasksFromNetwork.filter { it.id !in unsyncedIds }
+            val body = tasksFromNetwork.body()
+            if (body != null) {
+                val safeTasks = body.filter { it.id !in unsyncedIds }
+                //val safeTasks = tasksFromNetwork.body();
+                if (safeTasks.size != 0) {
+                    val entities = safeTasks.map { it.toEntity() }
 
-            val entities = safeTasks.map { it.toEntity() }
-            myTaskDao.insertAll(entities)
+                    myTaskDao.insertAll(entities)
 
-            val time_updated = myTaskDao.getMaxUpdatedAtForMonth(yearMonth)
-            if (time_updated != null) {
-                metadataDao.upsert(
-                    SyncMetadata(
-                        yearMonth = yearMonth,
-                        lastSyncAt = now,
-                        lastAccessAt = now,
-                        last_updated_at = time_updated
-                    )
-                )
+                    val time_updated = myTaskDao.getMaxUpdatedAtForMonth(yearMonth)
+                    if (time_updated != null) {
+                        metadataDao.upsert(
+                            SyncMetadata(
+                                yearMonth = yearMonth,
+                                lastSyncAt = now,
+                                lastAccessAt = now,
+                                last_updated_at = time_updated
+                            )
+                        )
+                    }
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -87,7 +100,7 @@ class TaskSyncManager(
             for (task in pendingTasks) {
                 // Преобразуем в NTasks (нужен метод toNetworkEntity или аналогичный)
                 val networkTask = task.toNetworkEntity()  // нужно реализовать
-                val response = apiService.updateTask(task.id, networkTask)
+                val response = apiService.updateTask(networkTask)
                 if (response.isSuccessful) {
                     val updatedTask = response.body()
                     if (updatedTask != null) {
