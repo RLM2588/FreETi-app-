@@ -72,6 +72,7 @@ class NewTaskActivity : AppCompatActivity() {
     )
 
     var iterator_privacy = 2
+    var privacySaved = 1
     var is_plus_day = true
 
     private lateinit var pref: SharedPreferences
@@ -210,13 +211,7 @@ class NewTaskActivity : AppCompatActivity() {
         gray_color.setOnClickListener { t_et_color.setText("888888") }
 
         t_ok.setOnClickListener {
-            val ttext = t_title.text
-            if (ttext.isEmpty()) {
-                showToast("Введите название")
-                return@setOnClickListener
-            }
-            if (ttext.length > 20) {
-                showToast("Название должно быть меньше 20 символов")
+            if (isCorrectLength()) {
                 return@setOnClickListener
             }
 
@@ -229,18 +224,26 @@ class NewTaskActivity : AppCompatActivity() {
         }
 
         t_save.setOnClickListener {
-            val ttext = t_title.text
-            if (ttext.isEmpty()) {
-                showToast("Введите название")
-                return@setOnClickListener
-            }
-            if (ttext.length > 20) {
-                showToast("Название должно быть меньше 20 символов")
+            if (isCorrectLength()) {
                 return@setOnClickListener
             }
             saveTask()
 
             finish()
+        }
+
+        t_save.setOnLongClickListener {
+            if (isCorrectLength()) {
+                return@setOnLongClickListener false
+            }
+            saveTask()
+            for (i in 0..2) {
+                if (privacySaved % (i + 2) == 0) {
+                    iterator_privacy = i
+                    saveTask(pref.getString("default_plug", "---") ?: "---")
+                }
+            }
+            true
         }
 
         t_delete.setOnClickListener {
@@ -255,6 +258,19 @@ class NewTaskActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun isCorrectLength(): Boolean {
+        val ttext = t_title.text
+        if (ttext.isEmpty()) {
+            showToast("Введите название")
+            return false
+        }
+        if (ttext.length > 40) {
+            showToast("Название должно быть меньше 40 символов")
+            return false
+        }
+        return true
     }
 
     private fun saveTask(someTitle: String = "") {
@@ -290,6 +306,7 @@ class NewTaskActivity : AppCompatActivity() {
         }
 
         showToast("Задача сохранена")
+        if (privacySaved % (iterator_privacy + 2) != 0) privacySaved *= (iterator_privacy + 2)
     }
 
     private fun setPrivacy(k: Boolean = true) {

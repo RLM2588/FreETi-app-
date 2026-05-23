@@ -38,6 +38,9 @@ class ContactsAdapter(
 
         if (item.isFriend) {
             holder.rootLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.for_privacy_private))
+            val colorBg = ContextCompat.getColor(context, R.color.bg)
+            holder.nickname.setTextColor(colorBg)
+            holder.login.setTextColor(colorBg)
         } else {
             holder.rootLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.bg))
         }

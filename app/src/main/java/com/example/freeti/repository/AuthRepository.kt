@@ -106,6 +106,7 @@ class AuthRepository(
             } else {
                 if (response.code() in 400..403) {
                     logout()
+                    Log.d("error refresh", "")
                     CoroutineScope(Dispatchers.IO).launch {
                         AuthEventBus.emit(AuthEvent.TokenRefreshFailed)
                     }

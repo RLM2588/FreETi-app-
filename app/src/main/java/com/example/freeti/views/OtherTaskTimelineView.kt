@@ -163,7 +163,7 @@ class OtherTaskTimelineView @JvmOverloads constructor(
                 canvas.drawRoundRect(rect, 12f, 12f, taskRectPaint)
 
                 // Название задачи
-                val titleText = task.title
+                val titleText = task.title.substring(0, 20)
                 val maxTextWidth = columnWidth - 2 * padding - 8f
                 titlePaint.textSize = minOf(titlePaint.textSize, maxTextWidth / titleText.length.coerceAtLeast(1) * 2.0f)
                 canvas.drawText(titleText, rect.left + 4f, rect.top + titlePaint.textSize + 4f, titlePaint)

@@ -67,6 +67,10 @@ object NetworkClient {
                 if (response.code == 401) {
                     //tokenManager.clearTokens()
                     //вот тут скорее всего нужно добавить выход из аккаунта
+                    CoroutineScope(Dispatchers.IO).launch {
+                        AuthEventBus.emit(AuthEvent.TokenRefreshFailed)
+                    }
+                    Log.d("401 error", "auth code 401")
                 }
 
                 return@Authenticator null
