@@ -94,15 +94,15 @@ class AuthRepository(
         return try {
             val response = api.refreshToken(RefreshTokenRequest(refreshToken))
             if (response.isSuccessful) {
-                Log.w("ok", "ok")
+                Log.w("ok", "ok refresh tokens")
                 response.body()?.let { tokenManager.saveTokens(it) }
                     ?: return Result.failure(Exception("Empty response"))
                 Result.success(Unit)
             } else {
                 if (response.code() in 400..403) {
                     // Неудачное обновление — разлогиниваем
-                    tokenManager.clearTokens()
                     logout()
+                    tokenManager.clearTokens()
                 }
                 Result.failure(Exception("Refresh failed: ${response.code()}"))
             }

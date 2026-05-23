@@ -84,6 +84,7 @@ object NetworkClient {
                     try {
                         authProvider().refreshToken()
                     } catch (e: Exception) {
+
                         Result.failure(e)
                     }
                 }
