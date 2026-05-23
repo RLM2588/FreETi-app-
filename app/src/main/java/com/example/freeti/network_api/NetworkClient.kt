@@ -2,8 +2,13 @@ package com.example.freeti.network_api
 
 import android.util.Log
 import com.example.freeti.MyApp
+import com.example.freeti.events.AuthEvent
+import com.example.freeti.events.AuthEventBus
 import com.example.freeti.repository.AuthRepository
 import com.example.freeti.tokens.TokenManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -84,6 +89,9 @@ object NetworkClient {
                     try {
                         authProvider().refreshToken()
                     } catch (e: Exception) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            AuthEventBus.emit(AuthEvent.TokenRefreshFailed)
+                        }
                         Result.failure(e)
                     }
                 }

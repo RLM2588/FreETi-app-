@@ -1,11 +1,16 @@
 package com.example.freeti
 
+import android.app.Activity
+import android.app.AlertDialog
 import android.app.Application
 import android.content.Context
+import android.os.Bundle
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.freeti.data_base.AppDataBase
+import com.example.freeti.events.AuthEvent
+import com.example.freeti.events.AuthEventBus
 import com.example.freeti.network_api.ApiService
 import com.example.freeti.network_api.NetworkClient
 import com.example.freeti.repository.AuthRepository
@@ -20,6 +25,9 @@ import com.example.freeti.sync.SyncConfig
 import com.example.freeti.sync.TaskSyncManager
 import com.example.freeti.tokens.TokenManager
 import com.example.freeti.worker.CleanupWorker
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 class AppContainer(private val context: Context) {
@@ -74,6 +82,10 @@ class MyApp: Application() {
 
         fun getAppContext(): Context = instance.applicationContext
     }
+
+    var currentActivity: Activity? = null
+        private set
+
     lateinit var appContainer: AppContainer
         private set
 
@@ -82,6 +94,30 @@ class MyApp: Application() {
         instance = this
 
         appContainer = AppContainer(this)
+
+        registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
+            override fun onActivityResumed(activity: Activity) {
+                currentActivity = activity
+            }
+
+            override fun onActivityPaused(activity: Activity) {
+                if (currentActivity == activity) currentActivity = null
+            }
+
+            override fun onActivityStarted(activity: Activity) {}
+            override fun onActivityStopped(activity: Activity) {}
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+            override fun onActivityDestroyed(activity: Activity) {}
+        })
+
+        CoroutineScope(Dispatchers.Main).launch {
+            AuthEventBus.events.collect { event ->
+                when (event) {
+                    is AuthEvent.TokenRefreshFailed -> showTokenErrorDialog()
+                }
+            }
+        }
     }
 
     private fun scheduleDailyCleanup() {
@@ -93,5 +129,49 @@ class MyApp: Application() {
             ExistingPeriodicWorkPolicy.KEEP,
             cleanupRequest
         )
+    }
+
+    private fun showTokenErrorDialog() {
+        val activity = currentActivity ?: return
+        if (activity.isFinishing || activity.isDestroyed) return
+
+        AlertDialog.Builder(activity)
+            .setTitle("Ошибка авторизации")
+            .setMessage("Не удалось обновить токены. Выберите действие?")
+            .setPositiveButton("Выйти и очистить кэш") { _, _ ->
+                logoutAndClearCache()
+            }
+            .setNegativeButton("Выйти без очистки") { _, _ ->
+                logoutWithoutClear()
+            }
+            .setNeutralButton("Продолжить офлайн") { _, _ ->
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    private fun logoutAndClearCache() {
+        val activity = currentActivity ?: return
+
+        appContainer.tokenManager.clearTokens()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            appContainer.database.clearAll_Tables()
+        }
+
+        val intent = android.content.Intent(activity, MainActivity::class.java)
+        intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+        activity.startActivity(intent)
+        activity.finishAffinity()
+    }
+
+    private fun logoutWithoutClear() {
+        val activity = currentActivity ?: return
+        appContainer.tokenManager.clearTokens()
+
+        val intent = android.content.Intent(activity, MainActivity::class.java)
+        intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+        activity.startActivity(intent)
+        activity.finishAffinity()
     }
 }

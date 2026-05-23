@@ -1,9 +1,14 @@
 package com.example.freeti.repository
 
 import android.util.Log
+import com.example.freeti.events.AuthEvent
+import com.example.freeti.events.AuthEventBus
 import com.example.freeti.network_api.ApiService
 import com.example.freeti.tokens.TokenManager
 import com.example.freeti.network_entity.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AuthRepository(
     private val api: ApiService,
@@ -94,20 +99,24 @@ class AuthRepository(
         return try {
             val response = api.refreshToken(RefreshTokenRequest(refreshToken))
             if (response.isSuccessful) {
-                Log.w("ok", "ok")
+                Log.w("ok", "ok refresh tokens")
                 response.body()?.let { tokenManager.saveTokens(it) }
                     ?: return Result.failure(Exception("Empty response"))
                 Result.success(Unit)
             } else {
                 if (response.code() in 400..403) {
-                    // Неудачное обновление — разлогиниваем
-                    tokenManager.clearTokens()
                     logout()
+                    CoroutineScope(Dispatchers.IO).launch {
+                        AuthEventBus.emit(AuthEvent.TokenRefreshFailed)
+                    }
                 }
                 Result.failure(Exception("Refresh failed: ${response.code()}"))
             }
         } catch (e: Exception) {
             //tokenManager.clearTokens()
+            //CoroutineScope(Dispatchers.IO).launch {
+            //    AuthEventBus.emit(AuthEvent.TokenRefreshFailed)
+            //}
             Result.failure(e)
         }
     }

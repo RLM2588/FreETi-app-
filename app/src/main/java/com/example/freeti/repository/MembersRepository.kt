@@ -4,7 +4,6 @@ import android.util.Log
 import com.example.freeti.data_base.GroupMembersDao
 import com.example.freeti.data_base.UserDao
 import com.example.freeti.network_api.ApiService
-import org.jetbrains.annotations.Async
 import kotlin.collections.map
 
 class MembersRepository (
