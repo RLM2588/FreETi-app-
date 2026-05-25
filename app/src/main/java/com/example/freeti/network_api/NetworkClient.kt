@@ -20,7 +20,7 @@ import okhttp3.*
 
 
 object NetworkClient {
-    private const val BASE_URL = "http://freeti.ru:8091/api/"
+    private const val BASE_URL = "https://freeti.ru:443/api/"
 
 
     fun provideApiService(tokenManager: TokenManager, authProvider: () -> AuthRepository): ApiService {

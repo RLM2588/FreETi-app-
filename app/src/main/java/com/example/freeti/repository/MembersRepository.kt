@@ -64,6 +64,8 @@ class MembersRepository (
 
     suspend fun getRoleById(groupId: String, userId: Int): String {
         return try {
+            Log.d("id?:", userId.toString())
+            Log.d("group_id?:", groupId)
             dao.getRoleById(groupId, userId)
         } catch (e: Exception) {
             Log.d("members", e.toString())

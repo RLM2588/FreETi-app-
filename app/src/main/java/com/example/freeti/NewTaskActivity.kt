@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -211,7 +212,7 @@ class NewTaskActivity : AppCompatActivity() {
         gray_color.setOnClickListener { t_et_color.setText("888888") }
 
         t_ok.setOnClickListener {
-            if (isCorrectLength()) {
+            if (!isCorrectLength()) {
                 return@setOnClickListener
             }
 
@@ -224,7 +225,7 @@ class NewTaskActivity : AppCompatActivity() {
         }
 
         t_save.setOnClickListener {
-            if (isCorrectLength()) {
+            if (!isCorrectLength()) {
                 return@setOnClickListener
             }
             saveTask()
@@ -233,16 +234,21 @@ class NewTaskActivity : AppCompatActivity() {
         }
 
         t_save.setOnLongClickListener {
-            if (isCorrectLength()) {
+            if (!isCorrectLength()) {
                 return@setOnLongClickListener false
             }
             saveTask()
+
+            val plug = pref.getString("default_plug", "---") ?: "---"
             for (i in 0..2) {
-                if (privacySaved % (i + 2) == 0) {
+                if (privacySaved % (i + 4) != 0) {
                     iterator_privacy = i
-                    saveTask(pref.getString("default_plug", "---") ?: "---")
+                    Log.d("privacy", iterator_privacy.toString())
+                    saveTask(plug)
                 }
             }
+
+            finish()
             true
         }
 
@@ -266,8 +272,9 @@ class NewTaskActivity : AppCompatActivity() {
             showToast("Введите название")
             return false
         }
-        if (ttext.length > 40) {
-            showToast("Название должно быть меньше 40 символов")
+        val maxLenth = 60
+        if (ttext.length > maxLenth) {
+            showToast("Название должно быть меньше $maxLenth символов")
             return false
         }
         return true
@@ -275,7 +282,7 @@ class NewTaskActivity : AppCompatActivity() {
 
     private fun saveTask(someTitle: String = "") {
         val title = if(someTitle == "") t_title.text.toString().trim() else someTitle
-        val body = t_body.text.toString().trim()
+        val body = if(someTitle == "") t_body.text.toString().trim() else ""
         val colorHex = t_et_color.text.toString().trim().ifBlank { "FFFFFF" }
         val isNoTime = t_no_time.isChecked
         val isTime = task_without_time.isChecked
@@ -306,7 +313,7 @@ class NewTaskActivity : AppCompatActivity() {
         }
 
         showToast("Задача сохранена")
-        if (privacySaved % (iterator_privacy + 2) != 0) privacySaved *= (iterator_privacy + 2)
+        if (privacySaved % (iterator_privacy + 4) != 0) privacySaved *= (iterator_privacy + 4)
     }
 
     private fun setPrivacy(k: Boolean = true) {

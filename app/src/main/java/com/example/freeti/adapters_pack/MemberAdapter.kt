@@ -1,5 +1,6 @@
 package com.example.freeti.adapters_pack
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,8 +11,8 @@ import com.example.freeti.Member
 import com.example.freeti.R
 
 class MemberAdapter(
-    private val myRole: String,
     private var members: List<Member>,
+    private val myRole: String?,
     private val onRoleClick: (Member) -> Unit,
     private val onDeleteClick: (Member) -> Unit
 ): RecyclerView.Adapter<MemberAdapter.MemberViewHolder>() {
@@ -53,7 +54,10 @@ class MemberAdapter(
                 onDeleteClick(member)
             }
 
-            if (member.role == "OWNER" || myRole == "MEMBER") {
+            if (myRole == null) {
+                Log.d("role", "role is null")
+            }
+            else if (member.role == "OWNER" || myRole == "MEMBER") {
                 buttonKick.visibility = View.GONE
                 buttonPromote.visibility = View.GONE
             }

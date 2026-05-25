@@ -52,8 +52,22 @@ class MembersActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         lifecycleScope.launch {
-            memberAdapter = MemberAdapter(membersRepository.getRoleById(groupId, currentUserId),
+            val isSuccess = membersRepository.getMembers(groupId)
+            var myRole: String
+            if (isSuccess) {
+                try {
+                    myRole = membersRepository.getRoleById(groupId, currentUserId) ?: "ADMIN"
+                } catch (e: Exception) {
+                    Log.d("members", "can not take my role")
+                    myRole = "MEMBER"
+                }
+                if (myRole == null) myRole = "MEMBER"
+                Log.d("role:", myRole ?: "hmmmm")
+            } else {myRole = "MEMBER"}
+
+            memberAdapter = MemberAdapter(
                 members = emptyList(),
+                myRole?: "OWNER",
                 onRoleClick = { user ->
                     lifecycleScope.launch {
                         val success = membersRepository.roleMember(groupId, user.id)
@@ -76,6 +90,8 @@ class MembersActivity : AppCompatActivity() {
                 }
             )
             recyclerView.adapter = memberAdapter
+
+            loadMembers()
         }
 
         buttonLeaveGroup = findViewById(R.id.buttonLeaveGroup)
@@ -111,14 +127,14 @@ class MembersActivity : AppCompatActivity() {
             intent.putExtra("group_id", groupId)
             startActivity(intent)
         }
-
-        loadMembers()
     }
 
     override fun onResume() {
         super.onResume()
 
-        loadMembers()
+        if (::memberAdapter.isInitialized) {
+            loadMembers()
+        }
     }
 
     private fun loadMembers() {

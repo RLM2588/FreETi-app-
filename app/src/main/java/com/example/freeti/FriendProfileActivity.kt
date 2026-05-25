@@ -99,12 +99,14 @@ class FriendProfileActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             user = app.appContainer.userDao.getUserForId(id)
+
             tvNickname.text = user.username
             avatar.text = user.avatar
 
             viewModel.setId(user.id)
 
             viewModel.setDate(calendar.timeInMillis)
+            viewModel.updateData()
         }
         nextDayButton = findViewById(R.id.main_next_day)
         prevDayButton = findViewById(R.id.main_prev_day)
@@ -123,9 +125,8 @@ class FriendProfileActivity : AppCompatActivity() {
                     tasks_view.setTasks2(tasks)
                 }
             }
+            viewModel.updateData()
         }
-
-        setDate()
 
         btnBack.setOnClickListener {
             finish()

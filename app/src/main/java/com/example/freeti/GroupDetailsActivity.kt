@@ -102,8 +102,6 @@ class GroupDetailsActivity : AppCompatActivity() {
             }
         }
 
-        setDate()
-
         buttonCreateEvent.setOnClickListener {
             val intent = Intent(this, NewEventGroupActivity::class.java)
             intent.putExtra("groupId", group.id)
@@ -215,6 +213,8 @@ class GroupDetailsActivity : AppCompatActivity() {
             viewModel.setId(group.id)
 
             viewModel.setDate(calendar.timeInMillis)
+
+            setDate()
         }
     }
 

@@ -29,7 +29,7 @@ class GroupTaskTimelineView @JvmOverloads constructor(
     private var downY = 0f
     private var downTime = 0L
     private var isLongPressPossible = false
-    private val longPressThreshold = 500L // миллисекунды
+    private val longPressThreshold = 400L // миллисекунды
     private val touchSlop = 10f
 
     private val timePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -117,7 +117,7 @@ class GroupTaskTimelineView @JvmOverloads constructor(
             canvas.drawLine(timeColumnWidth, y, width, y, gridPaint)
             if (row < totalRows) {
                 val slotMillis = dayStartMillis + TimeUnit.MINUTES.toMillis((row * cellDurationMinutes).toLong())
-                canvas.drawText(formatTime(slotMillis), timeColumnWidth - 16f, y - 2f, timePaint)
+                canvas.drawText(ViewsFunction.formatTime(slotMillis), timeColumnWidth - 16f, y - 2f, timePaint)
             }
         }
         // Вертикальная линия между временем и задачами
@@ -132,6 +132,7 @@ class GroupTaskTimelineView @JvmOverloads constructor(
 
                 val startSlot = getSlotIndexSt(task.start)
                 val endSlot = getSlotIndexFn(task.time_end)
+
                 var taskTop = startSlot * rowHeight
                 var taskBottom = endSlot * rowHeight + rowHeight
 
@@ -149,7 +150,9 @@ class GroupTaskTimelineView @JvmOverloads constructor(
                 )
 
                 taskRectPaint.color = Color.BLACK
-                canvas.drawRoundRect(rect2, 12f, 12f, taskRectPaint)
+                canvas.drawRoundRect(rect2,
+                    ViewsFunction.CORNER_RADIUS,
+                    ViewsFunction.CORNER_RADIUS, taskRectPaint)
 
                 val padding = 12f
                 val rect = RectF(
@@ -159,29 +162,59 @@ class GroupTaskTimelineView @JvmOverloads constructor(
 
                 val color = parseColor(task.colour)
                 taskRectPaint.color = color
-                canvas.drawRoundRect(rect, 12f, 12f, taskRectPaint)
+                canvas.drawRoundRect(rect,
+                    ViewsFunction.CORNER_RADIUS,
+                    ViewsFunction.CORNER_RADIUS, taskRectPaint)
 
                 // Название задачи
-                val titleText = task.title.substring(0, 20)
+                var hightDraw = rect.top + titlePaint.textSize + ViewsFunction.TEXT_MARGIN
+                var spaceIndex = ViewsFunction.searchSpace(task.title)
+                var titleText = task.title.substring(0, spaceIndex).trim()
                 val maxTextWidth = columnWidth - 2 * padding - 8f
+                titlePaint.color = ViewsFunction.getAdaptiveTextColor(color)
                 titlePaint.textSize = minOf(titlePaint.textSize, maxTextWidth / titleText.length.coerceAtLeast(1) * 2.0f)
-                canvas.drawText(titleText, rect.left + 4f, rect.top + titlePaint.textSize + 4f, titlePaint)
+                canvas.drawText(titleText, rect.left + 4f, hightDraw, titlePaint)
+                hightDraw += titlePaint.textSize + ViewsFunction.TEXT_MARGIN
 
                 if(startSlot != endSlot) {
                     // Время задачи – теперь чуть выше, чтобы не слипалось с соседней
-                    val timeText = "${formatTime(task.start)}–${formatTime(task.time_end)}"
+                    val timeText = "${ViewsFunction.formatTime(task.start)}–${ViewsFunction.formatTime(task.time_end)} |${task.importance}"
                     timePaintSm.textSize =
                         minOf(28f, maxTextWidth / timeText.length.coerceAtLeast(1) * 1.8f)
                     canvas.drawText(timeText, rect.left + 4f, rect.bottom - 8f, timePaintSm)
+                    val posYmax = rect.bottom - 8f - timePaintSm.textSize
+
+                    if (hightDraw < posYmax && task.title.length > ViewsFunction.CHUNK_SIZE) {
+                        titleText = task.title.substring(spaceIndex, ViewsFunction.searchSpace(task.title, spaceIndex)).trim()
+                        titlePaint.textSize = minOf(titlePaint.textSize, maxTextWidth / titleText.length.coerceAtLeast(1) * 2.0f)
+                        canvas.drawText(titleText, rect.left + 4f, hightDraw, titlePaint)
+                        hightDraw += titlePaint.textSize + ViewsFunction.TEXT_MARGIN
+                    }
+
+                    if ((hightDraw + ViewsFunction.SEPARATOR_HEIGHT) < posYmax && task.body.isNotEmpty()) {
+                        val rect3 = RectF(
+                            xStart + padding, hightDraw - titlePaint.textSize,
+                            xStart + columnWidth - padding, hightDraw + ViewsFunction.SEPARATOR_HEIGHT - titlePaint.textSize
+                        )
+                        taskRectPaint.color = titlePaint.color
+                        canvas.drawRoundRect(rect3, 0f, 0f, taskRectPaint)
+
+                        hightDraw += ViewsFunction.SEPARATOR_HEIGHT
+                        spaceIndex = ViewsFunction.searchSpace(task.body)
+                        titleText = task.body.substring(0, spaceIndex).trim()
+                        titlePaint.textSize = minOf(titlePaint.textSize, maxTextWidth / titleText.length.coerceAtLeast(1) * 2.0f)
+                        canvas.drawText(titleText, rect.left + 4f, hightDraw, titlePaint)
+                        hightDraw += titlePaint.textSize + ViewsFunction.TEXT_MARGIN
+                    }
+
+                    if (hightDraw < posYmax && task.body.length > ViewsFunction.CHUNK_SIZE + 1) {
+                        titleText = task.body.substring(spaceIndex, ViewsFunction.searchSpace(task.body, spaceIndex)).trim()
+                        titlePaint.textSize = minOf(titlePaint.textSize, maxTextWidth / titleText.length.coerceAtLeast(1) * 2.0f)
+                        canvas.drawText(titleText, rect.left + 4f, hightDraw, titlePaint)
+                    }
                 }
             }
         }
-    }
-
-    private fun formatTime(millis: Long): String {
-        val cal = java.util.Calendar.getInstance()   // локальный
-        cal.timeInMillis = millis
-        return String.format("%02d:%02d", cal.get(java.util.Calendar.HOUR_OF_DAY), cal.get(java.util.Calendar.MINUTE))
     }
 
     private fun getSlotIndexSt(timestamp: Long): Int {
