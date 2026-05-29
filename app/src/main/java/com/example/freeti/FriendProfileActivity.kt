@@ -101,11 +101,15 @@ class FriendProfileActivity : AppCompatActivity() {
             user = app.appContainer.userDao.getUserForId(id)
 
             tvNickname.text = user.username
-            avatar.text = user.avatar
+            var textAvatar = user.avatar
+            if (textAvatar.length > 1 && textAvatar[0] == '_') {
+                avatar.rotation = 0f
+                textAvatar = textAvatar.substring(1, textAvatar.length)
+            } else avatar.rotation = 90f
+            avatar.text = textAvatar
 
             viewModel.setId(user.id)
-
-            viewModel.setDate(calendar.timeInMillis)
+            setDate()
             viewModel.updateData()
         }
         nextDayButton = findViewById(R.id.main_next_day)

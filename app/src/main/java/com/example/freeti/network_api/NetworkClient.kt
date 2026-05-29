@@ -16,7 +16,9 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeoutOrNull
 import okhttp3.*
+import java.util.concurrent.TimeoutException
 
 
 object NetworkClient {
@@ -64,7 +66,7 @@ object NetworkClient {
         val tokenAuthenticator = Authenticator { _, response ->
             // Если мы уже 2 раза получили 401 для этого запроса - всё, стоп.
             if (response.responseCount >= 2) {
-                if (response.code == 401) {
+                if (response.code in 401..403){//response.code == 401) {
                     //tokenManager.clearTokens()
                     //вот тут скорее всего нужно добавить выход из аккаунта
                     CoroutineScope(Dispatchers.IO).launch {
@@ -91,7 +93,9 @@ object NetworkClient {
                 // Пытаемся обновить токен реально
                 val refreshResult = runBlocking {
                     try {
-                        authProvider().refreshToken()
+                        withTimeoutOrNull(5000L) {
+                            authProvider().refreshToken()
+                        } ?: Result.failure(TimeoutException("Refresh timeout"))
                     } catch (e: Exception) {
                         CoroutineScope(Dispatchers.IO).launch {
                             AuthEventBus.emit(AuthEvent.TokenRefreshFailed)
@@ -121,7 +125,6 @@ object NetworkClient {
             .addInterceptor(authInterceptor)
             .authenticator(tokenAuthenticator)
             .addInterceptor(loggingInterceptor)
-            .connectTimeout(15, TimeUnit.SECONDS)
             .connectTimeout(15, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)    // важно для медленных ответов
             .writeTimeout(30, TimeUnit.SECONDS)   // важно для больших запросов

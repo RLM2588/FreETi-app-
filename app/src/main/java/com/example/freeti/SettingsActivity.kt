@@ -34,6 +34,8 @@ class SettingsActivity : AppCompatActivity() {
 
         s_logout = findViewById(R.id.settings_logout)
         s_plug = findViewById(R.id.settings_plug)
+        s_plug.setText(pref.getString("default_plug", ""))
+
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         toolbar.setNavigationOnClickListener {
             pref.edit().putString("default_plug", s_plug.text.toString()).apply()

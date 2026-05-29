@@ -3,6 +3,7 @@ package com.example.freeti
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
@@ -17,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.freeti.data.local.entity.DGroupEvents
 import com.example.freeti.data.local.entity.DGroups
+import com.example.freeti.repository.MembersRepository
 import com.example.freeti.view_model.GroupTasksViewModel
 import com.example.freeti.view_model.GroupTasksViewModelFactory
 import com.example.freeti.views.GroupTaskTimelineView
@@ -55,6 +57,8 @@ class GroupDetailsActivity : AppCompatActivity() {
     private lateinit var id: String
     private lateinit var nextDayButton: ImageButton
     private lateinit var prevDayButton: ImageButton
+    private lateinit var membersRepository: MembersRepository
+    private var myId: Int = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,6 +95,9 @@ class GroupDetailsActivity : AppCompatActivity() {
         calendar = Calendar.getInstance()
         id = intent.getStringExtra("group_id")?: "0"
         if(id == "0") finish()
+
+        membersRepository = app.appContainer.membersRepository
+        myId = app.appContainer.tokenManager.getUserId()
 
         updateUi()
 
@@ -206,8 +213,21 @@ class GroupDetailsActivity : AppCompatActivity() {
             group = app.appContainer.groupsDao.getGroup(id)
             textGroupName.text = group.title
             textDescription.text = group.body
-            val net_count = app.appContainer.membersRepository.getCountMembers(id)
+
+            var myRole: String
+            try {
+                myRole = membersRepository.getMyRole(group.id, myId) ?: "ADMIN"
+            } catch (e: Exception) {
+                Log.d("members", "can not take my role")
+                myRole = "OWNER"
+            }
+            Log.d("role:", myRole ?: "hmmmm")
+
+            if (myRole == "MEMBER") buttonCreateEvent.visibility = View.GONE
+            val net_count = membersRepository.getCountMembers(id)
             val count = if(net_count != 0) net_count else app.appContainer.groupMemberDao.getCountGroupMembers(id)
+            if (count == 0) finish() // чтобы группа закрывалась сама при удалении
+
             textMemberCount.text = resources.getQuantityString(R.plurals.members_plurals, count, count)
 
             viewModel.setId(group.id)

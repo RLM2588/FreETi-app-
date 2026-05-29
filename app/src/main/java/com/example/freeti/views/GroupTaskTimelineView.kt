@@ -21,9 +21,9 @@ class GroupTaskTimelineView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     var cellDurationMinutes: Int = 30
-    var timeColumnWidth: Float = 160f
-    var rowHeight: Float = 80f
-    var columnWidth: Float = 360f   // фиксированная ширина одной колонки
+    var timeColumnWidth: Float = TimelineDimensions.timeColumnWidthPx
+    var rowHeight: Float = TimelineDimensions.rowHeightPx
+    var columnWidth: Float = TimelineDimensions.columnWidthPx   // фиксированная ширина одной колонки
 
     private var downX = 0f
     private var downY = 0f
@@ -34,7 +34,7 @@ class GroupTaskTimelineView @JvmOverloads constructor(
 
     private val timePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = ContextCompat.getColor(context, R.color.for_text)
-        textSize = 36f
+        textSize = 28f * TimelineDimensions.density
         textAlign = Paint.Align.RIGHT
     }
     private val gridPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -46,12 +46,12 @@ class GroupTaskTimelineView @JvmOverloads constructor(
     }
     private val titlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.BLACK
-        textSize = 32f
+        textSize = 26f * TimelineDimensions.density
         isFakeBoldText = true
     }
     private val timePaintSm = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.BLACK
-        textSize = 32f
+        textSize = 20f * TimelineDimensions.density
     }
 
     private var tasks: List<DGroupEvents> = emptyList()
@@ -117,7 +117,7 @@ class GroupTaskTimelineView @JvmOverloads constructor(
             canvas.drawLine(timeColumnWidth, y, width, y, gridPaint)
             if (row < totalRows) {
                 val slotMillis = dayStartMillis + TimeUnit.MINUTES.toMillis((row * cellDurationMinutes).toLong())
-                canvas.drawText(ViewsFunction.formatTime(slotMillis), timeColumnWidth - 16f, y - 2f, timePaint)
+                canvas.drawText(ViewsFunction.formatTime(slotMillis), timeColumnWidth - 16f * TimelineDimensions.density, y - 2f * TimelineDimensions.density, timePaint)
             }
         }
         // Вертикальная линия между временем и задачами
@@ -143,18 +143,16 @@ class GroupTaskTimelineView @JvmOverloads constructor(
                     taskBottom -= 3 * rowHeight / 8
                 }
 
-                val padding2 = 6f
+                val padding2 = TimelineDimensions.paddingSmallPx
                 val rect2 = RectF(
                     xStart + padding2, taskTop + padding2,
                     xStart + columnWidth - padding2, taskBottom - padding2
                 )
 
                 taskRectPaint.color = Color.BLACK
-                canvas.drawRoundRect(rect2,
-                    ViewsFunction.CORNER_RADIUS,
-                    ViewsFunction.CORNER_RADIUS, taskRectPaint)
+                canvas.drawRoundRect(rect2, ViewsFunction.CORNER_RADIUS, ViewsFunction.CORNER_RADIUS, taskRectPaint)
 
-                val padding = 12f
+                val padding = TimelineDimensions.paddingMainPx
                 val rect = RectF(
                     xStart + padding, taskTop + padding,
                     xStart + columnWidth - padding, taskBottom - padding
@@ -170,24 +168,24 @@ class GroupTaskTimelineView @JvmOverloads constructor(
                 var hightDraw = rect.top + titlePaint.textSize + ViewsFunction.TEXT_MARGIN
                 var spaceIndex = ViewsFunction.searchSpace(task.title)
                 var titleText = task.title.substring(0, spaceIndex).trim()
-                val maxTextWidth = columnWidth - 2 * padding - 8f
+                val maxTextWidth = columnWidth - 2 * padding - 8f * TimelineDimensions.density
                 titlePaint.color = ViewsFunction.getAdaptiveTextColor(color)
                 titlePaint.textSize = minOf(titlePaint.textSize, maxTextWidth / titleText.length.coerceAtLeast(1) * 2.0f)
-                canvas.drawText(titleText, rect.left + 4f, hightDraw, titlePaint)
+                canvas.drawText(titleText, rect.left + 4f * TimelineDimensions.density * TimelineDimensions.density, hightDraw, titlePaint)
                 hightDraw += titlePaint.textSize + ViewsFunction.TEXT_MARGIN
 
                 if(startSlot != endSlot) {
                     // Время задачи – теперь чуть выше, чтобы не слипалось с соседней
                     val timeText = "${ViewsFunction.formatTime(task.start)}–${ViewsFunction.formatTime(task.time_end)} |${task.importance}"
                     timePaintSm.textSize =
-                        minOf(28f, maxTextWidth / timeText.length.coerceAtLeast(1) * 1.8f)
-                    canvas.drawText(timeText, rect.left + 4f, rect.bottom - 8f, timePaintSm)
-                    val posYmax = rect.bottom - 8f - timePaintSm.textSize
+                        minOf(22f * TimelineDimensions.density, maxTextWidth / timeText.length.coerceAtLeast(1) * 1.8f)
+                    canvas.drawText(timeText, rect.left + 4f * TimelineDimensions.density, rect.bottom - 8f * TimelineDimensions.density, timePaintSm)
+                    val posYmax = rect.bottom - 8f * TimelineDimensions.density - timePaintSm.textSize
 
                     if (hightDraw < posYmax && task.title.length > ViewsFunction.CHUNK_SIZE) {
                         titleText = task.title.substring(spaceIndex, ViewsFunction.searchSpace(task.title, spaceIndex)).trim()
                         titlePaint.textSize = minOf(titlePaint.textSize, maxTextWidth / titleText.length.coerceAtLeast(1) * 2.0f)
-                        canvas.drawText(titleText, rect.left + 4f, hightDraw, titlePaint)
+                        canvas.drawText(titleText, rect.left + 4f * TimelineDimensions.density, hightDraw, titlePaint)
                         hightDraw += titlePaint.textSize + ViewsFunction.TEXT_MARGIN
                     }
 
@@ -203,14 +201,14 @@ class GroupTaskTimelineView @JvmOverloads constructor(
                         spaceIndex = ViewsFunction.searchSpace(task.body)
                         titleText = task.body.substring(0, spaceIndex).trim()
                         titlePaint.textSize = minOf(titlePaint.textSize, maxTextWidth / titleText.length.coerceAtLeast(1) * 2.0f)
-                        canvas.drawText(titleText, rect.left + 4f, hightDraw, titlePaint)
+                        canvas.drawText(titleText, rect.left + 4f * TimelineDimensions.density, hightDraw, titlePaint)
                         hightDraw += titlePaint.textSize + ViewsFunction.TEXT_MARGIN
                     }
 
                     if (hightDraw < posYmax && task.body.length > ViewsFunction.CHUNK_SIZE + 1) {
                         titleText = task.body.substring(spaceIndex, ViewsFunction.searchSpace(task.body, spaceIndex)).trim()
                         titlePaint.textSize = minOf(titlePaint.textSize, maxTextWidth / titleText.length.coerceAtLeast(1) * 2.0f)
-                        canvas.drawText(titleText, rect.left + 4f, hightDraw, titlePaint)
+                        canvas.drawText(titleText, rect.left + 4f * TimelineDimensions.density, hightDraw, titlePaint)
                     }
                 }
             }

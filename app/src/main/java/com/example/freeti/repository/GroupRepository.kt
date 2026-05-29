@@ -19,10 +19,10 @@ class GroupRepository(
     // отправка несинхронизированных + загрузка с сервера
     suspend fun syncGroups() {
         pushUnsyncedGroups()
-
         try {
             val serverGroups = apiService.getGroups()
             val entities = serverGroups.map { it.toEntity() }
+            groupsDao.deleteAll() // Удаляем если получаем с сервера
             groupsDao.insertAll(entities)
         } catch (e: Exception) {
             Log.w("GroupRepo", "Failed to fetch groups from server", e)

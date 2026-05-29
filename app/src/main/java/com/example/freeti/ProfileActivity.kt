@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.freeti.data.local.entity.DUsers
 import kotlinx.coroutines.launch
+import kotlin.math.min
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var btnSearch: Button
@@ -54,17 +56,17 @@ class ProfileActivity : AppCompatActivity() {
         val userId = tokenManager.getUserId()
 
         // Логика кнопки изменения аватара
-        btnChangeAvatar.setOnClickListener {
-            // Разрешаем редактирование
-            userAvatar.isFocusable = true
-            userAvatar.isFocusableInTouchMode = true
-            userAvatar.isCursorVisible = true
-            userAvatar.requestFocus()
-
-            // Принудительно показываем клавиатуру
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(userAvatar, InputMethodManager.SHOW_IMPLICIT)
-        }
+        //btnChangeAvatar.setOnClickListener {
+        //    // Разрешаем редактирование
+        //    userAvatar.isFocusable = true
+        //    userAvatar.isFocusableInTouchMode = true
+        //    userAvatar.isCursorVisible = true
+        //    userAvatar.requestFocus()
+        //
+        //    // Принудительно показываем клавиатуру
+        //    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        //    imm.showSoftInput(userAvatar, InputMethodManager.SHOW_IMPLICIT)
+        //}
         btnChangeAvatar.setOnClickListener {
             // Делаем поле редактируемым
             userAvatar.isFocusableInTouchMode = true
@@ -80,6 +82,7 @@ class ProfileActivity : AppCompatActivity() {
 
             // Выделяем текст, чтобы сразу можно было стереть старый
             userAvatar.selectAll()
+            if (userAvatar.rotation == 0f) userAvatar.setText("_" + userAvatar.text.toString())
         }
         btnBack.setOnClickListener { finish() }
 
@@ -165,6 +168,7 @@ class ProfileActivity : AppCompatActivity() {
                     }
                 } catch (e: Exception) {
                 }
+                setInfo()
             }
         }
         lifecycleScope.launch {
@@ -199,10 +203,20 @@ class ProfileActivity : AppCompatActivity() {
             } else {
                 currentUser = user
             }
-
-            // Заполняем поля
-            userName.setText(currentUser?.username ?: "")
-            userAvatar.setText(currentUser?.avatar ?: "")
+            setInfo()
         }
+    }
+
+    private fun setInfo() {
+        var textAvatar = currentUser?.avatar ?: ""
+        if (textAvatar.length > 1 && textAvatar[0] == '_') {
+            userAvatar.rotation = 0f
+            textAvatar = textAvatar.substring(1, textAvatar.length)
+        } else {
+            userAvatar.rotation = 90f
+            textAvatar = textAvatar.substring(0, min(textAvatar.length, 4))
+        }
+        userName.setText(currentUser?.username ?: "")
+        userAvatar.setText(textAvatar)//.trim()
     }
 }

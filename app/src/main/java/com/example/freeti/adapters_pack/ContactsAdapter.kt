@@ -34,7 +34,13 @@ class ContactsAdapter(
         val item = items[position]
         holder.nickname.text = item.username
         holder.login.text = item.login
-        holder.avatar.text = item.avatar
+
+        var textAvatar = item.avatar
+        if (textAvatar.length > 1 && textAvatar[0] == '_') {
+            holder.avatar.rotation = 0f
+            textAvatar = textAvatar.substring(1, textAvatar.length)
+        } else holder.avatar.rotation = 90f
+        holder.avatar.text = textAvatar.trim()
 
         if (item.isFriend) {
             holder.rootLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.for_privacy_private))

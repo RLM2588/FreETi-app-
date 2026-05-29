@@ -30,6 +30,12 @@ class UserAdapter(
         holder.nicknameTextView.text = user.username
         holder.nameTextView.text = user.login
         holder.avatar.text = user.avatar
+        var textAvatar = holder.avatar.text
+        if (textAvatar.length > 1 && textAvatar[0] == '_') {
+            holder.avatar.rotation = 0f
+            textAvatar = textAvatar.substring(1, textAvatar.length)
+        } else holder.avatar.rotation = 90f
+        holder.avatar.text = textAvatar
         holder.itemView.setOnClickListener { onItemClick(user) }
     }
 

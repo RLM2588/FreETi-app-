@@ -32,4 +32,7 @@ interface GroupsDao {
 
     @Query("DELETE FROM tgroups")
     suspend fun deleteAll()
+
+    @Query("DELETE FROM tgroups WHERE id = :groupId")
+    suspend fun deleteById(groupId: String)
 }

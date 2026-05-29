@@ -220,7 +220,7 @@ class NewTaskActivity : AppCompatActivity() {
         }
 
         t_ok.setOnLongClickListener { // Временно на эту кнопку - сохраняем с заглушкой в имени
-            saveTask(pref.getString("default_plug", "---")?: "---")
+            saveTask(if (isNotCheck()) pref.getString("default_plug", "---")?: "---" else "")
             true
         }
 
@@ -236,17 +236,18 @@ class NewTaskActivity : AppCompatActivity() {
         t_save.setOnLongClickListener {
             if (!isCorrectLength()) {
                 return@setOnLongClickListener false
-            }
-            saveTask()
+            } else if (isNotCheck()) {
+                if (privacySaved % (iterator_privacy + 4) != 0) saveTask() // Мб стоит убрать, но пока путаюсь
 
-            val plug = pref.getString("default_plug", "---") ?: "---"
-            for (i in 0..2) {
-                if (privacySaved % (i + 4) != 0) {
-                    iterator_privacy = i
-                    Log.d("privacy", iterator_privacy.toString())
-                    saveTask(plug)
+                val plug = pref.getString("default_plug", "---") ?: "---"
+                for (i in 0..2) {
+                    if (privacySaved % (i + 4) != 0) {
+                        iterator_privacy = i
+                        Log.d("privacy", iterator_privacy.toString())
+                        saveTask(plug)
+                    }
                 }
-            }
+            } else {saveTask()}
 
             finish()
             true
@@ -264,6 +265,10 @@ class NewTaskActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun isNotCheck(): Boolean {
+        return !(t_no_time.isChecked || task_without_time.isChecked)
     }
 
     private fun isCorrectLength(): Boolean {

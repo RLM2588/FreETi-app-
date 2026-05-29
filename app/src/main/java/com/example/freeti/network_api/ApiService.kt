@@ -17,6 +17,7 @@ import com.example.freeti.network_entity.NUsers
 import com.example.freeti.network_entity.RefreshTokenRequest
 import com.example.freeti.network_entity.RegisterRequest
 import com.example.freeti.network_entity.RegisterResponseCode
+import com.example.freeti.network_entity.StringMessage
 import com.example.freeti.network_entity.TestRequest
 import com.example.freeti.network_entity.TestResponse
 import com.example.freeti.network_entity.UserResponse
@@ -33,6 +34,9 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
+    @GET("groups/{group_id}")
+    suspend fun getMyRole(@Path("group_id") groupId: String): Response<StringMessage>
+
     @GET("tasks/username_id")
     suspend fun get_username_id(): Response<UserResponse>
 

@@ -24,6 +24,7 @@ import com.example.freeti.repository.TestRepository
 import com.example.freeti.sync.SyncConfig
 import com.example.freeti.sync.TaskSyncManager
 import com.example.freeti.tokens.TokenManager
+import com.example.freeti.views.TimelineDimensions
 import com.example.freeti.worker.CleanupWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,8 +32,8 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 class AppContainer(private val context: Context) {
+    val version = "1.1.0"
     val database = AppDataBase.getInstance(context)
-
     private val tasksDao = database.tasksDao()
     val myTasksDao = database.myTasksDao()
     val otherTaskDao = database.otherTaskDao()
@@ -58,7 +59,7 @@ class AppContainer(private val context: Context) {
 
     val groupRepository = GroupRepository(groupsDao, apiService)
     val groupTaskRepository = GroupTaskRepository(apiService, groupTasksDao)
-    val membersRepository = MembersRepository(apiService, groupMemberDao, userDao)
+    val membersRepository = MembersRepository(apiService, groupMemberDao, groupsDao, userDao)
     val contactsRepository = ContactsRepository(contactsDao, userDao, apiService, tokenManager)
 
     val searchRepository = SearchRepository(
@@ -94,6 +95,8 @@ class MyApp: Application() {
         instance = this
 
         appContainer = AppContainer(this)
+
+        TimelineDimensions.init(this)
 
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks {
             override fun onActivityResumed(activity: Activity) {

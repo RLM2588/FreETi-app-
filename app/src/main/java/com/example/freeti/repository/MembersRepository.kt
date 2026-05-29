@@ -2,6 +2,7 @@ package com.example.freeti.repository
 
 import android.util.Log
 import com.example.freeti.data_base.GroupMembersDao
+import com.example.freeti.data_base.GroupsDao
 import com.example.freeti.data_base.UserDao
 import com.example.freeti.network_api.ApiService
 import kotlin.collections.map
@@ -9,6 +10,7 @@ import kotlin.collections.map
 class MembersRepository (
     private val api: ApiService,
     private val dao: GroupMembersDao,
+    private val groupDao: GroupsDao,
     private val usersDao: UserDao
 ) {
     suspend fun getMembers(group_id: String): Boolean {
@@ -73,6 +75,20 @@ class MembersRepository (
         }
     }
 
+    suspend fun getMyRole(groupId: String, userId: Int): String {
+        return try {
+            val response = api.getMyRole(groupId)
+            if (response.isSuccessful) {
+                val body = response.body()
+                body?.stringMessage
+            }
+            dao.getRoleById(groupId, userId)
+        } catch (e: Exception) {
+            Log.d("members", e.toString())
+            "OWNER"
+        }
+    }
+
     suspend fun deleteMember(group_id: String, user_id: Int): Boolean {
         return try {
             val response = api.deleteMember(user_id, group_id)
@@ -117,6 +133,7 @@ class MembersRepository (
             if (response.isSuccessful && response.body() == true) {
                 // Если сервер успешно удалил группу, вычищаем её из локальной БД
                 dao.deleteGroupMembersId(groupId)
+                groupDao.deleteById(groupId) // для удаления из списка
                 true
             } else {
                 false
@@ -132,6 +149,7 @@ class MembersRepository (
             if (response.isSuccessful && response.body() == true) {
                 // После выхода просто удаляем кэш группы
                 dao.deleteGroupMembersId(groupId)
+                groupDao.deleteById(groupId) // для удаления из списка
                 true
             } else {
                 false

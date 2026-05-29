@@ -1,5 +1,5 @@
 package com.example.freeti.events
-import androidx.lifecycle.MutableLiveData
+
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 

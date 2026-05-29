@@ -52,18 +52,15 @@ class MembersActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         lifecycleScope.launch {
-            val isSuccess = membersRepository.getMembers(groupId)
+            //val isSuccess = membersRepository.getMembers(groupId)// временно, а так избыточно
             var myRole: String
-            if (isSuccess) {
-                try {
-                    myRole = membersRepository.getRoleById(groupId, currentUserId) ?: "ADMIN"
-                } catch (e: Exception) {
-                    Log.d("members", "can not take my role")
-                    myRole = "MEMBER"
-                }
-                if (myRole == null) myRole = "MEMBER"
-                Log.d("role:", myRole ?: "hmmmm")
-            } else {myRole = "MEMBER"}
+            try {
+                myRole = membersRepository.getMyRole(groupId, currentUserId) ?: "ADMIN"
+            } catch (e: Exception) {
+                Log.d("members", "can not take my role")
+                myRole = "MEMBER"
+            }
+            Log.d("role:", myRole ?: "hmmmm")
 
             memberAdapter = MemberAdapter(
                 members = emptyList(),

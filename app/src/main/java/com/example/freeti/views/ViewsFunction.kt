@@ -46,6 +46,6 @@ class ViewsFunction {
         const val TEXT_MARGIN = 4f
         const val SEPARATOR_HEIGHT = 4f
         const val TIME_TEXT_MAX_SIZE = 28f
-        const val CORNER_RADIUS = 12f
+        const val CORNER_RADIUS = 14f
     }
 }

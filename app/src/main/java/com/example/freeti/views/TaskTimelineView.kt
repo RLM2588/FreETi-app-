@@ -3,7 +3,6 @@ package com.example.freeti.views
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -19,9 +18,9 @@ class TaskTimelineView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     var cellDurationMinutes: Int = 30
-    var timeColumnWidth: Float = 160f
-    var rowHeight: Float = 80f
-    var columnWidth: Float = 360f   // фиксированная ширина одной колонки
+    var timeColumnWidth: Float = TimelineDimensions.timeColumnWidthPx
+    var rowHeight: Float = TimelineDimensions.rowHeightPx
+    var columnWidth: Float = TimelineDimensions.columnWidthPx   // фиксированная ширина одной колонки
 
     private var downX = 0f
     private var downY = 0f
@@ -32,7 +31,7 @@ class TaskTimelineView @JvmOverloads constructor(
 
     private val timePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = ContextCompat.getColor(context, R.color.for_text)
-        textSize = 36f
+        textSize = 28f * TimelineDimensions.density
         textAlign = Paint.Align.RIGHT
     }
     private val gridPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -44,12 +43,12 @@ class TaskTimelineView @JvmOverloads constructor(
     }
     private val titlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.BLACK
-        textSize = 32f
+        textSize = 26f * TimelineDimensions.density
         isFakeBoldText = true
     }
     private val timePaintSm = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.BLACK
-        textSize = 32f
+        textSize = 20f * TimelineDimensions.density
     }
 
     private var tasks: List<DTasks> = emptyList()
@@ -111,7 +110,7 @@ class TaskTimelineView @JvmOverloads constructor(
             canvas.drawLine(timeColumnWidth, y, width, y, gridPaint)
             if (row < totalRows) {
                 val slotMillis = dayStartMillis + TimeUnit.MINUTES.toMillis((row * cellDurationMinutes).toLong())
-                canvas.drawText(ViewsFunction.formatTime(slotMillis), timeColumnWidth - 16f, y - 2f, timePaint)
+                canvas.drawText(ViewsFunction.formatTime(slotMillis), timeColumnWidth - 16f * TimelineDimensions.density, y - 2f * TimelineDimensions.density, timePaint)
             }
         }
         // Вертикальная линия между временем и задачами
@@ -137,7 +136,7 @@ class TaskTimelineView @JvmOverloads constructor(
                     taskBottom -= 3 * rowHeight / 8
                 }
 
-                val padding2 = 6f
+                val padding2 = TimelineDimensions.paddingSmallPx
                 val rect2 = RectF(
                     xStart + padding2, taskTop + padding2,
                     xStart + columnWidth - padding2, taskBottom - padding2
@@ -146,7 +145,7 @@ class TaskTimelineView @JvmOverloads constructor(
                 taskRectPaint.color = Color.BLACK
                 canvas.drawRoundRect(rect2, ViewsFunction.CORNER_RADIUS, ViewsFunction.CORNER_RADIUS, taskRectPaint)
 
-                val padding = 12f
+                val padding = TimelineDimensions.paddingMainPx
                 val rect = RectF(
                     xStart + padding, taskTop + padding,
                     xStart + columnWidth - padding, taskBottom - padding
@@ -160,32 +159,32 @@ class TaskTimelineView @JvmOverloads constructor(
                 var hightDraw = rect.top + titlePaint.textSize + ViewsFunction.TEXT_MARGIN
                 var spaceIndex = ViewsFunction.searchSpace(task.title)
                 var titleText = task.title.substring(0, spaceIndex).trim()
-                val maxTextWidth = columnWidth - 2 * padding - 8f
+                val maxTextWidth = columnWidth - 2 * padding - 8f * TimelineDimensions.density
                 titlePaint.color = ViewsFunction.getAdaptiveTextColor(color)
                 titlePaint.textSize = minOf(titlePaint.textSize, maxTextWidth / titleText.length.coerceAtLeast(1) * 2.0f)
-                canvas.drawText(titleText, rect.left + 4f, hightDraw, titlePaint)
+                canvas.drawText(titleText, rect.left + 4f * TimelineDimensions.density * TimelineDimensions.density, hightDraw, titlePaint)
                 hightDraw += titlePaint.textSize + ViewsFunction.TEXT_MARGIN
 
                 if(startSlot != endSlot) {
                     // Время задачи – теперь чуть выше, чтобы не слипалось с соседней
                     val timeText = "${ViewsFunction.formatTime(task.start)}–${ViewsFunction.formatTime(task.time_end)} |${task.importance}"
                     timePaintSm.textSize =
-                        minOf(28f, maxTextWidth / timeText.length.coerceAtLeast(1) * 1.8f)
-                    canvas.drawText(timeText, rect.left + 4f, rect.bottom - 8f, timePaintSm)
-                    val posYmax = rect.bottom - 8f - timePaintSm.textSize
+                        minOf(22f * TimelineDimensions.density, maxTextWidth / timeText.length.coerceAtLeast(1) * 1.8f)
+                    canvas.drawText(timeText, rect.left + 4f * TimelineDimensions.density, rect.bottom - 8f * TimelineDimensions.density, timePaintSm)
+                    val posYmax = rect.bottom - 8f * TimelineDimensions.density - timePaintSm.textSize
 
-                    DrawRect(canvas, xStart, taskBottom, 4f, 40f, Color.BLACK)
-                    DrawRect(canvas, xStart, taskBottom, 0f, 40f, if(task.status == "DONE") Color.GREEN else Color.RED)
+                    DrawRect(canvas, xStart, taskBottom, 4f * TimelineDimensions.density, 40f * TimelineDimensions.density, Color.BLACK)
+                    DrawRect(canvas, xStart, taskBottom, 0f, 40f * TimelineDimensions.density, if(task.status == "DONE") Color.GREEN else Color.RED)
 
                     if(!task.is_synced) {
-                        DrawRect(canvas, xStart, taskBottom, 4f, 40f, Color.BLACK, 30f)
-                        DrawRect(canvas, xStart, taskBottom, 0f, 40f, Color.BLUE, 30f)
+                        DrawRect(canvas, xStart, taskBottom, 4f * TimelineDimensions.density, 40f * TimelineDimensions.density, Color.BLACK, 30f * TimelineDimensions.density)
+                        DrawRect(canvas, xStart, taskBottom, 0f, 40f * TimelineDimensions.density, Color.BLUE, 30f * TimelineDimensions.density)
                     }
 
                     if (hightDraw < posYmax && task.title.length > ViewsFunction.CHUNK_SIZE) {
                         titleText = task.title.substring(spaceIndex, ViewsFunction.searchSpace(task.title, spaceIndex)).trim()
                         titlePaint.textSize = minOf(titlePaint.textSize, maxTextWidth / titleText.length.coerceAtLeast(1) * 2.0f)
-                        canvas.drawText(titleText, rect.left + 4f, hightDraw, titlePaint)
+                        canvas.drawText(titleText, rect.left + 4f * TimelineDimensions.density, hightDraw, titlePaint)
                         hightDraw += titlePaint.textSize + ViewsFunction.TEXT_MARGIN
                     }
 
@@ -201,14 +200,14 @@ class TaskTimelineView @JvmOverloads constructor(
                         spaceIndex = ViewsFunction.searchSpace(task.body)
                         titleText = task.body.substring(0, spaceIndex).trim()
                         titlePaint.textSize = minOf(titlePaint.textSize, maxTextWidth / titleText.length.coerceAtLeast(1) * 2.0f)
-                        canvas.drawText(titleText, rect.left + 4f, hightDraw, titlePaint)
+                        canvas.drawText(titleText, rect.left + 4f * TimelineDimensions.density, hightDraw, titlePaint)
                         hightDraw += titlePaint.textSize + ViewsFunction.TEXT_MARGIN
                     }
 
                     if (hightDraw < posYmax && task.body.length > ViewsFunction.CHUNK_SIZE + 1) {
                         titleText = task.body.substring(spaceIndex, ViewsFunction.searchSpace(task.body, spaceIndex)).trim()
                         titlePaint.textSize = minOf(titlePaint.textSize, maxTextWidth / titleText.length.coerceAtLeast(1) * 2.0f)
-                        canvas.drawText(titleText, rect.left + 4f, hightDraw, titlePaint)
+                        canvas.drawText(titleText, rect.left + 4f * TimelineDimensions.density, hightDraw, titlePaint)
                     }
                 }
             }
@@ -222,7 +221,7 @@ class TaskTimelineView @JvmOverloads constructor(
         )
 
         taskRectPaint.color = color
-        canvas.drawRoundRect(rect, ViewsFunction.CORNER_RADIUS, ViewsFunction.CORNER_RADIUS, taskRectPaint)
+        canvas.drawRoundRect(rect, ViewsFunction.CORNER_RADIUS * TimelineDimensions.density, ViewsFunction.CORNER_RADIUS * TimelineDimensions.density, taskRectPaint)
     }
 
     private fun getSlotIndexSt(timestamp: Long): Int {

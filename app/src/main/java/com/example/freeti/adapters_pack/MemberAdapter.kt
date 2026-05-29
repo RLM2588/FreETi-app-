@@ -44,7 +44,13 @@ class MemberAdapter(
         fun bind(member: Member) {
             textUserName.text = member.username
             textUserRole.text = member.role
-            member_faceInput.text = member.avatar
+
+            var textAvatar = member.avatar
+            if (textAvatar.length > 1 && textAvatar[0] == '_') {
+                member_faceInput.rotation = 0f
+                textAvatar = textAvatar.substring(1, textAvatar.length)
+            } else member_faceInput.rotation = 90f
+            member_faceInput.text = textAvatar.trim()
 
             buttonPromote.setOnClickListener {
                 onRoleClick(member)
