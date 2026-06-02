@@ -49,6 +49,9 @@ class ContactsAdapter(
             holder.login.setTextColor(colorBg)
         } else {
             holder.rootLayout.setBackgroundColor(ContextCompat.getColor(context, R.color.bg))
+            val colorText = ContextCompat.getColor(context, R.color.for_text)
+            holder.nickname.setTextColor(colorText)
+            holder.login.setTextColor(colorText)
         }
         holder.itemView.setOnClickListener { onItemClick(item) }
         holder.itemView.setOnLongClickListener {

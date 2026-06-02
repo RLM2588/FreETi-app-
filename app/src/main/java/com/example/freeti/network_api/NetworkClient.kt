@@ -64,9 +64,25 @@ object NetworkClient {
 
         // 2. АУТЕНТИФИКАТОР: Умное обновление
         val tokenAuthenticator = Authenticator { _, response ->
+            Log.d("token", response.responseCount.toString() + "");
+            Log.d("token", response.body.toString() + "");
+            Log.d("token", response.code.toString());
+            Log.d("token", response.request.toString());
+            Log.d("token", response.message + "");
+
+            if (response.code == 401) {
+                if (response.request.url.toString() == "https://freeti.ru/api/auth/refresh") {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        AuthEventBus.emit(AuthEvent.TokenRefreshFailed)
+                    }
+                    Log.d("401 error", "auth code 401")
+                    return@Authenticator null
+                }
+            }
+
             // Если мы уже 2 раза получили 401 для этого запроса - всё, стоп.
             if (response.responseCount >= 2) {
-                if (response.code in 401..403){//response.code == 401) {
+                if (response.code == 401) {
                     //tokenManager.clearTokens()
                     //вот тут скорее всего нужно добавить выход из аккаунта
                     CoroutineScope(Dispatchers.IO).launch {

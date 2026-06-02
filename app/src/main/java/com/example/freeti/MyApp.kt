@@ -54,7 +54,6 @@ class AppContainer(private val context: Context) {
 
     val authRepository = AuthRepository(apiService, tokenManager)
 
-    val testRepository = TestRepository(apiService)
     val otherRepository = OtherTaskRepository(apiService, otherTaskDao, userDao)
 
     val groupRepository = GroupRepository(groupsDao, apiService)
@@ -85,6 +84,9 @@ class MyApp: Application() {
     }
 
     var currentActivity: Activity? = null
+        private set
+
+    var Alert: AlertDialog? = null
         private set
 
     lateinit var appContainer: AppContainer
@@ -138,7 +140,8 @@ class MyApp: Application() {
         val activity = currentActivity ?: return
         if (activity.isFinishing || activity.isDestroyed) return
 
-        AlertDialog.Builder(activity)
+        Alert?.cancel()
+        Alert = AlertDialog.Builder(activity)
             .setTitle("Ошибка авторизации")
             .setMessage("Не удалось обновить токены. Выберите действие?")
             .setPositiveButton("Выйти и очистить кэш") { _, _ ->

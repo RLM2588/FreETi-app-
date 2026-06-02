@@ -34,8 +34,8 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
-    @GET("groups/{group_id}")
-    suspend fun getMyRole(@Path("group_id") groupId: String): Response<StringMessage>
+    @GET("groups/myrole")
+    suspend fun getMyRole(@Query("group_id") groupId: String): Response<StringMessage>
 
     @GET("tasks/username_id")
     suspend fun get_username_id(): Response<UserResponse>
