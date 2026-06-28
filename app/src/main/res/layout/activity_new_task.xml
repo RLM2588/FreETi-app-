@@ -110,10 +110,10 @@
                 android:layout_marginTop="16dp">
 
                 <CheckBox
-                    android:id="@+id/task_no_time"
+                    android:id="@+id/task_without_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Без времени"
+                    android:text="Не распределенная"
                     android:textSize="20sp"
                     android:textColor="@color/for_text"
                     android:buttonTint="@color/for_text"/>
@@ -134,10 +134,10 @@
             </LinearLayout>
 
             <CheckBox
-                android:id="@+id/task_without_time"
+                android:id="@+id/task_no_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Не распределенная"
+                android:text="Без времени"
                 android:textSize="20sp"
                 android:textColor="@color/for_text"
                 android:buttonTint="@color/for_text"/>
@@ -294,6 +294,13 @@
                 <View
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:background="#DADA22"
+                    android:layout_marginStart="12dp"
+                    android:id="@+id/yellow_color"/>
+
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:background="#BB3344"
                     android:layout_marginStart="12dp"
                     android:id="@+id/red_color"/>
@@ -322,21 +329,41 @@
                 <View
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:background="#888888"
+                    android:background="#686878"
                     android:layout_marginStart="12dp"
                     android:id="@+id/gray_color"/>
 
+                <View
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="#53377A"
+                    android:layout_marginStart="12dp"
+                    android:id="@+id/other_color"/>
+
             </LinearLayout>
 
-            <CheckBox
-                android:id="@+id/task_is_done"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Состояние задачи"
-                android:buttonTint="@color/for_text"
-                android:textSize="20sp"
-                android:textColor="@color/for_text" />
+                android:orientation="horizontal">
 
+                <CheckBox
+                    android:id="@+id/task_is_done"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Состояние задачи"
+                    android:buttonTint="@color/for_text"
+                    android:textSize="20sp"
+                    android:textColor="@color/for_text" />
+
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@color/bg"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="15dp"
+                    android:id="@+id/is_synced"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/task_layout_ok"

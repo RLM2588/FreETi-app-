@@ -12,7 +12,7 @@ object TimelineDimensions {
     // Размеры в dp
     const val TIME_COLUMN_WIDTH_DP = 120f
     const val ROW_HEIGHT_DP = 60f
-    const val COLUMN_WIDTH_DP = 270f
+    const val COLUMN_WIDTH_DP = 320f // тестить еще нужно
     const val PADDING_MAIN_DP = 10f
     const val PADDING_SMALL_DP = 6f
     const val TEXT_MARGIN_DP = 4f

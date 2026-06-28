@@ -52,6 +52,7 @@ class NewTaskActivity : AppCompatActivity() {
     private lateinit var t_view_color_preview: View
     private lateinit var t_ok: Button
     private lateinit var t_save: Button
+    private lateinit var is_synced: View
     private lateinit var t_privacy: com.google.android.material.button.MaterialButton
     private lateinit var t_esc: FloatingActionButton
 
@@ -115,6 +116,9 @@ class NewTaskActivity : AppCompatActivity() {
         val blue_color = findViewById<View>(R.id.blue_color)
         val grbl_color = findViewById<View>(R.id.grbl_color)
         val gray_color = findViewById<View>(R.id.gray_color)
+        val yellow_color = findViewById<View>(R.id.yellow_color)
+        val other_color = findViewById<View>(R.id.other_color)
+        is_synced = findViewById(R.id.is_synced)
 
         pref = getSharedPreferences("settings", MODE_PRIVATE)
 
@@ -209,7 +213,9 @@ class NewTaskActivity : AppCompatActivity() {
         green_color.setOnClickListener { t_et_color.setText("22AA55") }
         blue_color.setOnClickListener { t_et_color.setText("3355AB") }
         grbl_color.setOnClickListener { t_et_color.setText("33AAAA") }
-        gray_color.setOnClickListener { t_et_color.setText("888888") }
+        gray_color.setOnClickListener { t_et_color.setText("686878") }
+        yellow_color.setOnClickListener { t_et_color.setText("DADA22") }
+        other_color.setOnClickListener { t_et_color.setText("53377A") }
 
         t_ok.setOnClickListener {
             if (!isCorrectLength()) {
@@ -237,14 +243,17 @@ class NewTaskActivity : AppCompatActivity() {
             if (!isCorrectLength()) {
                 return@setOnLongClickListener false
             } else if (isNotCheck()) {
-                if (privacySaved % (iterator_privacy + 4) != 0) saveTask() // Мб стоит убрать, но пока путаюсь
-
+                //if (privacySaved % (iterator_privacy + 4) != 0) saveTask() // Мб стоит убрать, но пока путаюсь
+                privacySaved = pref.getInt("privacy_saved", 1)
                 val plug = pref.getString("default_plug", "---") ?: "---"
                 for (i in 0..2) {
-                    if (privacySaved % (i + 4) != 0) {
+                    if (privacySaved % (i + 3) != 0) {
                         iterator_privacy = i
                         Log.d("privacy", iterator_privacy.toString())
                         saveTask(plug)
+                    }
+                    else {
+                        saveTask()
                     }
                 }
             } else {saveTask()}
@@ -318,7 +327,7 @@ class NewTaskActivity : AppCompatActivity() {
         }
 
         showToast("Задача сохранена")
-        if (privacySaved % (iterator_privacy + 4) != 0) privacySaved *= (iterator_privacy + 4)
+        //if (privacySaved % (iterator_privacy + 3) != 0) privacySaved *= (iterator_privacy + 3)
     }
 
     private fun setPrivacy(k: Boolean = true) {
@@ -348,6 +357,7 @@ class NewTaskActivity : AppCompatActivity() {
                 t_body.setText(task.body)
                 t_importance.setSelection(task.importance - 1)
                 val text_ptivacy = task.privacy
+                if(!task.is_synced) is_synced.setBackgroundColor(Color.BLUE)
 
                 if (text_ptivacy == "PUBLIC") {
                     iterator_privacy = 0

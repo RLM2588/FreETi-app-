@@ -123,7 +123,7 @@ class MainScreen : AppCompatActivity() {
         // мои малышки конец
 
         // Настройки
-        tasks_without_time.layoutManager = GridLayoutManager(this, 2)
+        tasks_without_time.layoutManager = GridLayoutManager(this, if(pref.getBoolean("one_column", false)) 1 else 2)
 
         val noTimeAdapter = TasksNoTimeAdapter(
             onDoneClick = { task -> viewModel.markTaskDone(task) },

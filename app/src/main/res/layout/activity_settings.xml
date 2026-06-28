@@ -50,6 +50,50 @@
             android:layout_marginVertical="4dp"
             android:background="#33888888" />
 
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="заглушка на Приватное"
+            android:textColor="@color/for_text"
+            android:textSize="20sp"
+            android:id="@+id/check_privacy"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="заглушка на Для друзей"
+            android:textColor="@color/for_text"
+            android:textSize="20sp"
+            android:id="@+id/check_friends"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="заглушка на Публичное"
+            android:textColor="@color/for_text"
+            android:textSize="20sp"
+            android:id="@+id/check_public"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="4dp"
+            android:background="#33888888" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1 колонка для дел на день"
+            android:textColor="@color/for_text"
+            android:textSize="20sp"
+            android:id="@+id/one_column_check"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="4dp"
+            android:background="#33888888" />
+
         <Button
             android:id="@+id/settings_logout"
             android:layout_width="wrap_content"
