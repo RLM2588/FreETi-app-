@@ -2,17 +2,21 @@ package com.example.freeti
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.freeti.data.local.entity.DUsers
+import com.example.freeti.network_entity.UpdateResponse
 import kotlinx.coroutines.launch
 import kotlin.math.min
 
@@ -28,6 +32,11 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var userAvatar: EditText // Изменено на EditText для управления фокусом
     private var currentUser: DUsers? = null
 
+    private lateinit var updateView: TextView
+
+    private lateinit var updateResp: UpdateResponse
+    private val app = application as MyApp
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
@@ -42,6 +51,8 @@ class ProfileActivity : AppCompatActivity() {
         btnSetting = findViewById(R.id.btnSettings)
         userAvatar = findViewById(R.id.faceInput)
         btnChangeAvatar = findViewById(R.id.btnChangeAvatar) // Инициализация
+        updateView = findViewById(R.id.main_update)
+        updateView.visibility = View.GONE
 
         val app = application as MyApp
         val userDao = app.appContainer.userDao
@@ -138,6 +149,8 @@ class ProfileActivity : AppCompatActivity() {
             )
             Log.d("updatedUser", "current: ${tokenManager.getLogin()}")
 
+            UpdateRequest() //TODO: Ждет реализации на сервере
+
             lifecycleScope.launch {
                 try {
                     val userResp = apiService.get_username_id()
@@ -204,6 +217,60 @@ class ProfileActivity : AppCompatActivity() {
                 currentUser = user
             }
             setInfo()
+        }
+
+        updateView.setOnClickListener {
+            showUpdateDialog(updateResp)
+        }
+    }
+
+    private fun showUpdateDialog(response: UpdateResponse) {
+        if(response.status != "critical") {
+            AlertDialog.Builder(this)
+                .setTitle("Доступна новая версия ${response.latestVersion}")
+                .setMessage(response.releaseNotes ?: "Нажмите для обновления")
+                .setPositiveButton("Обновить") { _, _ ->
+                    openBrowser(response.downloadUrl)
+                }
+                .setNegativeButton("Позже") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setCancelable(true)
+                .show()
+        } else {
+            AlertDialog.Builder(this)
+                .setTitle("Необходимо обновление")
+                .setMessage("Доступна версия ${response.latestVersion}. К сожалению ваша версия больше не поддерживается.\n" + (response.releaseNotes ?: "Нажмите для обновления"))
+                .setPositiveButton("Обновить") { _, _ ->
+                    openBrowser(response.downloadUrl)
+                }
+                .setCancelable(false)
+                .show()
+        }
+    }
+
+    private fun openBrowser(url: String) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(intent)
+        } catch (e: Exception) {
+            // Если нет браузера или ссылка некорректна
+            Toast.makeText(this, "Не удалось открыть ссылку", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun UpdateRequest() {
+        lifecycleScope.launch {
+            val answer = app.appContainer.updateRepository.checkUpdate(app.currentVersion)
+            if (answer != null) {
+                updateResp = answer
+                if (answer.status != "ok") {
+                    updateView.visibility = View.VISIBLE
+                    if (answer.status == "critical") {
+                        showUpdateDialog(answer)
+                    }
+                }
+            }
         }
     }
 

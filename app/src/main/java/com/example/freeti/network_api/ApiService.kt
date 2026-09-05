@@ -20,6 +20,7 @@ import com.example.freeti.network_entity.RegisterResponseCode
 import com.example.freeti.network_entity.StringMessage
 import com.example.freeti.network_entity.TestRequest
 import com.example.freeti.network_entity.TestResponse
+import com.example.freeti.network_entity.UpdateResponse
 import com.example.freeti.network_entity.UserResponse
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -200,4 +201,7 @@ interface ApiService {
 
     @GET("groups/group_users")
     suspend fun getGroupUsers(@Query("group_id") groupId: String): Response<List<NUsers>>
+
+    @GET("update/android")
+    suspend fun getUpdate(@Query("version") Version: String): Response<UpdateResponse>
 }

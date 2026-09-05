@@ -116,6 +116,18 @@
                 android:textSize="18sp"
                 app:cornerRadius="8dp" />
 
+            <Button
+                android:id="@+id/main_update"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Update"
+                android:textSize="18sp"
+                android:textColor="@color/bg"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:backgroundTint="#AAFFAA"
+                app:cornerRadius="8dp" />
+
         </LinearLayout>
 
         <LinearLayout

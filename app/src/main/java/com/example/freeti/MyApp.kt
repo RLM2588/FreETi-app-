@@ -21,6 +21,7 @@ import com.example.freeti.repository.MembersRepository
 import com.example.freeti.repository.OtherTaskRepository
 import com.example.freeti.repository.SearchRepository
 import com.example.freeti.repository.TestRepository
+import com.example.freeti.repository.UpdateRepository
 import com.example.freeti.sync.SyncConfig
 import com.example.freeti.sync.TaskSyncManager
 import com.example.freeti.tokens.TokenManager
@@ -32,7 +33,7 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 class AppContainer(private val context: Context) {
-    val version = "1.1.0"
+    //val version = "1.1.0"
     val database = AppDataBase.getInstance(context)
     private val tasksDao = database.tasksDao()
     val myTasksDao = database.myTasksDao()
@@ -61,6 +62,8 @@ class AppContainer(private val context: Context) {
     val membersRepository = MembersRepository(apiService, groupMemberDao, groupsDao, userDao)
     val contactsRepository = ContactsRepository(contactsDao, userDao, apiService, tokenManager)
 
+    val updateRepository = UpdateRepository(apiService)
+
     val searchRepository = SearchRepository(
         userDao,
         apiService,
@@ -84,6 +87,9 @@ class MyApp: Application() {
     }
 
     var currentActivity: Activity? = null
+        private set
+
+    var currentVersion: String = "1.0.1"
         private set
 
     var Alert: AlertDialog? = null
